@@ -1,0 +1,133 @@
+# Ghost Project .gitignore
+
+# ============================================================
+# ENVIRONMENT & SECRETS
+# ============================================================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.env
+!.env.example
+
+# API keys, tokens, credentials
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+service-account*.json
+gha-creds-*.json
+
+# Private keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*.gpg
+secrets/
+credentials/
+
+# ============================================================
+# ANDROID / KOTLIN
+# ============================================================
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+release/
+
+# Gradle
+.gradle/
+build/
+local.properties
+proguard/
+*.iml
+.idea/workspace.xml
+.cxx/
+
+# Android signing
+*.jks
+*.keystore
+keystore.properties
+
+# ============================================================
+# NODE / WEB (Phase 1+)
+# ============================================================
+node_modules/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build output
+dist/
+build/
+.next/
+out/
+.vite/
+*.tsbuildinfo
+
+# Vite
+.vite/
+
+# ============================================================
+# IDE / EDITOR
+# ============================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.idea_modules/
+
+# ============================================================
+# OS / SYSTEM
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+$TAGS
+
+# ============================================================
+# LOGS / RUNTIME
+# ============================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ============================================================
+# TESTING / COVERAGE
+# ============================================================
+coverage/
+.nyc_output/
+*.lcov
+
+# ============================================================
+# MISC
+# ============================================================
+.cache/
+.parcel-cache/
+.tmp/
+temp/
+*.tmp
+*.bak
+*.swp
