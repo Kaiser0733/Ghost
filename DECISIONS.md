@@ -1,8 +1,8 @@
 # DECISIONS LOG — Ghost
 
-**Version:** 1.0  
-**Status:** CONTROLLED DOCUMENT — All architectural decisions must be recorded here  
-**Authority:** Subordinate to PROJECT_CONSTITUTION.md and MASTER_ROADMAP.md  
+**Version:** 1.0
+**Status:** CONTROLLED DOCUMENT — All architectural decisions must be recorded here
+**Authority:** Subordinate to PROJECT_CONSTITUTION.md and MASTER_ROADMAP.md
 **Format:** `DECISION-XXX: CATEGORY | Title | Context | Decision | Rationale | Date`
 
 ---
@@ -35,13 +35,15 @@ DECISION-XXX: CATEGORY | Title | Context | Decision | Rationale | Date
 
 DECISION-001: ROADMAP-ADVANCE | Phase 0 → Phase 1 | The Ghost project foundation documents have been reviewed and approved. Development may proceed to Phase 1 Web Prototype. | APPROVED — Advance to Phase 1 | Phase 0 exit criteria met: all three foundation documents complete, consistent, and approved. No application code written. No dependencies installed. | 2026-08-11
 
+DECISION-002: SPEC-PROMOTE | PHASE-1-ENCOUNTER-FLOW | Ghost Phase 1 UX formally approved by founder. The encounter/reveal/connection flow, pre-reveal anonymity, first-reveal notification, mutual reveal profile, connection history, non-mutual fade behavior, emotional tone, privacy constraints, and Phase 1 boundaries are CONFIRMED for the web prototype. | CONFIRMED — Phase 1 encounter flow as specified | Founder approval of complete Phase 1 UX. This decision uses the Constitution Section 6 Exception Process to promote profile elements (photo, username, bio, Ghost ID) and connection history display from BANNED/FUTURE to CONFIRMED for Phase 1 prototype scope. | 2026-08-12
+
 ---
 
 ## DECISION-001 DETAIL
 
-**Title:** ROADMAP-ADVANCE | Phase 0 → Phase 1  
-**Status:** ACCEPTED  
-**Date:** 2026-08-11  
+**Title:** ROADMAP-ADVANCE | Phase 0 → Phase 1
+**Status:** ACCEPTED
+**Date:** 2026-08-11
 **Category:** ROADMAP-ADVANCE
 
 ### Context
@@ -90,6 +92,120 @@ No alterations required to PROJECT_CONSTITUTION.md, MASTER_ROADMAP.md, or PRODUC
 
 ---
 
+## DECISION-002 DETAIL
+
+**Title:** PHASE-1-ENCOUNTER-FLOW
+**Status:** APPROVED
+**Date:** 2026-08-12
+**Category:** SPEC-PROMOTE / SCOPE-RULE
+
+### Context
+Ghost Phase 1 UX has been formally approved by the founder. This decision records the complete encounter and reveal flow for the Phase 1 web prototype, promoting several items from BANNED/FUTURE/UNKNOWN to CONFIRMED via the Constitution Section 6 Exception Process.
+
+### Decision Summary
+
+#### 1. ENCOUNTER
+- Simulated encounter between two simulated users
+- Represents meaningful physical proximity
+- Communicates approximate elapsed time (e.g., "18 minutes ago")
+- No exact coordinates or exact location exposed
+
+#### 2. PRE-REVEAL STATE (Anonymous)
+- No username, profile photo, Ghost ID, exact location, or exact address visible
+- Encounter remains anonymous and mysterious
+
+#### 3. FIRST REVEAL
+- User A chooses REVEAL
+- User B receives notification/state change: "Someone remembers this encounter" + encounter context + "They chose to reveal themselves"
+- Actions available: REVEAL BACK | LET IT FADE
+- First user's identity NOT revealed before reciprocation
+
+#### 4. MUTUAL REVEAL
+- User B chooses REVEAL BACK
+- Both users simultaneously gain access to each other's limited profiles
+- Clear communication: "It's mutual" / "You both remembered"
+
+#### 5. PROFILE AFTER MUTUAL REVEAL (PROMOTED FROM BANNED)
+The revealed profile contains ONLY:
+- One profile photo
+- Username
+- Permanent Ghost ID
+- Short bio
+
+Explicitly EXCLUDED:
+- Profile gallery
+- Follower count
+- Likes
+- Public posts
+- Popularity ranking
+
+#### 6. CONNECTION
+- After mutual reveal → Ghost connection
+- Connection represented in user's Ghost history
+- Display: CONNECTION @username | First crossed paths: date/time | Status: Mutual
+- NO direct messaging in Phase 1 (may be considered later)
+
+#### 7. NON-MUTUAL REVEAL
+- User B chooses LET IT FADE
+- Encounter fades
+- NO notification to User A of explicit rejection
+- NO rejection counter
+- NO exposure of who rejected whom
+- Encounter simply expires from active state
+
+#### 8. PRODUCT EMOTION
+- Intended tone: mysterious, slightly romantic, intriguing, human, subtle
+- NOT: dating, matchmaking, social feed, messaging app, popularity system
+- Romantic tension from uncertainty and mutual reveal, not explicit dating framing
+
+#### 9. PRIVACY (NON-NEGOTIABLE)
+- Exact location never exposed
+- Identity not revealed before mutual reveal
+- Prototype must not imply real proximity detection exists
+- Simulated encounter data remains clearly simulated internally
+
+#### 10. PHASE 1 BOUNDARY
+**Tech Stack:**
+- React + TypeScript
+- Simulated User A/User B
+- Simulated encounter events
+- localStorage/local state
+
+**NOT Implemented:**
+- Real Bluetooth/GPS proximity detection
+- Nearby-user discovery
+- Firebase/production backend
+- Native Android
+- DM/messaging
+- AI
+- Monetization
+
+### Exception Process Compliance (Constitution Section 6)
+This decision promotes the following from BANNED to CONFIRMED for Phase 1 scope:
+
+| Item | Previously | Now | Rationale |
+|------|------------|-----|-----------|
+| Profile photo | BANNED (Constitution §6, Spec §6) | CONFIRMED | Required for mutual reveal moment |
+| Username | BANNED (Constitution §6, Spec §6) | CONFIRMED | Required for connection history display |
+| Short bio | BANNED (Constitution §6, Spec §6) | CONFIRMED | Human context for connection |
+| Ghost ID (permanent) | BANNED (Constitution §3: "no long-term linkable") | CONFIRMED (prototype only) | Prototype simulation; production uses rotating keys |
+| Connection history display | FUTURE (Spec §11) | CONFIRMED | Core to encounter → connection arc |
+| Profile system (Phase 1) | NOT BUILT (Roadmap Phase 1) | CONFIRMED (minimal, post-reveal only) | Required to validate mutual reveal UX |
+
+**Privacy Impact Assessment:** Profile data only exposed AFTER mutual consent. No location data in profile. Prototype uses local simulation only.
+
+**Friction Impact Assessment:** Single-tap reveal actions. No profile creation/maintenance required pre-reveal. Profile is revealed, not constructed.
+
+**Explicit Human Approval:** Founder approved complete Phase 1 UX including these elements.
+
+### References
+- PROJECT_CONSTITUTION.md Section 6 (Anti-Scope-Creep Rules, Exception Process)
+- PROJECT_CONSTITUTION.md Section 3 (Privacy Principles — maintained)
+- MASTER_ROADMAP.md Phase 1 Scope (extended per this decision)
+- PRODUCT_SPEC.md Sections 5, 6, 8, 10, 11 (promotions from PROPOSED/FUTURE/UNKNOWN/BANNED → CONFIRMED)
+
+---
+
 ## TEMPLATE FOR FUTURE DECISIONS
 
 ```
@@ -98,9 +214,9 @@ DECISION-XXX: CATEGORY | Title | Context | Decision | Rationale | Date
 
 **Example:**
 ```
-DECISION-002: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
+DECISION-003: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
 ```
 
 ---
 
-**END OF DECISIONS LOG (v1.0)**
+**END OF DECISIONS LOG (v1.1)**
