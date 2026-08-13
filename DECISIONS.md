@@ -37,6 +37,8 @@ DECISION-001: ROADMAP-ADVANCE | Phase 0 → Phase 1 | The Ghost project foundati
 
 DECISION-002: SPEC-PROMOTE | PHASE-1-ENCOUNTER-FLOW | Ghost Phase 1 UX formally approved by founder. The encounter/reveal/connection flow, pre-reveal anonymity, first-reveal notification, mutual reveal profile, connection history, non-mutual fade behavior, emotional tone, privacy constraints, and Phase 1 boundaries are CONFIRMED for the web prototype. | CONFIRMED — Phase 1 encounter flow as specified | Founder approval of complete Phase 1 UX. This decision uses the Constitution Section 6 Exception Process to promote profile elements (photo, username, bio, Ghost ID) and connection history display from BANNED/FUTURE to CONFIRMED for Phase 1 prototype scope. | 2026-08-12
 
+DECISION-003: ARCH-DECIDE | PHASE-1-SIMULATION | Single-device dual-user encounter simulation | The Phase 1 web prototype will simulate two Ghost users inside one browser/device with an explicit developer/test-only user switcher. The active simulated user may be switched between User A and User B. The encounter state is centrally modeled with explicit phase transitions: ANONYMOUS → REVEALED_BY_A/REVEALED_BY_B → WAITING_FOR_OTHER → MUTUAL → CONNECTED | FADED. Both reveal directions supported. No identity before mutual reveal. No persistence, no networking, no backend. The user switcher is visually distinct as a dev/test control and designed for clean removal. | Single-device simulation enables one person to test both sides of the encounter flow. Central state model ensures deterministic transitions. Dev switcher isolates test concerns from product UI. | 2026-08-12
+
 ---
 
 ## DECISION-001 DETAIL
@@ -73,7 +75,7 @@ The Phase 1 prototype uses localStorage (or equivalent local state) to simulate 
 
 - The Phase 1 prototype is NOT a two-device networking test
 - It is NOT evidence that real phones can detect each other
-- It is NOT evidence that proximity detection works
+- It IS NOT evidence that proximity detection works
 - It exists solely to test the Ghost product experience (encounter → reveal → connection flow)
 
 The initial Phase 1 simulation may use:
@@ -206,6 +208,80 @@ This decision promotes the following from BANNED to CONFIRMED for Phase 1 scope:
 
 ---
 
+## DECISION-003 DETAIL
+
+**Title:** PHASE-1-SIMULATION | Single-device dual-user encounter simulation
+**Status:** APPROVED
+**Date:** 2026-08-12
+**Category:** ARCH-DECIDE
+
+### Context
+The Phase 1 web prototype requires a single-device simulation of two Ghost users to enable one person to test both sides of the encounter flow. This decision records the architectural approach for the simulation layer.
+
+### Decision
+
+The Phase 1 web prototype will simulate two Ghost users inside one browser/device using an explicit developer/test-only user switcher.
+
+**Active simulated user:** Switchable between User A and User B.
+
+**User switcher:**
+- Clearly marked as a development/test control
+- Visually distinct from normal Ghost UI
+- Does not reset or create new encounters when switched
+- Designed for clean removal before production
+
+**Encounter state model (central, shared):**
+```
+ANONYMOUS
+    ↓
+REVEALED_BY_A | REVEALED_BY_B
+    ↓
+WAITING_FOR_OTHER
+    ↓
+MUTUAL
+    ↓
+CONNECTED
+
+Alternative terminal state:
+FADED
+```
+
+**Reveal flow (both directions):**
+
+User A reveals
+→ User B receives reveal notification/state
+→ User B may REVEAL BACK or LET IT FADE
+
+User B reveals
+→ User A receives reveal notification/state
+→ User A may REVEAL BACK or LET IT FADE
+
+**Privacy maintained:**
+- Identity NEVER revealed before mutual reveal
+- Exact location NEVER exposed
+- No localStorage persistence (in-memory state only)
+- No real networking, no backend, no Firebase
+- No GPS, no Bluetooth, no real proximity detection
+- No AI, no messaging
+
+**Prototype constraints:**
+- Single browser/device
+- Simulated users only
+- Local, in-memory React state
+- Dev switcher removable without affecting product code
+
+### Rationale
+
+Single-device simulation enables one person to test both sides of the encounter flow without requiring two devices or real proximity detection. Central state model ensures deterministic, testable transitions. Dev-only switcher isolates test infrastructure from product UI, enabling clean removal. In-memory state avoids persistence complexity for this prototype slice.
+
+### References
+- PROJECT_CONSTITUTION.md Section 5 (Technical Principles — local-first, deterministic logic)
+- MASTER_ROADMAP.md Phase 1 Scope (simulation-only prototype)
+- PRODUCT_SPEC.md Section 10 (Prototype Boundaries)
+- DECISION-002 (Phase 1 Encounter Flow UX)
+
+---
+
 ## TEMPLATE FOR FUTURE DECISIONS
 
 ```
@@ -214,9 +290,9 @@ DECISION-XXX: CATEGORY | Title | Context | Decision | Rationale | Date
 
 **Example:**
 ```
-DECISION-003: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
+DECISION-004: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
 ```
 
 ---
 
-**END OF DECISIONS LOG (v1.1)**
+**END OF DECISIONS LOG (v1.2)**

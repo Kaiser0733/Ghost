@@ -1,8 +1,7 @@
-import { SIMULATED_USER } from '../data/placeholders';
+import { useEncounter } from '../context/EncounterContext';
 
 export function Profile() {
-  const user = SIMULATED_USER;
-  const initials = user.username.slice(0, 2).toUpperCase();
+  const { currentUser } = useEncounter();
 
   return (
     <div className="screen profile">
@@ -13,20 +12,11 @@ export function Profile() {
 
       <div className="profile-card">
         <div className="profile-avatar" aria-hidden="true">
-          {initials}
+          {currentUser.initials}
         </div>
-        <h3 className="profile-username">@{user.username}</h3>
-        <p className="profile-ghostid">{user.ghostId}</p>
-        <p className="profile-bio">{user.bio}</p>
-      </div>
-
-      <div className="profile-connections">
-        <p className="profile-section-label">Connections</p>
-        <div className="profile-connection-item">
-          <span className="profile-connection-dot" aria-hidden="true">●</span>
-          <span className="profile-connection-name">@Marlow</span>
-          <span className="profile-connection-date">Connected 1 day ago</span>
-        </div>
+        <h3 className="profile-username">@{currentUser.username}</h3>
+        <p className="profile-ghostid">{currentUser.ghostId}</p>
+        <p className="profile-bio">{currentUser.bio}</p>
       </div>
 
       <p className="profile-footnote">
