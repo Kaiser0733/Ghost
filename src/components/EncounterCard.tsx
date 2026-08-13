@@ -50,13 +50,13 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
       <div className="encounter-card encounter-waiting">
         <div className="encounter-marker" aria-hidden="true">◐</div>
         <div className="encounter-body">
-          <p className="encounter-line">Someone remembers this encounter.</p>
+          <p className="encounter-line">You remembered this encounter.</p>
           <p className="encounter-meta">You were near each other {elapsed}.</p>
           <p className="encounter-venue">{venue}</p>
-          <p className="encounter-status">You chose to reveal yourself. Waiting.</p>
+          <p className="encounter-status">You've revealed yourself. Now it's their choice.</p>
         </div>
         <div className="encounter-actions">
-          <button className="btn-reveal" disabled>Reveal sent</button>
+          <button className="btn-reveal" disabled>Waiting…</button>
         </div>
       </div>
     );
@@ -68,10 +68,10 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
       <div className="encounter-card encounter-notification">
         <div className="encounter-marker" aria-hidden="true">◐</div>
         <div className="encounter-body">
-          <p className="encounter-line">They chose to reveal themselves.</p>
+          <p className="encounter-line">Someone remembers this encounter.</p>
           <p className="encounter-meta">You were near each other {elapsed}.</p>
           <p className="encounter-venue">{venue}</p>
-          <p className="encounter-status">Someone remembers this encounter.</p>
+          <p className="encounter-status">They chose to reveal themselves.</p>
         </div>
         <div className="encounter-actions">
           <button className="btn-reveal" onClick={revealBack}>Reveal back</button>
@@ -82,7 +82,6 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
   }
 
   // Mutual or Connected: both revealed
-  // For mutual, we need the other user's profile
   return (
     <div className="encounter-card encounter-connected">
       <div className="encounter-marker" aria-hidden="true">●</div>
