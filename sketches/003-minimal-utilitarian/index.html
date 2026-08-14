@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="color-scheme" content="dark">
+  <title>Ghost — Variant 3: Minimal Utilitarian</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #000000;
+      --bg-card: #0a0a0a;
+      --bg-elevated: #141414;
+      --text: #ffffff;
+      --text-dim: #888888;
+      --text-muted: #555555;
+      --accent: #ffffff;
+      --accent-dim: #aaaaaa;
+      --border: #222222;
+      --border-subtle: #1a1a1a;
+      --focus: #ffffff;
+      --sp-xs: 0.5rem; --sp-sm: 0.75rem; --sp-md: 1rem; --sp-lg: 1.5rem; --sp-xl: 2rem; --sp-2xl: 3rem;
+      --fs-xs: 0.6875rem; --fs-sm: 0.8125rem; --fs-base: 0.9375rem; --fs-lg: 1.0625rem; --fs-xl: 1.25rem; --fs-2xl: 1.75rem; --fs-3xl: 2.5rem; --fs-4xl: 3.5rem;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', monospace;
+      --radius: 4px;
+      --t-fast: 100ms ease; --t-med: 150ms ease; --t-slow: 200ms ease;
+      --nav-h: 52px; --max-w: 480px;
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: var(--font); font-size: var(--fs-base); line-height: 1.6; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; min-height: 100dvh; }
+    button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .app-shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; max-width: var(--max-w); margin: 0 auto; position: relative; }
+    .app-main { flex: 1; padding: var(--sp-lg) var(--sp-md); padding-bottom: calc(var(--nav-h) + var(--sp-lg) + env(safe-area-inset-bottom, 0px)); }
+    .screen { animation: none; }
+    .screen-header { margin-bottom: var(--sp-lg); }
+    .screen-title { font-size: var(--fs-2xl); font-weight: 500; letter-spacing: 0; }
+    .screen-subtitle { font-size: var(--fs-sm); color: var(--text-dim); }
+
+    .encounter-card {
+      display: grid; grid-template-columns: 48px 1fr; gap: var(--sp-md);
+      padding: var(--sp-lg); margin-bottom: var(--sp-md);
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      transition: background var(--t-fast), border-color var(--t-fast);
+    }
+    .encounter-card:hover { background: var(--bg-elevated); }
+    .encounter-marker { display: flex; align-items: center; justify-content: center; font-size: var(--fs-xl); color: var(--text-dim); }
+    .encounter-body { min-width: 0; }
+    .encounter-lead { font-size: var(--fs-lg); font-weight: 400; color: var(--text); margin-bottom: var(--sp-xs); }
+    .encounter-meta { font-size: var(--fs-sm); color: var(--text-dim); margin-bottom: var(--sp-xs); }
+    .encounter-venue { font-size: var(--fs-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .encounter-status { font-size: var(--fs-sm); color: var(--text-dim); margin-top: var(--sp-md); }
+    .encounter-status strong { font-weight: 500; color: var(--text); }
+
+    .encounter-actions { grid-column: 1 / -1; display: flex; gap: var(--sp-sm); margin-top: var(--sp-lg); padding-top: var(--sp-lg); border-top: 1px solid var(--border); }
+    .btn { flex: 1; padding: var(--sp-sm) var(--sp-md); font-size: var(--fs-sm); font-weight: 500; transition: all var(--t-fast); border-radius: var(--radius); }
+    .btn-primary { border: 1px solid var(--border); color: var(--text); background: transparent; }
+    .btn-primary:hover, .btn-primary:focus { border-color: var(--text-dim); background: var(--bg-elevated); }
+    .btn-primary:disabled { border-style: dashed; color: var(--text-muted); opacity: 0.5; }
+    .btn-secondary { border: 1px solid transparent; color: var(--text-dim); background: transparent; }
+    .btn-secondary:hover, .btn-secondary:focus { color: var(--text); border-color: var(--border); background: var(--bg-elevated); }
+
+    .mutual-reveal { padding-top: var(--sp-lg); }
+    .mutual-lead { font-size: var(--fs-2xl); font-weight: 500; color: var(--text); margin-bottom: var(--sp-xs); }
+    .mutual-sub { font-size: var(--fs-base); color: var(--text-dim); }
+    .mutual-profile { text-align: center; margin-top: var(--sp-xl); }
+    .mutual-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto var(--sp-lg); display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); font-size: var(--fs-2xl); font-weight: 500; }
+    .mutual-username { font-size: var(--fs-xl); font-weight: 500; color: var(--text); margin-bottom: var(--sp-xs); }
+    .mutual-ghostid { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.05em; font-family: var(--font-mono); margin-bottom: var(--sp-md); }
+    .mutual-bio { font-size: var(--fs-base); color: var(--text-dim); max-width: 300px; margin: 0 auto; line-height: 1.6; }
+
+    .home { display: flex; flex-direction: column; min-height: 70vh; }
+    .home-wordmark { font-size: var(--fs-4xl); font-weight: 500; letter-spacing: 0; color: var(--text); margin-bottom: var(--sp-xs); }
+    .home-tagline { font-size: var(--fs-xl); font-weight: 300; color: var(--text-dim); }
+    .home-state { margin: var(--sp-xl) 0; padding: 0 var(--sp-md); }
+    .home-state-row { display: flex; align-items: center; gap: var(--sp-md); margin-bottom: var(--sp-md); padding: var(--sp-md) 0; border-top: 1px solid var(--border-subtle); }
+    .home-state-row:first-child { border-top: none; }
+    .home-state-icon { font-size: var(--fs-lg); color: var(--text-dim); }
+    .home-state-text { font-size: var(--fs-sm); color: var(--text-dim); }
+    .home-cta { display: inline-block; margin: var(--sp-lg) auto 0; padding: var(--sp-md) var(--sp-xl); font-size: var(--fs-base); font-weight: 500; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); background: transparent; transition: all var(--t-fast); }
+    .home-cta:hover { border-color: var(--text-dim); background: var(--bg-elevated); }
+
+    .profile-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto var(--sp-lg); display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); font-size: var(--fs-2xl); font-weight: 500; }
+    .profile-username { font-size: var(--fs-xl); font-weight: 500; color: var(--text); margin-bottom: var(--sp-xs); }
+    .profile-ghostid { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.05em; font-family: var(--font-mono); margin-bottom: var(--sp-lg); }
+    .profile-bio { font-size: var(--fs-base); color: var(--text-dim); max-width: 280px; margin: 0 auto; line-height: 1.6; }
+
+    .bottom-nav { display: flex; justify-content: space-around; align-items: center; height: var(--nav-h); position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-w); background: var(--bg); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--sp-xs) 0; color: var(--text-dim); transition: color var(--t-fast); }
+    .nav-active { color: var(--accent); }
+    .nav-icon { font-size: var(--fs-xl); line-height: 1; }
+    .nav-label { font-size: 0.6rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    .user-switcher { padding: var(--sp-sm) var(--sp-md); background: var(--bg-card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .switcher-label { display: block; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: var(--sp-sm); }
+    .switcher-buttons { display: flex; gap: var(--sp-sm); }
+    .switcher-btn { flex: 1; padding: var(--sp-sm) var(--sp-md); font-size: var(--fs-sm); font-weight: 500; color: var(--text-dim); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--t-fast); }
+    .switcher-btn.active { color: var(--text); border-color: var(--accent); background: var(--bg-elevated); }
+
+    @media (max-width: 360px) { :root { --sp-lg: 1rem; --sp-xl: 1.5rem; --fs-base: 0.875rem; --max-w: 100%; } .encounter-card { padding: var(--sp-md); grid-template-columns: 40px 1fr; } }
+    @media (min-width: 768px) { :root { --max-w: 600px; } }
+    @media (min-width: 1024px) { .app-shell { max-width: 700px; } .bottom-nav { max-width: 700px; } }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="user-switcher" role="region" aria-label="Prototype user switcher">
+      <span class="switcher-label">Prototype — viewing as</span>
+      <div class="switcher-buttons">
+        <button class="switcher-btn active" aria-pressed="true">@Nocturne</button>
+        <button class="switcher-btn" aria-pressed="false">@Marlow</button>
+      </div>
+    </div>
+    <main class="app-main">
+      <section class="screen encounters" aria-label="Encounters">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+
+        <article class="encounter-card anonymous">
+          <div class="encounter-marker" aria-hidden="true">○</div>
+          <div>
+            <p class="encounter-lead">You crossed paths with someone.</p>
+            <p class="encounter-meta">You were near each other <strong>18 minutes ago</strong>.</p>
+            <p class="encounter-venue">Indoor · Commercial</p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+
+        <article class="encounter-card waiting">
+          <div class="encounter-marker" aria-hidden="true">◐</div>
+          <div>
+            <p class="encounter-lead">You remembered this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>2 hours ago</strong>.</p>
+            <p class="encounter-venue">Outdoor · Park</p>
+            <p class="encounter-status">You've revealed yourself. <strong>Now it's their choice.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary" disabled>Waiting…</button>
+          </div>
+        </article>
+
+        <article class="encounter-card notification">
+          <div class="encounter-marker" aria-hidden="true">◐</div>
+          <div>
+            <p class="encounter-lead">Someone remembers this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>2 hours ago</strong>.</p>
+            <p class="encounter-venue">Outdoor · Park</p>
+            <p class="encounter-status"><strong>They chose to reveal themselves.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal back</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+
+        <article class="encounter-card mutual">
+          <div class="encounter-marker" aria-hidden="true">●</div>
+          <div>
+            <div class="mutual-reveal">
+              <p class="mutual-lead">It's mutual.</p>
+              <p class="mutual-sub">You both remembered.</p>
+              <div class="mutual-profile">
+                <div class="mutual-avatar">MA</div>
+                <p class="mutual-username">@Marlow</p>
+                <p class="mutual-ghostid">ghost-K9pL3m-12Qr</p>
+                <p class="mutual-bio">Coffee at dawn. Books at dusk.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="encounter-card connected">
+          <div class="encounter-marker" aria-hidden="true">●</div>
+          <div>
+            <p class="encounter-lead">Connection — @Marlow</p>
+            <p class="encounter-meta">First crossed paths · Aug 12 · 7:42 PM</p>
+            <p class="encounter-status">Status: <strong>Mutual</strong></p>
+          </div>
+        </article>
+
+        <p style="text-align:center; font-size:var(--fs-xs); color:var(--text-muted); margin-top:var(--sp-xl); font-style:italic;">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+    </main>
+    <nav class="bottom-nav" role="navigation" aria-label="Primary">
+      <button class="nav-item"><span class="nav-icon" aria-hidden="true">○</span><span class="nav-label">Home</span></button>
+      <button class="nav-item" style="color:#fff"><span class="nav-icon" aria-hidden="true">◐</span><span class="nav-label">Encounters</span></button>
+      <button class="nav-item"><span class="nav-icon" aria-hidden="true">●</span><span class="nav-label">Profile</span></button>
+    </nav>
+  </div>
+</body>
+</html>

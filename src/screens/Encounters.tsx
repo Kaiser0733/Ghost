@@ -1,3 +1,6 @@
+// Ghost — Encounters Screen
+// The core experience. Real state, not placeholders.
+
 import { useEncounter } from '../context/EncounterContext';
 import { EncounterCard } from '../components/EncounterCard';
 

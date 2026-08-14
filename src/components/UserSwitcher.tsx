@@ -9,7 +9,7 @@ export function UserSwitcher() {
 
   return (
     <div className="user-switcher" role="region" aria-label="Prototype user switcher">
-      <span className="switcher-label">Prototype: Viewing as</span>
+      <span className="switcher-label">Prototype — viewing as</span>
       <div className="switcher-buttons">
         <button
           className={`switcher-btn ${perspective === 'user_a' ? 'active' : ''}`}

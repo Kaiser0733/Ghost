@@ -1,3 +1,6 @@
+// Ghost — Home Screen
+// Quiet, intentional, sparse. "The people you almost met."
+
 import type { ScreenId } from '../types/ghost';
 import { useEncounter } from '../context/EncounterContext';
 
@@ -9,47 +12,40 @@ export function Home({ onNavigate }: HomeProps) {
   const { encounter } = useEncounter();
 
   // Determine home state from encounter
-  let stateLabel = 'No active encounters';
-  let stateIcon = '○';
-  let stateText = 'No active encounters';
+  let stateLabel = 'Currently';
+  let stateRows = [
+    { icon: '○', text: 'No active encounters', dim: true },
+  ];
 
   if (encounter) {
     if (encounter.phase === 'faded') {
-      stateLabel = 'Currently';
-      stateIcon = '○';
-      stateText = '1 faded encounter';
-    } else if (encounter.phase === 'connected') {
-      stateLabel = 'Currently';
-      stateIcon = '●';
-      stateText = '1 connection';
+      stateRows = [{ icon: '○', text: '1 faded encounter', dim: true }];
+    } else if (encounter.phase === 'connected' || !!encounter.connectionId) {
+      stateRows = [{ icon: '●', text: '1 connection', dim: false }];
     } else if (encounter.userARevealed && encounter.userBRevealed) {
-      stateLabel = 'Currently';
-      stateIcon = '●';
-      stateText = '1 mutual reveal';
+      stateRows = [{ icon: '●', text: '1 mutual reveal', dim: false }];
     } else if (encounter.userARevealed || encounter.userBRevealed) {
-      stateLabel = 'Currently';
-      stateIcon = '◐';
-      stateText = '1 awaiting response';
+      stateRows = [{ icon: '◐', text: '1 awaiting response', dim: false }];
     } else {
-      stateLabel = 'Currently';
-      stateIcon = '○';
-      stateText = '1 active encounter';
+      stateRows = [{ icon: '○', text: '1 active encounter', dim: true }];
     }
   }
 
   return (
     <div className="screen home">
       <div className="home-hero">
-        <h1 className="home-title">Ghost</h1>
+        <h1 className="home-wordmark">Ghost</h1>
         <p className="home-tagline">The people you almost met.</p>
       </div>
 
       <div className="home-state">
         <p className="home-state-label">{stateLabel}</p>
-        <div className="home-state-row">
-          <span className="home-state-icon" aria-hidden="true">{stateIcon}</span>
-          <span className="home-state-text">{stateText}</span>
-        </div>
+        {stateRows.map((row, i) => (
+          <div key={i} className="home-state-row">
+            <span className="home-state-glyph" aria-hidden="true">{row.icon}</span>
+            <span className="home-state-text" style={{ opacity: row.dim ? 0.6 : 1 }}>{row.text}</span>
+          </div>
+        ))}
       </div>
 
       <button

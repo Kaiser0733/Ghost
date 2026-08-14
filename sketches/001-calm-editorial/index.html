@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="color-scheme" content="dark">
+  <title>Ghost — Variant 1: Calm Editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0c;
+      --bg-card: #131317;
+      --bg-elevated: #1a1a1f;
+      --text: #edeef0;
+      --text-dim: #8a8a92;
+      --text-muted: #55555d;
+      --accent: #d4d4dc;
+      --accent-warm: #e8dcc8;
+      --border: #232328;
+      --border-subtle: #1d1d22;
+      --focus: #d4d4dc;
+      --sp-xs: 0.5rem;
+      --sp-sm: 0.75rem;
+      --sp-md: 1.25rem;
+      --sp-lg: 2rem;
+      --sp-xl: 3rem;
+      --sp-2xl: 4rem;
+      --fs-xs: 0.7rem;
+      --fs-sm: 0.8rem;
+      --fs-base: 1rem;
+      --fs-lg: 1.125rem;
+      --fs-xl: 1.375rem;
+      --fs-2xl: 2rem;
+      --fs-3xl: 3rem;
+      --fs-4xl: 4.5rem;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', monospace;
+      --radius: 0;
+      --t-fast: 120ms ease-out;
+      --t-med: 200ms ease-out;
+      --t-slow: 350ms ease-out;
+      --nav-h: 56px;
+      --max-w: 480px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-ui);
+      font-size: var(--fs-base);
+      line-height: 1.7;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh; min-height: 100dvh;
+    }
+    button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .app-shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; max-width: var(--max-w); margin: 0 auto; position: relative; }
+    .app-main { flex: 1; padding: var(--sp-lg) var(--sp-md); padding-bottom: calc(var(--nav-h) + var(--sp-lg) + env(safe-area-inset-bottom, 0px)); }
+    .screen { animation: fadeIn var(--t-med); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .screen-header { margin-bottom: var(--sp-xl); padding-top: var(--sp-md); }
+    .screen-title { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; letter-spacing: 0.01em; }
+    .screen-subtitle { font-size: var(--fs-sm); color: var(--text-dim); font-style: italic; }
+
+    /* ENCOUNTER CARD SYSTEM */
+    .encounter-card {
+      display: grid; grid-template-columns: auto 1fr; gap: var(--sp-lg);
+      padding: var(--sp-xl) var(--sp-lg); margin-bottom: var(--sp-lg);
+      background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius);
+      transition: background var(--t-fast), border-color var(--t-fast);
+    }
+    .encounter-card:hover { background: var(--bg-elevated); border-color: var(--border); }
+    .encounter-card:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    .encounter-glyph {
+      width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); border-radius: 50%;
+      font-size: var(--fs-2xl); line-height: 1; color: var(--text-dim);
+      transition: all var(--t-med);
+      background: var(--bg);
+    }
+    .encounter-card:hover .encounter-glyph { border-color: var(--text-dim); }
+    .encounter-card.waiting .encounter-glyph { border-color: var(--accent-warm); color: var(--accent-warm); }
+    .encounter-card.notification .encounter-glyph { border-color: var(--accent); color: var(--accent); }
+    .encounter-card.mutual .encounter-glyph { border-color: var(--accent); color: var(--accent); background: rgba(212,212,220,0.1); }
+
+    .encounter-body { min-width: 0; }
+    .encounter-lead { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 400; line-height: 1.3; color: var(--text); margin-bottom: var(--sp-xs); }
+    .encounter-meta { font-size: var(--fs-sm); color: var(--text-dim); margin-bottom: var(--sp-xs); }
+    .encounter-venue { font-size: var(--fs-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    .encounter-status { font-size: var(--fs-sm); color: var(--text-dim); margin-top: var(--sp-md); font-style: italic; line-height: 1.5; }
+    .encounter-status strong { font-weight: 500; color: var(--text); font-style: normal; }
+
+    .encounter-actions { grid-column: 1 / -1; display: flex; gap: var(--sp-md); margin-top: var(--sp-lg); padding-top: var(--sp-lg); border-top: 1px solid var(--border-subtle); }
+    .btn { flex: 1; padding: var(--sp-sm) var(--sp-md); font-size: var(--fs-sm); letter-spacing: 0.04em; transition: all var(--t-fast); border-radius: var(--radius); font-family: var(--font-ui); font-weight: 500; }
+    .btn-primary { border: 1px solid var(--border); color: var(--text); background: transparent; }
+    .btn-primary:hover, .btn-primary:focus { border-color: var(--text-dim); background: var(--bg-elevated); }
+    .btn-primary:active { background: var(--border); }
+    .btn-primary:disabled { border-style: dashed; color: var(--text-muted); opacity: 0.6; }
+    .btn-secondary { border: 1px solid transparent; color: var(--text-dim); background: transparent; }
+    .btn-secondary:hover, .btn-secondary:focus { color: var(--text); border-color: var(--border); background: var(--bg-elevated); }
+    .btn-ghost { border: 1px solid transparent; color: var(--text-dim); background: transparent; padding: var(--sp-xs) var(--sp-sm); font-size: var(--fs-xs); }
+    .btn-ghost:hover, .btn-ghost:focus { color: var(--text); }
+
+    .encounter-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--sp-xl); font-style: italic; }
+
+    /* MUTUAL REVEAL DETAIL */
+    .mutual-reveal {
+      animation: mutualReveal var(--t-slow) ease-out;
+    }
+    @keyframes mutualReveal {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .mutual-header { text-align: center; margin-bottom: var(--sp-xl); }
+    .mutual-lead { font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; letter-spacing: 0.01em; color: var(--text); margin-bottom: var(--sp-xs); }
+    .mutual-sub { font-size: var(--fs-base); color: var(--text-dim); font-style: italic; }
+    .mutual-profile { text-align: center; }
+    .mutual-avatar { width: 96px; height: 96px; border-radius: 50%; margin: 0 auto var(--sp-lg); display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; letter-spacing: 0.02em; }
+    .mutual-username { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; color: var(--text); margin-bottom: var(--sp-xs); }
+    .mutual-ghostid { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.08em; font-family: var(--font-mono); margin-bottom: var(--sp-md); }
+    .mutual-bio { font-size: var(--fs-base); color: var(--text-dim); max-width: 300px; margin: 0 auto; line-height: 1.7; }
+    .mutual-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--sp-xl); font-style: italic; }
+
+    /* CONNECTION RECORD */
+    .connection-record { margin-top: var(--sp-xl); padding-top: var(--sp-lg); border-top: 1px solid var(--border-subtle); }
+    .connection-header { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: var(--sp-md); }
+    .connection-item { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-md) 0; }
+    .connection-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-family: var(--font-display); font-size: var(--fs-sm); font-weight: 400; }
+    .connection-info { flex: 1; min-width: 0; }
+    .connection-username { font-family: var(--font-display); font-size: var(--fs-base); font-weight: 400; color: var(--text); }
+    .connection-meta { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 2px; }
+    .connection-status { font-size: var(--fs-xs); color: var(--accent); font-weight: 500; }
+
+    /* HOME */
+    .home { display: flex; flex-direction: column; min-height: 70vh; }
+    .home-hero { text-align: center; padding-top: var(--sp-2xl); }
+    .home-wordmark { font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 300; letter-spacing: 0.02em; color: var(--text); margin-bottom: var(--sp-xs); }
+    .home-tagline { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 300; font-style: italic; color: var(--text-dim); }
+    .home-state { margin: var(--sp-2xl) 0; padding: 0 var(--sp-md); }
+    .home-state-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: var(--sp-lg); }
+    .home-state-row { display: flex; align-items: center; gap: var(--sp-lg); margin-bottom: var(--sp-lg); padding: var(--sp-md) 0; border-top: 1px solid var(--border-subtle); }
+    .home-state-row:first-child { border-top: none; }
+    .home-state-glyph { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 50%; font-size: var(--fs-base); color: var(--text-dim); flex-shrink: 0; }
+    .home-state-row:nth-child(2) .home-state-glyph { border-color: var(--accent-warm); color: var(--accent-warm); }
+    .home-state-row:nth-child(3) .home-state-glyph { border-color: var(--accent); color: var(--accent); background: rgba(212,212,220,0.1); }
+    .home-state-text { font-size: var(--fs-sm); color: var(--text-dim); }
+    .home-cta { display: inline-block; margin: var(--sp-xl) auto 0; padding: var(--sp-md) var(--sp-2xl); font-size: var(--fs-base); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--t-fast); background: transparent; }
+    .home-cta:hover, .home-cta:focus { border-color: var(--text-dim); background: var(--bg-elevated); }
+    .home-cta:active { background: var(--border); }
+    .home-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); max-width: 320px; margin: var(--sp-xl) auto 0; line-height: 1.8; font-style: italic; }
+
+    /* PROFILE */
+    .profile { padding-top: var(--sp-xl); }
+    .profile-card { text-align: center; padding: var(--sp-2xl) var(--sp-md); margin-bottom: var(--sp-2xl); }
+    .profile-avatar { width: 104px; height: 104px; border-radius: 50%; margin: 0 auto var(--sp-lg); display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 300; letter-spacing: 0.02em; }
+    .profile-username { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; color: var(--text); margin-bottom: var(--sp-xs); }
+    .profile-ghostid { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.08em; font-family: var(--font-mono); margin-bottom: var(--sp-lg); }
+    .profile-bio { font-size: var(--fs-base); color: var(--text-dim); max-width: 320px; margin: 0 auto; line-height: 1.8; }
+    .profile-connections { padding: 0 var(--sp-md); }
+    .profile-section-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: var(--sp-lg); }
+    .profile-connection-item { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-md) 0; border-top: 1px solid var(--border-subtle); }
+    .profile-connection-glyph { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .profile-connection-name { font-family: var(--font-display); font-size: var(--fs-base); font-weight: 400; color: var(--text); }
+    .profile-connection-date { font-size: var(--fs-xs); color: var(--text-muted); margin-left: auto; }
+    .profile-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--sp-2xl); font-style: italic; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { display: flex; justify-content: space-around; align-items: center; height: var(--nav-h); position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-w); background: var(--bg); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: var(--sp-xs) 0; color: var(--text-muted); transition: color var(--t-fast); }
+    .nav-item:active { color: var(--text-dim); }
+    .nav-active { color: var(--accent); }
+    .nav-icon { font-size: var(--fs-xl); line-height: 1; }
+    .nav-label { font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    /* USER SWITCHER */
+    .user-switcher { padding: var(--sp-md) var(--sp-md); background: var(--bg-card); border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 50; animation: slideDown var(--t-med) ease-out; }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-100%); } to { opacity: 1; transform: translateY(0); } }
+    .switcher-label { display: block; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: var(--sp-sm); }
+    .switcher-buttons { display: flex; gap: var(--sp-md); }
+    .switcher-btn { flex: 1; padding: var(--sp-sm) var(--sp-md); font-size: var(--fs-sm); font-weight: 500; color: var(--text-dim); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--t-fast); }
+    .switcher-btn:hover, .switcher-btn:focus { color: var(--text); border-color: var(--text-dim); background: var(--bg-elevated); }
+    .switcher-btn.active { color: var(--text); border-color: var(--accent); background: rgba(212,212,220,0.08); }
+    .switcher-btn:active { background: var(--border); }
+
+    /* RESPONSIVE */
+    @media (max-width: 360px) { :root { --sp-lg: 1.5rem; --sp-xl: 2.5rem; --fs-base: 0.9rem; --max-w: 100%; } .encounter-card { padding: var(--sp-lg) var(--sp-md); gap: var(--sp-md); } .encounter-actions { flex-direction: column; gap: var(--sp-sm); } }
+    @media (min-width: 768px) { :root { --max-w: 600px; --fs-3xl: 3.5rem; --fs-4xl: 5.5rem; } }
+    @media (min-width: 1024px) { .app-shell { max-width: 700px; } .bottom-nav { max-width: 700px; } }
+
+    /* ACCESSIBILITY */
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="user-switcher" role="region" aria-label="Prototype user switcher">
+      <span class="switcher-label">Prototype — viewing as</span>
+      <div class="switcher-buttons">
+        <button class="switcher-btn active" aria-pressed="true">@Nocturne</button>
+        <button class="switcher-btn" aria-pressed="false">@Marlow</button>
+      </div>
+    </div>
+
+    <main class="app-main">
+      <!-- ENCOUNTERS SCREEN - showing all states sequentially -->
+      <section class="screen encounters" aria-label="Encounters">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+
+        <!-- 1. ANONYMOUS -->
+        <article class="encounter-card anonymous">
+          <div class="encounter-glyph" aria-hidden="true">○</div>
+          <div class="encounter-body">
+            <p class="encounter-lead">You crossed paths with someone.</p>
+            <p class="encounter-meta">You were near each other <strong>18 minutes ago</strong>.</p>
+            <p class="encounter-venue">Indoor · Commercial</p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+
+        <!-- 2. WAITING (I revealed) -->
+        <article class="encounter-card waiting">
+          <div class="encounter-glyph" aria-hidden="true">◐</div>
+          <div class="encounter-body">
+            <p class="encounter-lead">You remembered this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>2 hours ago</strong>.</p>
+            <p class="encounter-venue">Outdoor · Park</p>
+            <p class="encounter-status">You've revealed yourself. <strong>Now it's their choice.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary" disabled>Waiting…</button>
+          </div>
+        </article>
+
+        <!-- 3. NOTIFICATION (they revealed) -->
+        <article class="encounter-card notification">
+          <div class="encounter-glyph" aria-hidden="true">◐</div>
+          <div class="encounter-body">
+            <p class="encounter-lead">Someone remembers this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>2 hours ago</strong>.</p>
+            <p class="encounter-venue">Outdoor · Park</p>
+            <p class="encounter-status"><strong>They chose to reveal themselves.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal back</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+
+        <!-- 4. MUTUAL REVEAL -->
+        <article class="encounter-card mutual mutual-reveal">
+          <div class="encounter-glyph" aria-hidden="true">●</div>
+          <div class="encounter-body">
+            <div class="mutual-header">
+              <p class="mutual-lead">It's mutual.</p>
+              <p class="mutual-sub">You both remembered.</p>
+            </div>
+            <div class="mutual-profile">
+              <div class="mutual-avatar">MA</div>
+              <p class="mutual-username">@Marlow</p>
+              <p class="mutual-ghostid">ghost-K9pL3m-12Qr</p>
+              <p class="mutual-bio">Coffee at dawn. Books at dusk.</p>
+              <p class="mutual-footnote">Revealed only after mutual encounter.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 5. CONNECTION RECORD -->
+        <article class="encounter-card connected">
+          <div class="encounter-glyph" aria-hidden="true">●</div>
+          <div class="encounter-body">
+            <div class="connection-record">
+              <p class="connection-header">Connection</p>
+              <div class="connection-item">
+                <div class="connection-avatar">MA</div>
+                <div class="connection-info">
+                  <p class="connection-username">@Marlow</p>
+                  <p class="connection-meta">First crossed paths · Aug 12 · 7:42 PM</p>
+                </div>
+                <span class="connection-status">Mutual</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <p class="encounter-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" role="navigation" aria-label="Primary">
+      <button class="nav-item" aria-current="page"><span class="nav-icon" aria-hidden="true">○</span><span class="nav-label">Home</span></button>
+      <button class="nav-item nav-active"><span class="nav-icon" aria-hidden="true">◐</span><span class="nav-label">Encounters</span></button>
+      <button class="nav-item"><span class="nav-icon" aria-hidden="true">●</span><span class="nav-label">Profile</span></button>
+    </nav>
+  </div>
+</body>
+</html>

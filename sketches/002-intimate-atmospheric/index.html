@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#050507">
+  <meta name="color-scheme" content="dark">
+  <title>Ghost — Variant 2: Intimate Atmospheric</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #050507;
+      --bg-card: #0b0b0d;
+      --bg-elevated: #111114;
+      --text: #f0f0f2;
+      --text-dim: #7a7a82;
+      --text-muted: #4a4a52;
+      --accent: #c8b8a0;
+      --accent-glow: rgba(200,184,160,0.15);
+      --border: #1a1a1d;
+      --border-subtle: #141416;
+      --focus: #c8b8a0;
+      --sp-xs: 0.5rem; --sp-sm: 0.75rem; --sp-md: 1.25rem; --sp-lg: 2rem; --sp-xl: 3rem; --sp-2xl: 4rem;
+      --fs-xs: 0.7rem; --fs-sm: 0.8rem; --fs-base: 1rem; --fs-lg: 1.125rem; --fs-xl: 1.375rem; --fs-2xl: 2.25rem; --fs-3xl: 3.5rem; --fs-4xl: 5rem;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-ui: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', monospace;
+      --radius: 0;
+      --t-fast: 120ms ease-out; --t-med: 250ms ease-out; --t-slow: 400ms ease-out;
+      --nav-h: 56px; --max-w: 480px;
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: var(--font-ui); font-size: var(--fs-base); line-height: 1.7; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; min-height: 100vh; min-height: 100dvh; }
+    button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .app-shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; max-width: var(--max-w); margin: 0 auto; position: relative; }
+    .app-main { flex: 1; padding: var(--sp-lg) var(--sp-md); padding-bottom: calc(var(--nav-h) + var(--sp-lg) + env(safe-area-inset-bottom, 0px)); }
+    .screen { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .screen-header { margin-bottom: var(--sp-xl); padding-top: var(--sp-md); }
+    .screen-title { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; letter-spacing: 0.01em; }
+    .screen-subtitle { font-size: var(--fs-sm); color: var(--text-dim); font-style: italic; }
+
+    .encounter-card {
+      display: flex; flex-direction: column; gap: var(--sp-lg);
+      padding: var(--sp-xl) var(--sp-lg); margin-bottom: var(--sp-lg);
+      background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius);
+      transition: background var(--t-med), border-color var(--t-med);
+      position: relative;
+    }
+    .encounter-card:hover { background: var(--bg-elevated); border-color: var(--border); }
+    .encounter-card:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    .encounter-glyph {
+      width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--sp-md);
+      border: 1px solid var(--border); border-radius: 50%;
+      font-size: var(--fs-3xl); line-height: 1; color: var(--text-dim);
+      background: var(--bg);
+      transition: all var(--t-slow);
+      box-shadow: 0 0 0 0 transparent;
+    }
+    .encounter-card:hover .encounter-glyph { border-color: var(--text-dim); box-shadow: 0 0 24px 0 var(--accent-glow); }
+    .encounter-card.waiting .encounter-glyph { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 32px 0 var(--accent-glow); animation: pulse 2s ease-in-out infinite; }
+    .encounter-card.notification .encounter-glyph { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 32px 0 var(--accent-glow); }
+    .encounter-card.mutual .encounter-glyph { border-color: var(--accent); color: var(--accent); background: rgba(200,184,160,0.12); box-shadow: 0 0 48px 0 var(--accent-glow); }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 24px 0 var(--accent-glow); } 50% { box-shadow: 0 0 48px 0 var(--accent-glow); } }
+
+    .encounter-body { text-align: center; }
+    .encounter-lead { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; line-height: 1.3; color: var(--text); margin-bottom: var(--sp-sm); }
+    .encounter-meta { font-size: var(--fs-sm); color: var(--text-dim); margin-bottom: var(--sp-xs); }
+    .encounter-venue { font-size: var(--fs-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .encounter-status { font-size: var(--fs-base); color: var(--text-dim); margin-top: var(--sp-lg); font-style: italic; line-height: 1.6; }
+    .encounter-status strong { font-weight: 500; color: var(--text); font-style: normal; }
+
+    .encounter-actions { display: flex; flex-direction: column; gap: var(--sp-md); margin-top: var(--sp-xl); padding-top: var(--sp-xl); border-top: 1px solid var(--border-subtle); }
+    .btn { padding: var(--sp-md) var(--sp-lg); font-size: var(--fs-base); letter-spacing: 0.03em; transition: all var(--t-med); border-radius: var(--radius); font-family: var(--font-ui); font-weight: 500; }
+    .btn-primary { border: 1px solid var(--border); color: var(--text); background: transparent; }
+    .btn-primary:hover, .btn-primary:focus { border-color: var(--text-dim); background: var(--bg-elevated); }
+    .btn-primary:active { background: var(--border); }
+    .btn-primary:disabled { border-style: dashed; color: var(--text-muted); opacity: 0.5; }
+    .btn-secondary { border: 1px solid transparent; color: var(--text-dim); background: transparent; }
+    .btn-secondary:hover, .btn-secondary:focus { color: var(--text); border-color: var(--border); background: var(--bg-elevated); }
+
+    .encounter-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--sp-xl); font-style: italic; }
+
+    /* MUTUAL REVEAL - Full screen moment */
+    .mutual-reveal { animation: mutualUnfurl 0.6s ease-out; }
+    @keyframes mutualUnfurl { from { opacity: 0; transform: translateY(24px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .mutual-header { text-align: center; margin-bottom: var(--sp-2xl); }
+    .mutual-lead { font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; letter-spacing: 0.01em; color: var(--text); margin-bottom: var(--sp-sm); }
+    .mutual-sub { font-size: var(--fs-lg); color: var(--text-dim); font-style: italic; }
+    .mutual-profile { margin-top: var(--sp-2xl); }
+    .mutual-avatar { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto var(--sp-xl); display: flex; align-items: center; justify-content: center; background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; letter-spacing: 0.02em; }
+    .mutual-username { font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; color: var(--text); margin-bottom: var(--sp-xs); }
+    .mutual-ghostid { font-size: var(--fs-xs); color: var(--text-muted); letter-spacing: 0.1em; font-family: var(--font-mono); margin-bottom: var(--sp-lg); }
+    .mutual-bio { font-size: var(--fs-lg); color: var(--text-dim); max-width: 400px; margin: 0 auto var(--sp-xl); line-height: 1.8; }
+    .mutual-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--sp-xl); font-style: italic; }
+
+    /* CONNECTION */
+    .connection-record { margin-top: var(--sp-2xl); padding-top: var(--sp-xl); border-top: 1px solid var(--border-subtle); }
+    .connection-header { font-size: var(--xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: var(--sp-lg); }
+    .connection-item { display: flex; align-items: center; gap: var(--sp-lg); padding: var(--sp-lg) 0; }
+    .connection-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 400; }
+    .connection-info { flex: 1; min-width: 0; }
+    .connection-username { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 400; color: var(--text); }
+    .connection-meta { font-size: var(--fs-sm); color: var(--text-dim); margin-top: 4px; }
+    .connection-status { font-size: var(--fs-sm); color: var(--accent); font-weight: 500; }
+
+    /* HOME */
+    .home { display: flex; flex-direction: column; min-height: 75vh; }
+    .home-hero { text-align: center; padding-top: var(--sp-2xl); }
+    .home-wordmark { font-family: var(--font-display); font-size: var(--fs-4xl); font-weight: 400; letter-spacing: 0.02em; color: var(--text); margin-bottom: var(--sp-sm); }
+    .home-tagline { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 300; font-style: italic; color: var(--text-dim); }
+    .home-state { margin: var(--sp-2xl) 0; padding: 0 var(--sp-md); }
+    .home-state-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: var(--sp-xl); }
+    .home-state-row { display: flex; align-items: center; justify-content: center; gap: var(--sp-lg); margin-bottom: var(--sp-lg); padding: var(--sp-lg) 0; border-top: 1px solid var(--border-subtle); }
+    .home-state-row:first-child { border-top: none; }
+    .home-state-glyph { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 50%; font-size: var(--fs-lg); color: var(--text-dim); flex-shrink: 0; }
+    .home-state-row:nth-child(2) .home-state-glyph { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 24px 0 var(--accent-glow); }
+    .home-state-row:nth-child(3) .home-state-glyph { border-color: var(--accent); color: var(--accent); background: rgba(200,184,160,0.15); box-shadow: 0 0 24px 0 var(--accent-glow); }
+    .home-state-text { font-size: var(--fs-base); color: var(--text-dim); }
+    .home-cta { display: inline-block; margin: var(--sp-xl) auto 0; padding: var(--sp-md) var(--sp-2xl); font-size: var(--fs-lg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--t-med); background: transparent; }
+    .home-cta:hover, .home-cta:focus { border-color: var(--text-dim); background: var(--bg-elevated); }
+    .home-cta:active { background: var(--border); }
+    .home-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-muted); max-width: 360px; margin: var(--sp-xl) auto 0; line-height: 1.8; font-style: italic; }
+
+    /* BOTTOM NAV */
+    .bottom-nav { display: flex; justify-content: space-around; align-items: center; height: var(--nav-h); position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-w); background: var(--bg); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: var(--sp-xs) 0; color: var(--text-muted); transition: color var(--t-fast); }
+    .nav-item:active { color: var(--text-dim); }
+    .nav-active { color: var(--accent); }
+    .nav-icon { font-size: var(--fs-xl); line-height: 1; }
+    .nav-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* USER SWITCHER */
+    .user-switcher { padding: var(--sp-md); background: var(--bg-card); border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 50; }
+    .switcher-label { display: block; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: var(--sp-sm); }
+    .switcher-buttons { display: flex; gap: var(--sp-md); }
+    .switcher-btn { flex: 1; padding: var(--sp-sm) var(--sp-md); font-size: var(--fs-sm); font-weight: 500; color: var(--text-dim); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); transition: all var(--t-fast); }
+    .switcher-btn:hover, .switcher-btn:focus { color: var(--text); border-color: var(--text-dim); background: var(--bg-elevated); }
+    .switcher-btn.active { color: var(--text); border-color: var(--accent); background: rgba(200,184,160,0.1); }
+    .switcher-btn:active { background: var(--border); }
+
+    @media (max-width: 360px) { :root { --sp-lg: 1.5rem; --sp-xl: 2.5rem; --fs-base: 0.9rem; --max-w: 100%; } .encounter-card { padding: var(--lg) var(--md); } .btn { padding: var(--sm) var(--md); } }
+    @media (min-width: 768px) { :root { --max-w: 600px; --fs-3xl: 4rem; --fs-4xl: 6rem; } }
+    @media (min-width: 1024px) { .app-shell { max-width: 700px; } .bottom-nav { max-width: 700px; } }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+    button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="user-switcher" role="region" aria-label="Prototype user switcher">
+      <span class="switcher-label">Prototype — viewing as</span>
+      <div class="switcher-buttons">
+        <button class="switcher-btn active" aria-pressed="true">@Nocturne</button>
+        <button class="switcher-btn" aria-pressed="false">@Marlow</button>
+      </div>
+    </div>
+    <main class="app-main">
+      <section class="screen encounters" aria-label="Encounters">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+
+        <article class="encounter-card anonymous">
+          <div class="encounter-glyph" aria-hidden="true">○</div>
+          <div class="encounter-body">
+            <p class="encounter-lead">You crossed paths with someone.</p>
+            <p class="encounter-meta">You were near each other <strong>18 minutes ago</strong>.</p>
+            <p class="encounter-venue">Indoor · Commercial</p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+
+        <article class="encounter-card waiting">
+          <div class="encounter-glyph" aria-hidden="true">◐</div>
+          <div class="encounter-body">
+            <p class="encounter-lead">You remembered this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>2 hours ago</strong>.</p>
+            <p class="encounter-venue">Outdoor · Park</p>
+            <p class="encounter-status">You've revealed yourself. <strong>Now it's their choice.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary" disabled>Waiting…</button>
+          </div>
+        </article>
+
+        <article class="encounter-card notification">
+          <div class="encounter-glyph" aria-hidden="true">◐</div>
+          <div class="encounter-body">
+            <p class="encounter-lead">Someone remembers this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>2 hours ago</strong>.</p>
+            <p class="encounter-venue">Outdoor · Park</p>
+            <p class="encounter-status"><strong>They chose to reveal themselves.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal back</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+
+        <article class="encounter-card mutual">
+          <div class="encounter-glyph" aria-hidden="true">●</div>
+          <div class="encounter-body mutual-reveal">
+            <div class="mutual-header">
+              <p class="mutual-lead">It's mutual.</p>
+              <p class="mutual-sub">You both remembered.</p>
+            </div>
+            <div class="mutual-profile">
+              <div class="mutual-avatar">MA</div>
+              <p class="mutual-username">@Marlow</p>
+              <p class="mutual-ghostid">ghost-K9pL3m-12Qr</p>
+              <p class="mutual-bio">Coffee at dawn. Books at dusk.</p>
+              <p class="mutual-footnote">Revealed only after mutual encounter.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="encounter-card connected">
+          <div class="encounter-glyph" aria-hidden="true">●</div>
+          <div class="encounter-body">
+            <div class="connection-record">
+              <p class="connection-header">Connection</p>
+              <div class="connection-item">
+                <div class="connection-avatar">MA</div>
+                <div class="connection-info">
+                  <p class="connection-username">@Marlow</p>
+                  <p class="connection-meta">First crossed paths · Aug 12 · 7:42 PM</p>
+                </div>
+                <span class="connection-status">Mutual</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <p class="encounter-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+    </main>
+    <nav class="bottom-nav" role="navigation" aria-label="Primary">
+      <button class="nav-item"><span class="nav-icon" aria-hidden="true">○</span><span class="nav-label">Home</span></button>
+      <button class="nav-item nav-active"><span class="nav-icon" aria-hidden="true">◐</span><span class="nav-label">Encounters</span></button>
+      <button class="nav-item"><span class="nav-icon" aria-hidden="true">●</span><span class="nav-label">Profile</span></button>
+    </nav>
+  </div>
+</body>
+</html>
