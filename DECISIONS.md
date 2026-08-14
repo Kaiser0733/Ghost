@@ -39,6 +39,8 @@ DECISION-002: SPEC-PROMOTE | PHASE-1-ENCOUNTER-FLOW | Ghost Phase 1 UX formally 
 
 DECISION-003: ARCH-DECIDE | PHASE-1-SIMULATION | Single-device dual-user encounter simulation | The Phase 1 web prototype will simulate two Ghost users inside one browser/device with an explicit developer/test-only user switcher. The active simulated user may be switched between User A and User B. The encounter state is centrally modeled with explicit phase transitions: ANONYMOUS → REVEALED_BY_A/REVEALED_BY_B → WAITING_FOR_OTHER → MUTUAL → CONNECTED | FADED. Both reveal directions supported. No identity before mutual reveal. No persistence, no networking, no backend. The user switcher is visually distinct as a dev/test control and designed for clean removal. | Single-device simulation enables one person to test both sides of the encounter flow. Central state model ensures deterministic transitions. Dev switcher isolates test concerns from product UI. | 2026-08-12
 
+DECISION-004: ARCH-DECIDE | PHASE-1-UI | Atmosphere and Interaction Design Pass | Phase 1 receives a focused UI/interaction design pass to make the experience feel mysterious, intimate, slightly romantic, quiet, modern, and memorable. Visual system: Cormorant Garamond serif display, Inter UI sans, warm dark palette (#0a0a0c) with warm accent (#e8dcc8) for waiting, cool accent (#d4d4dc) for mutual. Encounter glyph system (○/��/●) with state transitions. Mutual reveal moment with scale+fade animation. Home screen sparse with glyph state indicators. Profile with connection records. Bottom nav with glyph icons. User switcher visually distinct as dev control. No scope expansion — no new features, no networking, no backend, no AI. | Phase 1 prototype felt "basic" — core flow worked but lacked emotional resonance. Visual and interaction design needed to make the experience feel mysterious, intimate, slightly romantic, quiet, modern, and human — per the Constitution's emotional tone requirements — without expanding product scope. | 2026-08-13
+
 ---
 
 ## DECISION-001 DETAIL
@@ -233,13 +235,13 @@ The Phase 1 web prototype will simulate two Ghost users inside one browser/devic
 **Encounter state model (central, shared):**
 ```
 ANONYMOUS
-    ↓
+    ��
 REVEALED_BY_A | REVEALED_BY_B
-    ↓
+    ��
 WAITING_FOR_OTHER
-    ↓
+    ��
 MUTUAL
-    ↓
+    ��
 CONNECTED
 
 Alternative terminal state:
@@ -282,6 +284,73 @@ Single-device simulation enables one person to test both sides of the encounter 
 
 ---
 
+## DECISION-004 DETAIL
+
+**Title:** PHASE-1-UI | Atmosphere and Interaction Design Pass
+**Status:** APPROVED
+**Date:** 2026-08-13
+**Category:** ARCH-DECIDE
+
+### Context
+Phase 1 prototype was functional but felt "basic" per human testing. The core encounter/reveal flow worked correctly per DECISION-002/003, but the visual and interaction design lacked emotional resonance — it felt like a generic dark-mode app rather than Ghost's intended mysterious, intimate, slightly romantic, quiet, modern, human experience.
+
+### Decision
+
+Phase 1 receives a focused UI/interaction design pass to make the experience feel:
+- Mysterious
+- Intimate
+- Slightly romantic
+- Quiet
+- Modern
+- Memorable
+
+**Without expanding product scope.** The existing information architecture (Home / Encounters / Profile) and encounter state machine (DECISION-003) remain unchanged.
+
+**Visual System:**
+- **Display Typography:** Cormorant Garamond (serif) — Ghost wordmark, emotional statements, mutual reveal
+- **UI Typography:** Inter (sans) — controls, utility text, metadata
+- **Monospace:** SF Mono / Fira Code — Ghost IDs
+- **Color Palette:** Warm dark base (#0a0a0c), cards (#131317), elevated (#1a1a1f)
+- **Accents:** Warm (#e8dcc8) for waiting states, cool (#d4d4dc) for mutual/connected
+- **Glyph System:** ○ (anonymous) → �� (waiting/notification) → ● (mutual/connected) with state transitions
+
+**Screen Redesigns:**
+
+**Home:** Sparse, intentional. Ghost wordmark in Cormorant Garamond serif. "The people you almost met." tagline. State glyphs (○/��/●) with encounter counts. Sparse CTA. No feed, no stats.
+
+**Encounters:** Glyph-centered cards (56px breathing glyph). Serif lead copy for emotional statements. Warm accent glyph for waiting, cool for mutual. Subtle hover/tap transitions. Glyph breathes (pulse) on waiting states.
+
+**First Reveal (Waiting):** "You remembered this encounter." / "You've revealed yourself. Now it's their choice." Button → "Waiting…" (disabled). Glyph pulses warm.
+
+**Incoming Reveal (Notification):** "Someone remembers this encounter." / "They chose to reveal themselves." Actions: Reveal back / Let it fade. Glyph pulses cool.
+
+**Mutual Reveal:** "It's mutual." / "You both remembered." Centered profile reveal with scale+fade animation. Avatar, username, Ghost ID, bio. Connection record below.
+
+**Profile:** Serif username, monospace Ghost ID, avatar with initials, bio, connection history with glyph dots.
+
+**Bottom Nav:** Glyph icons (○/��/●), minimal labels, active accent color.
+
+**User Switcher:** Sticky banner, clearly marked "Prototype — viewing as", visually distinct from product UI.
+
+**Interaction:** Subtle transitions (120-350ms ease-out). Glyph state changes (border/color/background). Mutual reveal scale+fade (350ms). No particle effects, no loading spinners, no fake network activity.
+
+**Accessibility:** Reduced motion support, focus-visible outlines, semantic buttons, sufficient contrast.
+
+**No Scope Changes:** No new features, no networking, no backend, no AI, no messaging, no persistence.
+
+### Rationale
+Phase 1 prototype was functionally correct per DECISION-002/003 but lacked emotional resonance — "pretty basic" per human testing. This design pass implements the Constitution's intended emotional tone (mysterious, intimate, slightly romantic, quiet, modern, human) through typography, glyph system, color, motion, and spacing — without any scope expansion or new features.
+
+### References
+- PROJECT_CONSTITUTION.md Section 1 (Product Identity — emotional tone)
+- PROJECT_CONSTITUTION.md Section 6 (Anti-Scope-Creep — no new features)
+- MASTER_ROADMAP.md Phase 1 Scope (UI polish within existing scope)
+- DECISION-002 (Phase 1 Encounter Flow UX)
+- DECISION-003 (Phase 1 Simulation Architecture)
+- PRODUCT_SPEC.md Section 10 (Prototype Boundaries)
+
+---
+
 ## TEMPLATE FOR FUTURE DECISIONS
 
 ```
@@ -290,9 +359,9 @@ DECISION-XXX: CATEGORY | Title | Context | Decision | Rationale | Date
 
 **Example:**
 ```
-DECISION-004: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
+DECISION-005: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
 ```
 
 ---
 
-**END OF DECISIONS LOG (v1.2)**
+**END OF DECISIONS LOG (v1.3)**
