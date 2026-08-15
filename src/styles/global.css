@@ -502,44 +502,23 @@ a:focus-visible,
   justify-content: center;
 }
 
-.encounter-icon {
-  width: 64px;
-  height: 64px;
-  max-width: 64px;
-  max-height: 64px;
+/* Encounter State Icon — Founder-provided encounter.png with state variations */
+.encounter-state-icon {
+  width: 72px;
+  height: 72px;
+  max-width: 72px;
+  max-height: 72px;
   object-fit: contain;
   flex-shrink: 0;
   display: block;
-}
-
-/* ========================================================
-   ENCOUNTER GLYPH SYSTEM — Custom designed icons
-   Waiting: reaching/half-revealed → Incoming: approaching presence → Mutual: two paths connecting
-   ======================================================== */
-.encounter-glyph {
-  width: 72px;
-  height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
   border-radius: 50%;
-  font-size: var(--fs-4xl);
-  line-height: 1;
-  color: var(--text-dim);
+  border: 1px solid var(--border);
   background: var(--bg-deep);
   transition: all var(--t-slower);
-  position: relative;
-  flex-shrink: 0;
 }
 
-.encounter-card:hover .encounter-glyph {
-  border-color: var(--border);
-}
-
-/* Waiting — warm pulse, reaching */
-.encounter-card.waiting .encounter-glyph {
-  color: var(--accent);
+/* Waiting — warm pulse */
+.encounter-state-icon--waiting {
   border-color: var(--accent);
   background: rgba(183, 110, 121, 0.08);
   animation: pulse-rose 2.5s ease-in-out infinite;
@@ -554,8 +533,7 @@ a:focus-visible,
 }
 
 /* Notification / Incoming Reveal — stronger rose-gold emphasis */
-.encounter-card.notification .encounter-glyph {
-  color: var(--accent);
+.encounter-state-icon--notification {
   border-color: var(--accent);
   background: rgba(183, 110, 121, 0.1);
   animation: pulse-rose 2.5s ease-in-out infinite;
@@ -574,10 +552,9 @@ a:focus-visible,
   50% { box-shadow: 0 0 24px 8px rgba(183, 110, 121, 0.15); }
 }
 
-/* Mutual / Connected — warm fill, designed keepsake */
-.encounter-card.mutual .encounter-glyph,
-.encounter-card.connected .encounter-glyph {
-  color: var(--bg);
+/* Mutual / Connected — warm fill */
+.encounter-state-icon--mutual,
+.encounter-state-icon--connected {
   border-color: var(--accent);
   background: var(--accent);
   box-shadow: 0 0 32px 8px rgba(183, 110, 121, 0.25);

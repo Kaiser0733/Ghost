@@ -11,27 +11,18 @@ interface EncounterCardProps {
   perspective: 'user_a' | 'user_b';
 }
 
-// Custom SVG Icons for encounter states
-const WaitingIcon = () => (
-  <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.2" strokeLinecap="round" aria-hidden="true">
-    <path d="M12 4a8 8 0 0 1 8 8c0 2.5-1.5 4.5-4 6-2.5-1.5-4-3.5-4-6a8 8 0 0 1 8-8z"/>
-    <path d="M12 8v4l3 3" strokeWidth="2"/>
-  </svg>
-);
-
-const IncomingIcon = () => (
-  <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.2" strokeLinecap="round" aria-hidden="true">
-    <path d="M12 4a8 8 0 0 1 8 8c0 2.5-1.5 4.5-4 6-2.5-1.5-4-3.5-4-6a8 8 0 0 1 8-8z"/>
-    <path d="M12 16v-6" strokeWidth="2"/>
-    <path d="M9 13l3-3 3 3" strokeWidth="2"/>
-  </svg>
-);
-
-const MutualIcon = () => (
-  <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
-    <path d="M16 12c0 2.2-1.8 4-4 4s-4-1.8-4-4"/>
-  </svg>
+// Encounter icon using founder-provided encounter.png with state-specific variations
+const EncounterStateIcon = ({ state, className = '' }: { state: 'waiting' | 'notification' | 'mutual' | 'connected'; className?: string }) => (
+  <img
+    src="/src/assets/encounter/encounter_optimized.png"
+    alt=""
+    className={`encounter-state-icon encounter-state-icon--${state} ${className}`}
+    width="72"
+    height="72"
+    loading="eager"
+    decoding="async"
+    aria-hidden="true"
+  />
 );
 
 export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
@@ -84,7 +75,7 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
     return (
       <article className="encounter-card waiting">
         <div className="encounter-glyph" aria-hidden="true">
-          <WaitingIcon />
+          <EncounterStateIcon state="waiting" />
         </div>
         <div className="encounter-body">
           <p className="encounter-lead">You remembered this encounter.</p>
@@ -105,7 +96,7 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
     return (
       <article className="encounter-card notification">
         <div className="encounter-glyph" aria-hidden="true">
-          <IncomingIcon />
+          <EncounterStateIcon state="notification" />
         </div>
         <div className="encounter-body">
           <p className="encounter-lead">Someone remembers this encounter.</p>
@@ -132,7 +123,7 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
     return (
       <article className="encounter-card connected">
         <div className="encounter-glyph" aria-hidden="true">
-          <MutualIcon />
+          <EncounterStateIcon state="connected" />
         </div>
         <div className="encounter-body">
           <div className="connection-record">
@@ -166,7 +157,7 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
   return (
     <article className="encounter-card mutual mutual-reveal">
       <div className="encounter-glyph" aria-hidden="true">
-        <MutualIcon />
+        <EncounterStateIcon state="mutual" />
       </div>
       <div className="encounter-body">
         <div className="mutual-header">

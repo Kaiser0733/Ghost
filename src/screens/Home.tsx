@@ -4,22 +4,7 @@
 import type { ScreenId } from '../types/ghost';
 import { useEncounter } from '../context/EncounterContext';
 
-// Custom SVG Icons for home state glyphs - specialized states only
-const HomeWaitingIcon = () => (
-  <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-    <path d="M12 4a8 8 0 0 1 8 8c0 2.5-1.5 4.5-4 6-2.5-1.5-4-3.5-4-6a8 8 0 0 1 8-8z"/>
-    <path d="M12 8v4l3 3"/>
-  </svg>
-);
-
-const HomeMutualIcon = () => (
-  <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
-    <path d="M16 12c0 2.2-1.8 4-4 4s-4-1.8-4-4"/>
-  </svg>
-);
-
-// Founder-provided encounter asset for neutral/anonymous encounter state
+// Founder-provided encounter asset for all encounter states
 const HomeEncounterIcon = () => (
   <img
     src="/src/assets/encounter/encounter_optimized.png"
@@ -50,12 +35,12 @@ export function Home({ onNavigate }: HomeProps) {
     if (encounter.phase === 'faded') {
       stateRows = [{ Icon: HomeEncounterIcon, text: '1 faded encounter', dim: true }];
     } else if (encounter.phase === 'connected' || !!encounter.connectionId) {
-      stateRows = [{ Icon: HomeMutualIcon, text: '1 connection', dim: false }];
+      stateRows = [{ Icon: HomeEncounterIcon, text: '1 connection', dim: false }];
     } else if (encounter.userARevealed && encounter.userBRevealed) {
-      stateRows = [{ Icon: HomeMutualIcon, text: '1 mutual reveal', dim: false }];
+      stateRows = [{ Icon: HomeEncounterIcon, text: '1 mutual reveal', dim: false }];
     } else if (encounter.userARevealed || encounter.userBRevealed) {
       // Responder perspective: they have a reveal waiting for them
-      stateRows = [{ Icon: HomeWaitingIcon, text: '1 reveal to answer', dim: false }];
+      stateRows = [{ Icon: HomeEncounterIcon, text: '1 reveal to answer', dim: false }];
     } else {
       // Waiter perspective or neutral: active encounter
       stateRows = [{ Icon: HomeEncounterIcon, text: '1 active encounter', dim: true }];
