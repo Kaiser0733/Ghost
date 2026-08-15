@@ -10,6 +10,7 @@ import type {
   Encounter,
   EncounterPhase,
 } from '../types/ghost';
+import { otherPerspective } from '../types/ghost';
 
 // Initial encounter state factory
 export function createInitialEncounter(): Encounter {
@@ -125,8 +126,9 @@ export function encounterReducer(state: SimulationState, action: EncounterAction
         connectedAt: Date.now(),
       };
 
-      // Create connection record for both users
+      // Create connection records for BOTH users
       const otherUser = perspective === 'user_a' ? state.userB : state.userA;
+      const currentUser = perspective === 'user_a' ? state.userA : state.userB;
 
       const connectionForMe = {
         id: newEncounter.connectionId!,
@@ -138,12 +140,26 @@ export function encounterReducer(state: SimulationState, action: EncounterAction
         firstCrossedPaths: encounter.timestamp,
         connectedAt: newEncounter.connectedAt!,
         status: 'mutual' as const,
+        ownerId: perspective,
+      };
+
+      const connectionForOther = {
+        id: newEncounter.connectionId!,
+        username: currentUser.username,
+        ghostId: currentUser.ghostId,
+        photoUrl: currentUser.photoUrl,
+        initials: currentUser.initials,
+        bio: currentUser.bio,
+        firstCrossedPaths: encounter.timestamp,
+        connectedAt: newEncounter.connectedAt!,
+        status: 'mutual' as const,
+        ownerId: otherPerspective(perspective),
       };
 
       return {
         ...state,
         encounter: newEncounter,
-        connections: [...state.connections, connectionForMe],
+        connections: [...state.connections, connectionForMe, connectionForOther],
       };
     }
 

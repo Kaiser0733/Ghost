@@ -119,6 +119,7 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
   }
 
   // Mutual reveal (just happened, not yet a persisted connection)
+  const { otherUser } = useEncounter();
   return (
     <article className="encounter-card mutual mutual-reveal">
       <div className="encounter-glyph" aria-hidden="true">●</div>
@@ -128,11 +129,10 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
           <p className="mutual-sub">You both remembered.</p>
         </div>
         <div className="mutual-profile">
-          {/* The other user's profile */}
-          <div className="mutual-avatar">MA</div>
-          <p className="mutual-username">@Marlow</p>
-          <p className="mutual-ghostid">ghost-K9pL3m-12Qr</p>
-          <p className="mutual-bio">Coffee at dawn. Books at dusk.</p>
+          <div className="mutual-avatar">{otherUser.initials}</div>
+          <p className="mutual-username">@{otherUser.username}</p>
+          <p className="mutual-ghostid">{otherUser.ghostId}</p>
+          <p className="mutual-bio">{otherUser.bio}</p>
           <p className="mutual-footnote">Revealed only after mutual encounter.</p>
         </div>
       </div>

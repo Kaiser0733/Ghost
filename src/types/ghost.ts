@@ -60,6 +60,7 @@ export interface ConnectionRecord {
   firstCrossedPaths: number;     // Unix ms
   connectedAt: number;           // Unix ms
   status: 'mutual';
+  ownerId: 'user_a' | 'user_b';  // Which user this connection belongs to
 }
 
 export type ScreenId = 'home' | 'encounters' | 'profile';

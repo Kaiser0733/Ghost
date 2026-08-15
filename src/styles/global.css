@@ -1,9 +1,9 @@
 /* ============================================================
-   GHOST — Global Styles (Calm Editorial Variant)
-   Design direction: mysterious, intimate, slightly romantic,
-   quiet, modern, human.
-   Dark interface, warm accents, serif display typography.
-   No gradients, no glowing, no glassmorphism, no neon.
+   GHOST — Global Styles (Warm Noir / Streetlight Variant)
+   Design direction: warm, modern, intimate, approachable,
+   cinematic, socially attractive, slightly mysterious, alive.
+   Warm Noir / Streetlight — layered dark surfaces, warm amber
+   accent for human presence, neutral/moonlight for anonymous.
    ============================================================ */
 
 /* RESET */
@@ -18,53 +18,106 @@ html {
   text-size-adjust: 100%;
 }
 
-/* VARIABLES */
+/* ============================================================
+   DESIGN TOKENS — Warm Noir / Streetlight
+   ============================================================ */
 :root {
-  /* Neutral dark palette — restrained, not pure black */
-  --bg: #0a0a0c;
-  --bg-card: #131317;
-  --bg-elevated: #1a1a1f;
-  --text: #edeef0;
-  --text-dim: #8a8a92;
-  --text-muted: #55555d;
-  --accent: #d4d4dc;
-  --accent-warm: #e8dcc8;
-  --border: #232328;
-  --border-subtle: #1d1d22;
-  --focus: #d4d4dc;
+  /* ========================================================
+     LAYERED DARK SURFACES — Warm Noir depth
+     Not flat black. Layered charcoal with warm undertones.
+     ======================================================== */
+  --bg: #0e0d0c;              /* Page background — warm near-black */
+  --bg-deep: #080809;         /* Deepest layer, subtle */
+  --bg-card: #161412;         /* Card surface — warm charcoal */
+  --bg-card-hover: #1d1a17;   /* Hover state — slightly lighter */
+  --bg-elevated: #221f1c;     /* Elevated surfaces, modals */
+  --bg-input: #1a1817;        /* Input surfaces */
 
-  /* Spacing */
-  --sp-xs: 0.5rem;
-  --sp-sm: 0.75rem;
-  --sp-md: 1.25rem;
-  --sp-lg: 2rem;
-  --sp-xl: 3rem;
-  --sp-2xl: 4rem;
+  /* ========================================================
+     TEXT HIERARCHY — High contrast, warm undertones
+     Improved readability on mobile in bright conditions.
+     ======================================================== */
+  --text: #f5f0eb;            /* Primary text — warm off-white */
+  --text-dim: #b8afa4;        /* Secondary text — warm muted */
+  --text-muted: #7a7268;      /* Muted text — readable but subdued */
+  --text-faint: #5a5248;      /* Faint text — metadata, labels */
 
-  /* Typography */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  --font-mono: 'SF Mono', 'Fira Code', monospace;
-  --fs-xs: 0.7rem;
-  --fs-sm: 0.8rem;
-  --fs-base: 1rem;
-  --fs-lg: 1.125rem;
-  --fs-xl: 1.375rem;
-  --fs-2xl: 2rem;
-  --fs-3xl: 3rem;
-  --fs-4xl: 4.5rem;
+  /* ========================================================
+     ACCENT SYSTEM — Warm Noir signature
+     Warm amber for human presence/reveal states.
+     Neutral/moonlight for anonymous states.
+     ======================================================== */
+  --accent-warm: #d4a843;     /* Warm amber — human presence, reveal */
+  --accent-warm-soft: #d4a843cc; /* Soft variant for glows */
+  --accent-warm-subtle: #d4a84333; /* Subtle backgrounds */
+  --accent-cool: #8ab4d8;     /* Cool moonlight — mutual/connected */
+  --accent-cool-soft: #8ab4d8cc;
+  --accent-error: #c85a4a;    /* Error states */
 
-  /* Transitions */
-  --t-fast: 120ms ease-out;
+  /* ========================================================
+     BORDERS & DIVIDERS — Subtle depth
+     ======================================================== */
+  --border: #2d2723;          /* Standard borders */
+  --border-subtle: #1e1a18;   /* Subtle dividers */
+  --border-strong: #3d332b;   /* Stronger emphasis */
+
+  /* ========================================================
+     FOCUS & INTERACTION
+     ======================================================== */
+  --focus: #d4a843;           /* Focus ring — warm amber */
+  --focus-ring: 0 0 0 2px var(--focus);
+
+  /* ========================================================
+     SPACING SCALE — Harmonious rhythm
+     ======================================================== */
+  --sp-xs: 0.375rem;   /* 6px */
+  --sp-sm: 0.625rem;   /* 10px */
+  --sp-md: 1rem;       /* 16px */
+  --sp-lg: 1.5rem;     /* 24px */
+  --sp-xl: 2rem;       /* 32px */
+  --sp-2xl: 3rem;      /* 48px */
+  --sp-3xl: 4rem;      /* 64px */
+
+  /* ========================================================
+     TYPOGRAPHY — Emotional voice + utility clarity
+     Serif for emotional/product voice, sans for utility.
+     ======================================================== */
+  --font-display: 'Playfair Display', Georgia, serif;   /* Emotional voice */
+  --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; /* Utility */
+  --font-mono: 'SF Mono', 'Fira Code', monospace;       /* Ghost IDs */
+
+  --fs-xs: 0.6875rem;   /* 11px — labels, captions */
+  --fs-sm: 0.8125rem;   /* 13px — metadata, buttons */
+  --fs-base: 1rem;      /* 16px — body text */
+  --fs-lg: 1.125rem;    /* 18px — emphasis */
+  --fs-xl: 1.25rem;     /* 20px — lead statements */
+  --fs-2xl: 1.75rem;    /* 28px — section titles */
+  --fs-3xl: 2.25rem;    /* 36px — major statements */
+  --fs-4xl: 3rem;       /* 48px — wordmark */
+  --fs-5xl: 4rem;       /* 64px — mutual reveal */
+
+  /* ========================================================
+     TRANSITIONS — Restrained, purposeful
+     ======================================================== */
+  --t-fast: 100ms ease-out;
   --t-med: 200ms ease-out;
-  --t-slow: 350ms ease-out;
+  --t-slow: 300ms ease-out;
+  --t-slower: 500ms ease-out;
 
-  /* Layout */
-  --nav-h: 56px;
+  /* ========================================================
+     LAYOUT
+     ======================================================== */
+  --nav-h: 64px;           /* Slightly taller for comfort */
   --max-w: 480px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
 }
 
-/* Reduce motion */
+/* ========================================================
+   REDUCE MOTION — Respect user preference
+   ======================================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -72,7 +125,9 @@ html {
   }
 }
 
-/* BASE */
+/* ========================================================
+   RESET & BASE
+   ======================================================== */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -87,12 +142,17 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-ui);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   font-size: var(--fs-base);
-  line-height: 1.7;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   min-height: 100dvh;
+  /* Subtle ambient depth — not flat black */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, #1a1815 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 120%, #151210 0%, transparent 60%);
 }
 
 button {
@@ -104,7 +164,19 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* APP SHELL */
+/* ========================================================
+   FOCUS — Visible, warm, accessible
+   ======================================================== */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ========================================================
+   APP SHELL
+   ======================================================== */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -118,16 +190,18 @@ button {
 .app-main {
   flex: 1;
   padding: var(--sp-lg) var(--sp-md);
-  padding-bottom: calc(var(--nav-h) + var(--sp-lg) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--nav-h) + var(--sp-xl) + env(safe-area-inset-bottom, 0px));
 }
 
-/* SCREEN */
+/* ========================================================
+   SCREEN TRANSITIONS
+   ======================================================== */
 .screen {
-  animation: fadeIn var(--t-med);
+  animation: fadeIn var(--t-med) ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -137,25 +211,33 @@ button {
 }
 
 .screen-title {
-  font-family: var(--font-display);
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: var(--fs-2xl);
   font-weight: 400;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
 .screen-subtitle {
   font-size: var(--fs-sm);
   color: var(--text-dim);
   font-style: italic;
+  margin-top: var(--sp-xs);
 }
 
-/* FOCUS */
-button:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
+/* ========================================================
+   FOCUS VISIBLE
+   ======================================================== */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
-/* USER SWITCHER (Prototype only) */
+/* ========================================================
+   USER SWITCHER (Prototype Only) — Reduced prominence
+   ======================================================== */
 .user-switcher {
   padding: var(--sp-md) var(--sp-md);
   background: var(--bg-card);
@@ -175,14 +257,15 @@ button:focus-visible {
   display: block;
   font-size: var(--fs-xs);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
   margin-bottom: var(--sp-sm);
+  font-weight: 500;
 }
 
 .switcher-buttons {
   display: flex;
-  gap: var(--sp-md);
+  gap: var(--sp-sm);
 }
 
 .switcher-btn {
@@ -191,30 +274,32 @@ button:focus-visible {
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--text-dim);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 0;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
   transition: all var(--t-fast);
 }
 
 .switcher-btn:hover,
 .switcher-btn:focus {
   color: var(--text);
-  border-color: var(--text-dim);
-  background: var(--bg-elevated);
+  border-color: var(--border);
+  background: var(--bg-card);
 }
 
 .switcher-btn.active {
-  color: var(--text);
-  border-color: var(--accent);
-  background: rgba(212, 212, 220, 0.08);
+  color: var(--accent-warm);
+  border-color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.1);
 }
 
 .switcher-btn:active {
   background: var(--border);
 }
 
-/* APP SHELL LAYOUT */
+/* ========================================================
+   APP SHELL LAYOUT
+   ======================================================== */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -223,21 +308,27 @@ button:focus-visible {
   max-width: var(--max-w);
   margin: 0 auto;
   position: relative;
+  /* Subtle ambient glow — streetlight warmth */
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(212, 168, 67, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(136, 180, 216, 0.02) 0%, transparent 50%);
 }
 
 .app-main {
   flex: 1;
   padding: var(--sp-lg) var(--sp-md);
-  padding-bottom: calc(var(--nav-h) + var(--sp-lg) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--nav-h) + var(--sp-xl) + env(safe-area-inset-bottom, 0px));
 }
 
-/* SCREEN */
+/* ========================================================
+   SCREEN TRANSITIONS
+   ======================================================== */
 .screen {
-  animation: fadeIn var(--t-med);
+  animation: fadeIn var(--t-med) ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -247,26 +338,31 @@ button:focus-visible {
 }
 
 .screen-title {
-  font-family: var(--font-display);
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: var(--fs-2xl);
   font-weight: 400;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  line-height: 1.2;
 }
 
 .screen-subtitle {
   font-size: var(--fs-sm);
   color: var(--text-dim);
   font-style: italic;
+  margin-top: var(--sp-xs);
 }
 
-/* FOCUS */
-button:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
+/* FOCUS VISIBLE */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-warm);
 }
 
 /* ============================================================
-   HOME
+   HOME — The threshold
    ============================================================ */
 .home {
   display: flex;
@@ -276,24 +372,41 @@ button:focus-visible {
 
 .home-hero {
   text-align: center;
-  padding-top: var(--sp-2xl);
+  padding-top: var(--sp-3xl);
+  padding-bottom: var(--sp-xl);
 }
 
 .home-wordmark {
-  font-family: var(--font-display);
-  font-size: var(--fs-4xl);
-  font-weight: 300;
-  letter-spacing: 0.02em;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-5xl);
+  font-weight: 400;
+  letter-spacing: -0.02em;
   color: var(--text);
-  margin-bottom: var(--sp-xs);
+  margin-bottom: var(--sp-sm);
+  line-height: 1.1;
 }
 
 .home-tagline {
-  font-family: var(--font-display);
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: var(--fs-xl);
   font-weight: 300;
   font-style: italic;
   color: var(--text-dim);
+  line-height: 1.4;
+  max-width: 320px;
+  margin: 0 auto var(--sp-md);
+}
+
+.home-context {
+  text-align: center;
+  max-width: 340px;
+  margin: 0 auto var(--sp-2xl);
+}
+
+.home-context-text {
+  font-size: var(--fs-base);
+  color: var(--text-dim);
+  line-height: 1.6;
 }
 
 .home-state {
@@ -305,8 +418,9 @@ button:focus-visible {
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--text-muted);
+  color: var(--text-faint);
   margin-bottom: var(--sp-lg);
+  font-weight: 500;
 }
 
 .home-state-row {
@@ -323,32 +437,41 @@ button:focus-visible {
 }
 
 .home-state-glyph {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border);
   border-radius: 50%;
-  font-size: var(--fs-base);
+  font-size: var(--fs-lg);
   color: var(--text-dim);
   flex-shrink: 0;
+  background: var(--bg-deep);
+  transition: all var(--t-med);
+}
+
+.home-state-row:nth-child(1) .home-state-glyph {
+  border-color: var(--border);
+  color: var(--text-dim);
 }
 
 .home-state-row:nth-child(2) .home-state-glyph {
   border-color: var(--accent-warm);
   color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.08);
 }
 
 .home-state-row:nth-child(3) .home-state-glyph {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(212, 212, 220, 0.1);
+  border-color: var(--accent-cool);
+  color: var(--accent-cool);
+  background: rgba(136, 180, 216, 0.1);
 }
 
 .home-state-text {
   font-size: var(--fs-sm);
   color: var(--text-dim);
+  line-height: 1.5;
 }
 
 .home-cta {
@@ -356,17 +479,19 @@ button:focus-visible {
   margin: var(--sp-xl) auto 0;
   padding: var(--sp-md) var(--sp-2xl);
   font-size: var(--fs-base);
+  font-weight: 500;
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 0;
+  border-radius: var(--radius-md);
   transition: all var(--t-fast);
   background: transparent;
 }
 
 .home-cta:hover,
 .home-cta:focus {
-  border-color: var(--text-dim);
-  background: var(--bg-elevated);
+  border-color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.08);
+  color: var(--accent-warm);
 }
 
 .home-cta:active {
@@ -376,79 +501,121 @@ button:focus-visible {
 .home-footnote {
   text-align: center;
   font-size: var(--fs-xs);
-  color: var(--text-muted);
+  color: var(--text-faint);
   max-width: 320px;
   margin: var(--sp-xl) auto 0;
-  line-height: 1.8;
+  line-height: 1.7;
   font-style: italic;
 }
 
 /* ============================================================
-   ENCOUNTERS
+   ENCOUNTERS — The heart
    ============================================================ */
 .encounters-footnote {
   text-align: center;
   font-size: var(--fs-xs);
-  color: var(--text-muted);
+  color: var(--text-faint);
   margin-top: var(--sp-xl);
   font-style: italic;
 }
 
 .encounter-card {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 64px 1fr;
   gap: var(--sp-lg);
   padding: var(--sp-xl) var(--sp-lg);
   margin-bottom: var(--sp-lg);
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 0;
-  transition: background var(--t-fast), border-color var(--t-fast);
+  border-radius: var(--radius-lg);
+  transition: background var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
 }
 
 .encounter-card:hover {
-  background: var(--bg-elevated);
+  background: var(--bg-card-hover);
   border-color: var(--border);
 }
 
 .encounter-card:focus-within {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-warm);
 }
 
+/* ========================================================
+   ENCOUNTER GLYPH SYSTEM — The presence indicator
+   Anonymous: ○ (cool) → Waiting: �� (warm pulse) → Notification: �� (amber glow) → Mutual: ● (warm fill)
+   ======================================================== */
 .encounter-glyph {
-  width: 56px;
-  height: 56px;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--border);
   border-radius: 50%;
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-4xl);
   line-height: 1;
   color: var(--text-dim);
-  transition: all var(--t-med);
-  background: var(--bg);
+  background: var(--bg-deep);
+  transition: all var(--t-slower);
+  position: relative;
+  flex-shrink: 0;
 }
 
 .encounter-card:hover .encounter-glyph {
-  border-color: var(--text-dim);
+  border-color: var(--border);
 }
 
+.encounter-card.anonymous .encounter-glyph {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: var(--bg-deep);
+}
+
+/* Anonymous — subtle breathing */
+.encounter-card.anonymous .encounter-glyph::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  animation: breath 4s ease-in-out infinite;
+}
+
+@keyframes breath {
+  0%, 100% { border-color: transparent; transform: scale(1); }
+  50% { border-color: rgba(212, 168, 67, 0.3); transform: scale(1.02); }
+}
+
+/* Waiting — warm pulse */
 .encounter-card.waiting .encounter-glyph {
-  border-color: var(--accent-warm);
   color: var(--accent-warm);
+  border-color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.08);
+  animation: pulse-warm 2.5s ease-in-out infinite;
 }
 
+@keyframes pulse-warm {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 168, 67, 0.3); }
+  50% { box-shadow: 0 0 24px 8px rgba(212, 168, 67, 0.15); }
+}
+
+/* Notification — amber glow */
 .encounter-card.notification .encounter-glyph {
-  border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-warm);
+  border-color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.1);
+  animation: pulse-warm 2.5s ease-in-out infinite;
 }
 
-.encounter-card.mutual .encounter-glyph {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(212, 212, 220, 0.1);
+/* Mutual / Connected — warm fill */
+.encounter-card.mutual .encounter-glyph,
+.encounter-card.connected .encounter-glyph {
+  color: var(--accent-warm);
+  border-color: var(--accent-warm);
+  background: var(--accent-warm);
+  color: var(--bg);
+  box-shadow: 0 0 32px 8px rgba(212, 168, 67, 0.25);
 }
 
 .encounter-body {
@@ -456,25 +623,28 @@ button:focus-visible {
 }
 
 .encounter-lead {
-  font-family: var(--font-display);
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: var(--fs-xl);
   font-weight: 400;
-  line-height: 1.3;
+  line-height: 1.35;
   color: var(--text);
-  margin-bottom: var(--sp-xs);
+  margin-bottom: var(--sp-sm);
+  letter-spacing: -0.01em;
 }
 
 .encounter-meta {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   color: var(--text-dim);
   margin-bottom: var(--sp-xs);
+  font-weight: 400;
 }
 
 .encounter-venue {
   font-size: var(--fs-xs);
-  color: var(--text-muted);
+  color: var(--text-faint);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  font-weight: 500;
 }
 
 .encounter-status {
@@ -482,7 +652,7 @@ button:focus-visible {
   color: var(--text-dim);
   margin-top: var(--sp-md);
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .encounter-status strong {
@@ -495,20 +665,20 @@ button:focus-visible {
   grid-column: 1 / -1;
   display: flex;
   gap: var(--sp-md);
-  margin-top: var(--sp-lg);
+  margin-top: var(--sp-xl);
   padding-top: var(--sp-lg);
   border-top: 1px solid var(--border-subtle);
 }
 
 .btn {
   flex: 1;
-  padding: var(--sp-sm) var(--sp-md);
+  padding: var(--sp-md) var(--sp-lg);
   font-size: var(--fs-sm);
-  letter-spacing: 0.04em;
-  transition: all var(--t-fast);
-  border-radius: 0;
-  font-family: var(--font-ui);
   font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all var(--t-med);
+  border-radius: var(--radius-md);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .btn-primary {
@@ -519,8 +689,9 @@ button:focus-visible {
 
 .btn-primary:hover,
 .btn-primary:focus {
-  border-color: var(--text-dim);
-  background: var(--bg-elevated);
+  border-color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.08);
+  color: var(--accent-warm);
 }
 
 .btn-primary:active {
@@ -529,8 +700,8 @@ button:focus-visible {
 
 .btn-primary:disabled {
   border-style: dashed;
-  color: var(--text-muted);
-  opacity: 0.6;
+  color: var(--text-faint);
+  opacity: 0.5;
 }
 
 .btn-secondary {
@@ -543,45 +714,66 @@ button:focus-visible {
 .btn-secondary:focus {
   color: var(--text);
   border-color: var(--border);
-  background: var(--bg-elevated);
+  background: var(--bg-card);
+}
+
+.btn-ghost {
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  background: transparent;
+  padding: var(--sp-sm) var(--sp-md);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus {
+  color: var(--text);
+  border-color: var(--border);
+  background: var(--bg-card);
 }
 
 .encounter-footnote {
   text-align: center;
   font-size: var(--fs-xs);
-  color: var(--text-muted);
+  color: var(--text-faint);
   margin-top: var(--sp-xl);
   font-style: italic;
 }
 
-/* MUTUAL REVEAL */
+/* ========================================================
+   MUTUAL REVEAL — The emotional payoff
+   ======================================================== */
 .mutual-reveal {
-  animation: mutualReveal var(--t-slow) ease-out;
+  animation: mutualReveal var(--t-slower) ease-out;
 }
 
 @keyframes mutualReveal {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .mutual-header {
   text-align: center;
-  margin-bottom: var(--sp-xl);
+  margin-bottom: var(--sp-2xl);
 }
 
 .mutual-lead {
-  font-family: var(--font-display);
-  font-size: var(--fs-3xl);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-5xl);
   font-weight: 400;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.02em;
   color: var(--text);
   margin-bottom: var(--sp-xs);
+  line-height: 1.1;
 }
 
 .mutual-sub {
-  font-size: var(--fs-base);
+  font-size: var(--fs-lg);
   color: var(--text-dim);
   font-style: italic;
+  margin-bottom: var(--sp-xl);
 }
 
 .mutual-profile {
@@ -589,89 +781,100 @@ button:focus-visible {
 }
 
 .mutual-avatar {
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  margin: 0 auto var(--sp-lg);
+  margin: 0 auto var(--sp-xl);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  font-weight: 400;
+  background: var(--bg-deep);
+  border: 2px solid var(--accent-warm);
+  color: var(--accent-warm);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-5xl);
+  font-weight: 300;
   letter-spacing: 0.02em;
+  box-shadow: 0 0 48px 16px rgba(212, 168, 67, 0.2);
 }
 
 .mutual-username {
-  font-family: var(--font-display);
-  font-size: var(--fs-2xl);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-3xl);
   font-weight: 400;
   color: var(--text);
   margin-bottom: var(--sp-xs);
+  letter-spacing: -0.01em;
 }
 
 .mutual-ghostid {
   font-size: var(--fs-xs);
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
   font-family: var(--font-mono);
-  margin-bottom: var(--sp-md);
+  margin-bottom: var(--sp-lg);
 }
 
 .mutual-bio {
   font-size: var(--fs-base);
   color: var(--text-dim);
-  max-width: 300px;
-  margin: 0 auto;
-  line-height: 1.7;
+  max-width: 360px;
+  margin: 0 auto var(--sp-xl);
+  line-height: 1.8;
 }
 
 .mutual-footnote {
   text-align: center;
   font-size: var(--fs-xs);
-  color: var(--text-muted);
+  color: var(--text-faint);
   margin-top: var(--sp-xl);
   font-style: italic;
 }
 
-/* CONNECTION RECORD */
+/* ========================================================
+   CONNECTION RECORD — Preserved moments
+   ======================================================== */
 .connection-record {
   margin-top: var(--sp-xl);
-  padding-top: var(--sp-lg);
+  padding-top: var(--sp-xl);
   border-top: 1px solid var(--border-subtle);
 }
 
 .connection-header {
   font-size: var(--fs-xs);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: var(--sp-md);
+  letter-spacing: 0.15em;
+  color: var(--text-faint);
+  margin-bottom: var(--sp-lg);
+  font-weight: 500;
 }
 
 .connection-item {
   display: flex;
   align-items: center;
-  gap: var(--sp-md);
-  padding: var(--sp-md) 0;
+  gap: var(--sp-lg);
+  padding: var(--sp-lg) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.connection-item:first-child {
+  border-top: none;
 }
 
 .connection-avatar {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--bg);
+  background: var(--bg-deep);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-dim);
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
+  color: var(--accent-warm);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-lg);
   font-weight: 400;
+  flex-shrink: 0;
 }
 
 .connection-info {
@@ -680,27 +883,30 @@ button:focus-visible {
 }
 
 .connection-username {
-  font-family: var(--font-display);
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: var(--fs-base);
   font-weight: 400;
   color: var(--text);
+  margin-bottom: 2px;
 }
 
 .connection-meta {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
   margin-top: 2px;
 }
 
 .connection-status {
   font-size: var(--fs-xs);
-  color: var(--accent);
+  color: var(--accent-warm);
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* ============================================================
+/* ========================================================
    PROFILE
-   ============================================================ */
+   ======================================================== */
 .profile {
   padding-top: var(--sp-xl);
 }
@@ -712,34 +918,41 @@ button:focus-visible {
 }
 
 .profile-avatar {
-  width: 104px;
-  height: 104px;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
   margin: 0 auto var(--sp-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--bg-deep);
+  border: 2px solid var(--border);
   color: var(--text-dim);
-  font-family: var(--font-display);
-  font-size: var(--fs-3xl);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-5xl);
   font-weight: 300;
   letter-spacing: 0.02em;
+  transition: all var(--t-med);
+}
+
+.profile-avatar:hover {
+  border-color: var(--accent-warm);
+  color: var(--accent-warm);
 }
 
 .profile-username {
-  font-family: var(--font-display);
-  font-size: var(--fs-2xl);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-3xl);
   font-weight: 400;
   color: var(--text);
   margin-bottom: var(--sp-xs);
+  letter-spacing: -0.01em;
 }
 
 .profile-ghostid {
   font-size: var(--fs-xs);
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  letter-spacing: 0.12em;
   font-family: var(--font-mono);
   margin-bottom: var(--sp-lg);
 }
@@ -747,8 +960,8 @@ button:focus-visible {
 .profile-bio {
   font-size: var(--fs-base);
   color: var(--text-dim);
-  max-width: 320px;
-  margin: 0 auto;
+  max-width: 340px;
+  margin: 0 auto var(--sp-xl);
   line-height: 1.8;
 }
 
@@ -760,50 +973,55 @@ button:focus-visible {
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--text-muted);
+  color: var(--text-faint);
   margin-bottom: var(--sp-lg);
+  font-weight: 500;
 }
 
 .profile-connection-item {
   display: flex;
   align-items: center;
   gap: var(--sp-md);
-  padding: var(--sp-md) 0;
+  padding: var(--sp-lg) 0;
   border-top: 1px solid var(--border-subtle);
 }
 
+.profile-connection-item:first-child {
+  border-top: none;
+}
+
 .profile-connection-glyph {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--accent-warm);
   flex-shrink: 0;
 }
 
 .profile-connection-name {
-  font-family: var(--font-display);
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: var(--fs-base);
   font-weight: 400;
   color: var(--text);
 }
 
 .profile-connection-date {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
   margin-left: auto;
 }
 
 .profile-footnote {
   text-align: center;
   font-size: var(--fs-xs);
-  color: var(--text-muted);
-  margin-top: var(--sp-xl);
+  color: var(--text-faint);
+  margin-top: var(--sp-2xl);
   font-style: italic;
 }
 
-/* ============================================================
+/* ========================================================
    BOTTOM NAV
-   ============================================================ */
+   ======================================================== */
 .bottom-nav {
   display: flex;
   justify-content: space-around;
@@ -819,6 +1037,7 @@ button:focus-visible {
   border-top: 1px solid var(--border);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   z-index: 100;
+  background-image: linear-gradient(to top, var(--bg) 0%, transparent 100%);
 }
 
 .nav-item {
@@ -826,10 +1045,10 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   padding: var(--sp-xs) 0;
   color: var(--text-dim);
-  transition: color var(--t-fast);
+  transition: color var(--t-med);
 }
 
 .nav-item:active {
@@ -837,43 +1056,197 @@ button:focus-visible {
 }
 
 .nav-active {
-  color: var(--accent);
+  color: var(--accent-warm);
 }
 
 .nav-icon {
-  font-size: var(--fs-xl);
+  font-size: var(--fs-2xl);
   line-height: 1;
 }
 
 .nav-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* USER SWITCHER — Prototype only, reduced prominence */
+.user-switcher {
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  animation: slideDown var(--t-med) ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.switcher-label {
+  display: block;
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  margin-bottom: var(--sp-xs);
+  font-weight: 500;
+}
+
+.switcher-buttons {
+  display: flex;
+  gap: var(--sp-sm);
+}
+
+.switcher-btn {
+  flex: 1;
+  padding: var(--sp-sm) var(--sp-md);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text-dim);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--t-fast);
+}
+
+.switcher-btn:hover,
+.switcher-btn:focus {
+  color: var(--text);
+  border-color: var(--border);
+  background: var(--bg-card);
+}
+
+.switcher-btn.active {
+  color: var(--accent-warm);
+  border-color: var(--accent-warm);
+  background: rgba(212, 168, 67, 0.1);
+}
+
+.switcher-btn:active {
+  background: var(--border);
+}
+
+/* ========================================================
+   APP SHELL LAYOUT
+   ======================================================== */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  position: relative;
+  /* Subtle ambient warmth — streetlight glow */
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(212, 168, 67, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(136, 180, 216, 0.02) 0%, transparent 50%);
+}
+
+.app-main {
+  flex: 1;
+  padding: var(--sp-lg) var(--sp-md);
+  padding-bottom: calc(var(--nav-h) + var(--sp-xl) + env(safe-area-inset-bottom, 0px));
+}
+
+/* SCREEN */
+.screen {
+  animation: fadeIn var(--t-med) ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.screen-header {
+  margin-bottom: var(--sp-xl);
+  padding-top: var(--sp-md);
+}
+
+.screen-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: var(--fs-2xl);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.screen-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: var(--sp-xs);
+}
+
+/* FOCUS VISIBLE */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-warm);
+}
+
+/* REDUCE MOTION */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* RESPONSIVE */
 @media (max-width: 360px) {
   :root {
-    --sp-lg: 1.5rem;
-    --sp-xl: 2.5rem;
-    --fs-base: 0.9rem;
+    --sp-lg: 1.25rem;
+    --sp-xl: 2rem;
+    --sp-2xl: 2.5rem;
+    --sp-3xl: 3rem;
+    --fs-base: 0.9375rem;
     --max-w: 100%;
   }
   .encounter-card {
     padding: var(--sp-lg) var(--sp-md);
     gap: var(--sp-md);
+    grid-template-columns: 56px 1fr;
+  }
+  .encounter-glyph {
+    width: 56px;
+    height: 56px;
+    font-size: var(--fs-3xl);
   }
   .encounter-actions {
     flex-direction: column;
     gap: var(--sp-sm);
+  }
+  .encounter-lead {
+    font-size: var(--fs-lg);
+  }
+  .mutual-avatar {
+    width: 96px;
+    height: 96px;
+  }
+  .mutual-lead {
+    font-size: var(--fs-4xl);
+  }
+}
+
+@media (min-width: 361px) and (max-width: 480px) {
+  :root {
+    --max-w: 100%;
   }
 }
 
 @media (min-width: 768px) {
   :root {
     --max-w: 600px;
-    --fs-3xl: 3.5rem;
-    --fs-4xl: 5.5rem;
+    --fs-5xl: 4.5rem;
   }
 }
 
@@ -894,15 +1267,15 @@ button:focus-visible {
   }
 }
 
-/* FOCUS */
-button:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
+/* FOCUS VISIBLE */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-warm);
 }
 
-/* ============================================================
-   BASE (keep at end for override precedence)
-   ============================================================ */
+/* BASE (keep at end for override precedence) */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -917,10 +1290,11 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-ui);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   font-size: var(--fs-base);
-  line-height: 1.7;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   min-height: 100dvh;
 }
@@ -932,4 +1306,12 @@ button {
   font: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* FOCUS VISIBLE */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-warm);
 }

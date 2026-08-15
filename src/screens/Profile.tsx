@@ -4,7 +4,10 @@
 import { useEncounter } from '../context/EncounterContext';
 
 export function Profile() {
-  const { currentUser, connections } = useEncounter();
+  const { currentUser, connections, perspective } = useEncounter();
+
+  // Filter connections to only show those belonging to the current user
+  const myConnections = connections.filter(c => c.ownerId === perspective);
 
   return (
     <div className="screen profile">
@@ -24,8 +27,8 @@ export function Profile() {
 
       <div className="profile-connections">
         <p className="profile-section-label">Connections</p>
-        {connections.length > 0 ? (
-          connections.map((conn, i) => (
+        {myConnections.length > 0 ? (
+          myConnections.map((conn, i) => (
             <div key={i} className="profile-connection-item">
               <span className="profile-connection-glyph" aria-hidden="true"></span>
               <span className="profile-connection-name">@{conn.username}</span>

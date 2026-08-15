@@ -41,6 +41,8 @@ DECISION-003: ARCH-DECIDE | PHASE-1-SIMULATION | Single-device dual-user encount
 
 DECISION-004: ARCH-DECIDE | PHASE-1-UI | Atmosphere and Interaction Design Pass | Phase 1 receives a focused UI/interaction design pass to make the experience feel mysterious, intimate, slightly romantic, quiet, modern, and memorable. Visual system: Cormorant Garamond serif display, Inter UI sans, warm dark palette (#0a0a0c) with warm accent (#e8dcc8) for waiting, cool accent (#d4d4dc) for mutual. Encounter glyph system (○/��/●) with state transitions. Mutual reveal moment with scale+fade animation. Home screen sparse with glyph state indicators. Profile with connection records. Bottom nav with glyph icons. User switcher visually distinct as dev control. No scope expansion — no new features, no networking, no backend, no AI. | Phase 1 prototype felt "basic" — core flow worked but lacked emotional resonance. Visual and interaction design needed to make the experience feel mysterious, intimate, slightly romantic, quiet, modern, and human — per the Constitution's emotional tone requirements — without expanding product scope. | 2026-08-13
 
+DECISION-005: ARCH-DECIDE | PHASE-1-UI | Warm Noir / Streetlight Design Direction | Phase 1 prototype receives a Warm Noir / Streetlight visual redesign to make the experience feel warm, modern, intimate, approachable, cinematic, socially attractive, slightly mysterious, and alive. The redesign replaces the flat black presentation with layered dark/charcoal surfaces, introduces a restrained warm amber accent for human presence and reveal states, uses neutral/moonlight tones for anonymous states, improves body text contrast, uses serif typography for emotional voice and sans-serif for utility, improves contrast for readability, adds subtle ambient depth, and refines state transitions. The design preserves all existing mechanics, privacy rules, and scope boundaries. The design principle is: MYSTERY ABOUT THE PERSON = GOOD, MYSTERY ABOUT HOW THE APP WORKS = BAD. | Visual audit identified: too dark/flat/empty; mystery created through obscurity not person; emotional arc not visible; encounter feels like database record; waiting state dead; incoming reveal indistinguishable from normal; mutual reveal looks like table row; insufficient text contrast; venue labels feel like surveillance metadata; Home over-prioritizes wordmark; dev switcher too prominent. Redesign addresses all while preserving core mechanics. | 2026-08-14
+
 ---
 
 ## DECISION-001 DETAIL
@@ -351,6 +353,109 @@ Phase 1 prototype was functionally correct per DECISION-002/003 but lacked emoti
 
 ---
 
+## DECISION-005 DETAIL
+
+**Title:** PHASE-1-UI | Warm Noir / Streetlight Design Direction
+**Status:** APPROVED
+**Date:** 2026-08-14
+**Category:** ARCH-DECIDE
+
+### Context
+An independent visual/UX audit identified the following major problems with the current Phase 1 implementation:
+1. The current UI is too dark, flat, empty, and developer-oriented.
+2. Mystery is being created through visual obscurity instead of through the anonymous person.
+3. The emotional arc is not visible in the interface.
+4. The encounter feels like a database record instead of a real coincidence.
+5. The waiting state feels dead.
+6. The incoming reveal is visually indistinguishable from a normal encounter.
+7. The mutual reveal is the emotional climax but currently looks like a table row.
+8. Functional text has insufficient contrast.
+9. "INDOOR · COMMERCIAL" feels like surveillance metadata rather than human context.
+10. The Home screen over-prioritizes the wordmark instead of the user's current state.
+11. The developer/test switcher is too visually prominent.
+12. The current product copy is strong and should be preserved.
+
+### Decision
+
+The Phase 1 prototype will adopt a Warm Noir / Streetlight visual direction.
+
+**The redesign must:**
+- preserve the Ghost concept
+- preserve the approved encounter state machine
+- preserve the three-screen information architecture
+- preserve the minimal social model
+- preserve privacy rules
+- improve visual warmth, clarity, contrast, state differentiation, and emotional progression
+
+**The design should use:**
+- layered dark/charcoal surfaces instead of flat black
+- a restrained warm amber accent for human presence and reveal states
+- neutral/moonlight tones for anonymous states
+- higher body-text contrast
+- serif typography for emotional/product voice
+- human-readable sans-serif typography for utility information
+- monospace only for Ghost IDs
+- subtle ambient depth rather than empty black space
+- restrained motion for state transitions
+
+**The redesign should NOT introduce:**
+- AI
+- messaging
+- followers
+- likes
+- feed
+- stories
+- dating mechanics
+- maps
+- GPS
+- real proximity detection
+- gamification
+- analytics
+- payments
+- backend
+- persistence
+
+**The design principle is:**
+> MYSTERY ABOUT THE PERSON = GOOD
+> MYSTERY ABOUT HOW THE APP WORKS = BAD
+
+### Rationale
+
+The visual audit identified 12 major problems with the current implementation:
+1. Too dark, flat, empty, developer-oriented
+2. Mystery from obscurity, not the person
+3. Emotional arc not visible
+5. Waiting state feels dead
+6. Incoming reveal indistinguishable
+7. Mutual reveal looks like table row
+8. Insufficient text contrast
+9. Venue labels feel like surveillance
+10. Home over-prioritizes wordmark
+11. Dev switcher too prominent
+
+The Warm Noir / Streetlight direction addresses all these while preserving:
+- Core encounter mechanics
+- Privacy rules
+- Three-screen architecture
+- Minimal social model
+- Privacy-first behavior
+- All existing product copy (which is strong)
+
+**Design Principles:**
+- MYSTERY ABOUT THE PERSON = GOOD
+- MYSTERY ABOUT HOW THE APP WORKS = BAD
+
+### References
+- PROJECT_CONSTITUTION.md Section 1 (Product Identity — emotional tone)
+- PROJECT_CONSTITUTION.md Section 6 (Anti-Scope-Creep — no new features)
+- MASTER_ROADMAP.md Phase 1 Scope (UI polish within existing scope)
+- DECISION-002 (Phase 1 Encounter Flow UX)
+- DECISION-003 (Phase 1 Simulation Architecture)
+- DECISION-004 (Phase 1 Atmosphere Design Pass)
+- PRODUCT_SPEC.md Section 10 (Prototype Boundaries)
+
+---
+
 ## TEMPLATE FOR FUTURE DECISIONS
 
 ```
@@ -359,9 +464,9 @@ DECISION-XXX: CATEGORY | Title | Context | Decision | Rationale | Date
 
 **Example:**
 ```
-DECISION-005: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
+DECISION-006: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research concluded BLE with Private Set Intersection meets privacy/battery requirements | SELECTED — BLE + PSI for Phase 4 | Best balance of Android background support, privacy (no raw location exchange), and battery efficiency (<3%/hr) | 2026-XX-XX
 ```
 
 ---
 
-**END OF DECISIONS LOG (v1.3)**
+**END OF DECISIONS LOG (v1.4)**
