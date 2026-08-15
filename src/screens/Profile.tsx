@@ -13,7 +13,6 @@ export function Profile() {
     <div className="screen profile">
       <header className="screen-header">
         <h2 className="screen-title">Profile</h2>
-        <p className="screen-subtitle">Simulated prototype user.</p>
       </header>
 
       <div className="profile-card">

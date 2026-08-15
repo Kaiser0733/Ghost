@@ -67,12 +67,12 @@ export function formatElapsed(timestamp: number): string {
 // Helper: venue category to display label (no venue names per privacy principle)
 export function venueLabel(category: string): string {
   const labels: Record<string, string> = {
-    indoor_commercial: 'Indoor · Commercial',
-    indoor_public: 'Indoor · Public',
-    outdoor_park: 'Outdoor · Park',
-    outdoor_street: 'Outdoor · Street',
-    transit: 'Transit',
-    unknown: 'Unknown location',
+    indoor_commercial: 'a quiet café',
+    indoor_public: 'a public space',
+    outdoor_park: 'a park',
+    outdoor_street: 'a street corner',
+    transit: 'transit',
+    unknown: 'somewhere nearby',
   };
-  return labels[category] ?? 'Unknown location';
+  return labels[category] ?? 'somewhere nearby';
 }

@@ -54,9 +54,16 @@ export function EncounterCard({ encounter, perspective }: EncounterCardProps) {
     return (
       <article className="encounter-card anonymous">
         <div className="encounter-presence">
-          <div className="presence-silhouette">
-            <div className="presence-shimmer" />
-          </div>
+          <img
+            src="/src/assets/encounter/encounter_optimized.png"
+            alt=""
+            className="encounter-icon"
+            width="64"
+            height="64"
+            loading="eager"
+            decoding="async"
+            aria-hidden="true"
+          />
         </div>
         <div className="encounter-body">
           <p className="encounter-lead">You crossed paths with someone.</p>
