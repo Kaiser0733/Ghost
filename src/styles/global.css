@@ -975,7 +975,7 @@ a:focus-visible,
   font-size: var(--fs-base);
   color: var(--text-dim);
   max-width: 340px;
-  margin: 0 auto var(--sp-xl);
+  margin: 0 auto var(--sp-lg);
   line-height: 1.8;
 }
 
@@ -1053,6 +1053,8 @@ a:focus-visible,
   z-index: 100;
   background-image: linear-gradient(to top, var(--bg) 0%, transparent 100%);
   box-shadow: 0 -4px 24px -8px rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .nav-item {

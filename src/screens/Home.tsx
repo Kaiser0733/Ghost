@@ -54,8 +54,10 @@ export function Home({ onNavigate }: HomeProps) {
     } else if (encounter.userARevealed && encounter.userBRevealed) {
       stateRows = [{ Icon: HomeMutualIcon, text: '1 mutual reveal', dim: false }];
     } else if (encounter.userARevealed || encounter.userBRevealed) {
-      stateRows = [{ Icon: HomeWaitingIcon, text: '1 awaiting response', dim: false }];
+      // Responder perspective: they have a reveal waiting for them
+      stateRows = [{ Icon: HomeWaitingIcon, text: '1 reveal to answer', dim: false }];
     } else {
+      // Waiter perspective or neutral: active encounter
       stateRows = [{ Icon: HomeEncounterIcon, text: '1 active encounter', dim: true }];
     }
   }
@@ -89,8 +91,6 @@ export function Home({ onNavigate }: HomeProps) {
       >
         View encounters
       </button>
-
-      <p className="home-footnote">No profile to maintain. No feed to scroll. Just the world you already move through.</p>
     </div>
   );
 }
