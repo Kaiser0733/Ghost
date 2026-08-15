@@ -1,9 +1,8 @@
 /* ============================================================
-   GHOST — Global Styles (Warm Noir / Streetlight Variant)
-   Design direction: warm, modern, intimate, approachable,
-   cinematic, socially attractive, slightly mysterious, alive.
-   Warm Noir / Streetlight — layered dark surfaces, warm amber
-   accent for human presence, neutral/moonlight for anonymous.
+   GHOST — Global Styles (Rose Gold Noir Variant)
+   Design direction: warm, elegant, modern, human, slightly nocturnal.
+   Rose Gold Noir — layered dark rose-charcoal surfaces, rose-gold
+   accent for human presence/reveal states, warm ivory text.
    ============================================================ */
 
 /* RESET */
@@ -19,52 +18,50 @@ html {
 }
 
 /* ============================================================
-   DESIGN TOKENS — Warm Noir / Streetlight
+   DESIGN TOKENS — Rose Gold Noir
    ============================================================ */
 :root {
   /* ========================================================
-     LAYERED DARK SURFACES — Warm Noir depth
-     Not flat black. Layered charcoal with warm undertones.
+     LAYERED DARK SURFACES — Derived from rose-gold hue (~350°)
+     Not pure black. Deep rose-charcoal with subtle warmth.
      ======================================================== */
-  --bg: #0e0d0c;              /* Page background — warm near-black */
-  --bg-deep: #080809;         /* Deepest layer, subtle */
-  --bg-card: #161412;         /* Card surface — warm charcoal */
-  --bg-card-hover: #1d1a17;   /* Hover state — slightly lighter */
-  --bg-elevated: #221f1c;     /* Elevated surfaces, modals */
-  --bg-input: #1a1817;        /* Input surfaces */
+  --bg: #0f0b0c;               /* Page background — very dark muted rose-charcoal */
+  --bg-deep: #080607;          /* Deepest layer, subtle */
+  --bg-card: #1a1416;          /* Card surface — visibly lighter, subtly rose-toned */
+  --bg-card-hover: #221a1d;    /* Hover state — slightly lighter */
+  --bg-elevated: #2a2023;      /* Elevated surfaces, modals */
+  --bg-input: #1e1719;         /* Input surfaces */
 
   /* ========================================================
-     TEXT HIERARCHY — High contrast, warm undertones
-     Improved readability on mobile in bright conditions.
+     TEXT HIERARCHY — Warm ivory/cream for primary, softer warm-gray for secondary
+     High contrast on rose-charcoal backgrounds.
      ======================================================== */
-  --text: #f5f0eb;            /* Primary text — warm off-white */
-  --text-dim: #b8afa4;        /* Secondary text — warm muted */
-  --text-muted: #7a7268;      /* Muted text — readable but subdued */
-  --text-faint: #5a5248;      /* Faint text — metadata, labels */
+  --text: #faf6f0;             /* Primary text — warm ivory */
+  --text-dim: #d4c8c0;         /* Secondary text — warm muted */
+  --text-muted: #9a8d85;       /* Muted text — readable but subdued */
+  --text-faint: #70655d;       /* Faint text — metadata, labels */
 
   /* ========================================================
-     ACCENT SYSTEM — Warm Noir signature
-     Warm amber for human presence/reveal states.
-     Neutral/moonlight for anonymous states.
+     ACCENT SYSTEM — Rose Gold identity
+     #B76E79 is the founder's chosen signature color.
      ======================================================== */
-  --accent-warm: #d4a843;     /* Warm amber — human presence, reveal */
-  --accent-warm-soft: #d4a843cc; /* Soft variant for glows */
-  --accent-warm-subtle: #d4a84333; /* Subtle backgrounds */
-  --accent-cool: #8ab4d8;     /* Cool moonlight — mutual/connected */
-  --accent-cool-soft: #8ab4d8cc;
-  --accent-error: #c85a4a;    /* Error states */
+  --accent: #B76E79;           /* Primary accent — Rose Gold signature */
+  --accent-light: #d4969e;     /* Lighter rose-gold highlight */
+  --accent-soft: #B76E79cc;    /* Soft variant for glows */
+  --accent-subtle: #B76E7933;  /* Subtle backgrounds */
+  --accent-muted: #8b5a60;     /* Muted state — desaturated rose-gray */
 
   /* ========================================================
-     BORDERS & DIVIDERS — Subtle depth
+     BORDERS & DIVIDERS — Subtle rose-toned depth
      ======================================================== */
-  --border: #2d2723;          /* Standard borders */
-  --border-subtle: #1e1a18;   /* Subtle dividers */
-  --border-strong: #3d332b;   /* Stronger emphasis */
+  --border: #3d2d30;           /* Standard borders */
+  --border-subtle: #2a1e21;    /* Subtle dividers */
+  --border-strong: #5a3d43;    /* Stronger emphasis */
 
   /* ========================================================
      FOCUS & INTERACTION
      ======================================================== */
-  --focus: #d4a843;           /* Focus ring — warm amber */
+  --focus: #B76E79;            /* Focus ring — Rose Gold */
   --focus-ring: 0 0 0 2px var(--focus);
 
   /* ========================================================
@@ -103,6 +100,7 @@ html {
   --t-med: 200ms ease-out;
   --t-slow: 300ms ease-out;
   --t-slower: 500ms ease-out;
+  --t-reveal: 600ms ease-out;
 
   /* ========================================================
      LAYOUT
@@ -142,17 +140,17 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-family: var(--font-ui);
   font-size: var(--fs-base);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
   min-height: 100dvh;
-  /* Subtle ambient depth — not flat black */
+  /* Subtle ambient depth — not flat black, derived from rose-gold */
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, #1a1815 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 50% 120%, #151210 0%, transparent 60%);
+    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(183, 110, 121, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(138, 90, 96, 0.02) 0%, transparent 50%);
 }
 
 button {
@@ -211,11 +209,12 @@ a:focus-visible,
 }
 
 .screen-title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-2xl);
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   color: var(--text);
+  line-height: 1.2;
 }
 
 .screen-subtitle {
@@ -226,20 +225,10 @@ a:focus-visible,
 }
 
 /* ========================================================
-   FOCUS VISIBLE
-   ======================================================== */
-button:focus-visible,
-a:focus-visible,
-[role="button"]:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-/* ========================================================
    USER SWITCHER (Prototype Only) — Reduced prominence
    ======================================================== */
 .user-switcher {
-  padding: var(--sp-md) var(--sp-md);
+  padding: var(--sp-sm) var(--sp-md);
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-subtle);
   position: sticky;
@@ -259,7 +248,7 @@ a:focus-visible,
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-faint);
-  margin-bottom: var(--sp-sm);
+  margin-bottom: var(--sp-xs);
   font-weight: 500;
 }
 
@@ -288,9 +277,9 @@ a:focus-visible,
 }
 
 .switcher-btn.active {
-  color: var(--accent-warm);
-  border-color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.1);
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(183, 110, 121, 0.1);
 }
 
 .switcher-btn:active {
@@ -298,72 +287,8 @@ a:focus-visible,
 }
 
 /* ========================================================
-   APP SHELL LAYOUT
-   ======================================================== */
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  position: relative;
-  /* Subtle ambient glow — streetlight warmth */
-  background:
-    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(212, 168, 67, 0.03) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(136, 180, 216, 0.02) 0%, transparent 50%);
-}
-
-.app-main {
-  flex: 1;
-  padding: var(--sp-lg) var(--sp-md);
-  padding-bottom: calc(var(--nav-h) + var(--sp-xl) + env(safe-area-inset-bottom, 0px));
-}
-
-/* ========================================================
-   SCREEN TRANSITIONS
-   ======================================================== */
-.screen {
-  animation: fadeIn var(--t-med) ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.screen-header {
-  margin-bottom: var(--sp-xl);
-  padding-top: var(--sp-md);
-}
-
-.screen-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: var(--fs-2xl);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  color: var(--text);
-  line-height: 1.2;
-}
-
-.screen-subtitle {
-  font-size: var(--fs-sm);
-  color: var(--text-dim);
-  font-style: italic;
-  margin-top: var(--sp-xs);
-}
-
-/* FOCUS VISIBLE */
-button:focus-visible,
-a:focus-visible,
-[role="button"]:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent-warm);
-}
-
-/* ============================================================
    HOME — The threshold
-   ============================================================ */
+   ======================================================== */
 .home {
   display: flex;
   flex-direction: column;
@@ -377,7 +302,7 @@ a:focus-visible,
 }
 
 .home-wordmark {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-5xl);
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -387,7 +312,7 @@ a:focus-visible,
 }
 
 .home-tagline {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-xl);
   font-weight: 300;
   font-style: italic;
@@ -457,15 +382,15 @@ a:focus-visible,
 }
 
 .home-state-row:nth-child(2) .home-state-glyph {
-  border-color: var(--accent-warm);
-  color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(183, 110, 121, 0.08);
 }
 
 .home-state-row:nth-child(3) .home-state-glyph {
-  border-color: var(--accent-cool);
-  color: var(--accent-cool);
-  background: rgba(136, 180, 216, 0.1);
+  border-color: var(--accent-muted);
+  color: var(--accent-muted);
+  background: rgba(139, 90, 96, 0.1);
 }
 
 .home-state-text {
@@ -489,9 +414,9 @@ a:focus-visible,
 
 .home-cta:hover,
 .home-cta:focus {
-  border-color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.08);
-  color: var(--accent-warm);
+  border-color: var(--accent);
+  background: rgba(183, 110, 121, 0.08);
+  color: var(--accent);
 }
 
 .home-cta:active {
@@ -519,9 +444,12 @@ a:focus-visible,
   font-style: italic;
 }
 
+/* ========================================================
+   ENCOUNTER CARD — Designed product object
+   ======================================================== */
 .encounter-card {
   display: grid;
-  grid-template-columns: 64px 1fr;
+  grid-template-columns: 72px 1fr;
   gap: var(--sp-lg);
   padding: var(--sp-xl) var(--sp-lg);
   margin-bottom: var(--sp-lg);
@@ -529,6 +457,9 @@ a:focus-visible,
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   transition: background var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
+  box-shadow:
+    0 4px 24px -4px rgba(0,0,0,0.4),
+    0 0 0 1px var(--border-subtle);
 }
 
 .encounter-card:hover {
@@ -538,12 +469,67 @@ a:focus-visible,
 
 .encounter-card:focus-within {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-warm);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Anonymous Presence Illustration */
+.encounter-presence {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.presence-silhouette {
+  position: relative;
+  width: 48px;
+  height: 64px;
+  color: var(--text-dim);
+}
+
+.presence-silhouette::before,
+.presence-silhouette::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  border-radius: var(--radius-full);
+}
+
+.presence-silhouette::before {
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+}
+
+.presence-silhouette::after {
+  width: 32px;
+  height: 40px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 16px 16px 4px 4px;
+}
+
+.presence-shimmer {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, rgba(183, 110, 121, 0.15), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+@keyframes shimmer {
+  0%, 100% { transform: translateX(-100%) rotate(-15deg); opacity: 0; }
+  50% { transform: translateX(100%) rotate(-15deg); opacity: 0.6; }
 }
 
 /* ========================================================
-   ENCOUNTER GLYPH SYSTEM — The presence indicator
-   Anonymous: ○ (cool) → Waiting: �� (warm pulse) → Notification: �� (amber glow) → Mutual: ● (warm fill)
+   ENCOUNTER GLYPH SYSTEM — Custom designed icons
+   Anonymous: obscured presence → Waiting: reaching/half-revealed
+   Incoming: approaching presence → Mutual: two paths connecting
    ======================================================== */
 .encounter-glyph {
   width: 72px;
@@ -584,38 +570,63 @@ a:focus-visible,
 
 @keyframes breath {
   0%, 100% { border-color: transparent; transform: scale(1); }
-  50% { border-color: rgba(212, 168, 67, 0.3); transform: scale(1.02); }
+  50% { border-color: rgba(183, 110, 121, 0.3); transform: scale(1.02); }
 }
 
-/* Waiting — warm pulse */
+/* Waiting — warm pulse, reaching */
 .encounter-card.waiting .encounter-glyph {
-  color: var(--accent-warm);
-  border-color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.08);
-  animation: pulse-warm 2.5s ease-in-out infinite;
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(183, 110, 121, 0.08);
+  animation: pulse-rose 2.5s ease-in-out infinite;
 }
 
-@keyframes pulse-warm {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 168, 67, 0.3); }
-  50% { box-shadow: 0 0 24px 8px rgba(212, 168, 67, 0.15); }
+.encounter-card.waiting {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 32px -8px rgba(183, 110, 121, 0.25),
+    0 4px 24px -4px rgba(0,0,0,0.4);
 }
 
-/* Notification — amber glow */
+/* Notification / Incoming Reveal — stronger rose-gold emphasis */
 .encounter-card.notification .encounter-glyph {
-  color: var(--accent-warm);
-  border-color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.1);
-  animation: pulse-warm 2.5s ease-in-out infinite;
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(183, 110, 121, 0.1);
+  animation: pulse-rose 2.5s ease-in-out infinite;
 }
 
-/* Mutual / Connected — warm fill */
+.encounter-card.notification {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 32px -8px rgba(183, 110, 121, 0.3),
+    0 4px 24px -4px rgba(0,0,0,0.4);
+}
+
+@keyframes pulse-rose {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0.3); }
+  50% { box-shadow: 0 0 24px 8px rgba(183, 110, 121, 0.15); }
+}
+
+/* Mutual / Connected — warm fill, designed keepsake */
 .encounter-card.mutual .encounter-glyph,
 .encounter-card.connected .encounter-glyph {
-  color: var(--accent-warm);
-  border-color: var(--accent-warm);
-  background: var(--accent-warm);
   color: var(--bg);
-  box-shadow: 0 0 32px 8px rgba(212, 168, 67, 0.25);
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 32px 8px rgba(183, 110, 121, 0.25);
+}
+
+.encounter-card.mutual,
+.encounter-card.connected {
+  border-color: var(--accent);
+  background-image: linear-gradient(135deg, var(--bg-card) 0%, rgba(183, 110, 121, 0.06) 50%, var(--bg-card) 100%);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 8px 48px -12px rgba(183, 110, 121, 0.35),
+    0 4px 24px -4px rgba(0,0,0,0.4);
 }
 
 .encounter-body {
@@ -623,7 +634,7 @@ a:focus-visible,
 }
 
 .encounter-lead {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-xl);
   font-weight: 400;
   line-height: 1.35;
@@ -637,6 +648,13 @@ a:focus-visible,
   color: var(--text-dim);
   margin-bottom: var(--sp-xs);
   font-weight: 400;
+}
+
+.encounter-context {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: var(--sp-xs);
 }
 
 .encounter-venue {
@@ -678,7 +696,7 @@ a:focus-visible,
   letter-spacing: 0.02em;
   transition: all var(--t-med);
   border-radius: var(--radius-md);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-ui);
 }
 
 .btn-primary {
@@ -689,9 +707,9 @@ a:focus-visible,
 
 .btn-primary:hover,
 .btn-primary:focus {
-  border-color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.08);
-  color: var(--accent-warm);
+  border-color: var(--accent);
+  background: rgba(183, 110, 121, 0.08);
+  color: var(--accent);
 }
 
 .btn-primary:active {
@@ -744,14 +762,16 @@ a:focus-visible,
 
 /* ========================================================
    MUTUAL REVEAL — The emotional payoff
+   Choreographed 600ms transformation
    ======================================================== */
 .mutual-reveal {
-  animation: mutualReveal var(--t-slower) ease-out;
+  animation: mutualReveal var(--t-reveal) ease-out;
 }
 
 @keyframes mutualReveal {
-  from { opacity: 0; transform: translateY(24px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  0% { opacity: 0; transform: translateY(24px) scale(0.97); }
+  40% { opacity: 0.6; transform: translateY(8px) scale(0.99); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .mutual-header {
@@ -760,7 +780,7 @@ a:focus-visible,
 }
 
 .mutual-lead {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-5xl);
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -789,22 +809,29 @@ a:focus-visible,
   align-items: center;
   justify-content: center;
   background: var(--bg-deep);
-  border: 2px solid var(--accent-warm);
-  color: var(--accent-warm);
-  font-family: 'Playfair Display', Georgia, serif;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-display);
   font-size: var(--fs-5xl);
   font-weight: 300;
   letter-spacing: 0.02em;
-  box-shadow: 0 0 48px 16px rgba(212, 168, 67, 0.2);
+  box-shadow: 0 0 48px 16px rgba(183, 110, 121, 0.25);
+  animation: avatarEmerge var(--t-reveal) ease-out both;
+}
+
+@keyframes avatarEmerge {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .mutual-username {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-3xl);
   font-weight: 400;
   color: var(--text);
   margin-bottom: var(--sp-xs);
   letter-spacing: -0.01em;
+  animation: fadeUp var(--t-reveal) ease-out 100ms both;
 }
 
 .mutual-ghostid {
@@ -813,6 +840,7 @@ a:focus-visible,
   letter-spacing: 0.12em;
   font-family: var(--font-mono);
   margin-bottom: var(--sp-lg);
+  animation: fadeUp var(--t-reveal) ease-out 200ms both;
 }
 
 .mutual-bio {
@@ -821,6 +849,7 @@ a:focus-visible,
   max-width: 360px;
   margin: 0 auto var(--sp-xl);
   line-height: 1.8;
+  animation: fadeUp var(--t-reveal) ease-out 300ms both;
 }
 
 .mutual-footnote {
@@ -829,6 +858,24 @@ a:focus-visible,
   color: var(--text-faint);
   margin-top: var(--sp-xl);
   font-style: italic;
+  animation: fadeUp var(--t-reveal) ease-out 400ms both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mutual-reveal-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: var(--sp-xl) 0;
+  animation: lineDraw var(--t-reveal) ease-out both;
+}
+
+@keyframes lineDraw {
+  from { width: 0; margin-left: 50%; }
+  to { width: 100%; margin-left: 0; }
 }
 
 /* ========================================================
@@ -870,8 +917,8 @@ a:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent-warm);
-  font-family: 'Playfair Display', Georgia, serif;
+  color: var(--accent);
+  font-family: var(--font-display);
   font-size: var(--fs-lg);
   font-weight: 400;
   flex-shrink: 0;
@@ -883,7 +930,7 @@ a:focus-visible,
 }
 
 .connection-username {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-base);
   font-weight: 400;
   color: var(--text);
@@ -898,7 +945,7 @@ a:focus-visible,
 
 .connection-status {
   font-size: var(--fs-xs);
-  color: var(--accent-warm);
+  color: var(--accent);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -928,7 +975,7 @@ a:focus-visible,
   background: var(--bg-deep);
   border: 2px solid var(--border);
   color: var(--text-dim);
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-5xl);
   font-weight: 300;
   letter-spacing: 0.02em;
@@ -936,12 +983,12 @@ a:focus-visible,
 }
 
 .profile-avatar:hover {
-  border-color: var(--accent-warm);
-  color: var(--accent-warm);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .profile-username {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-3xl);
   font-weight: 400;
   color: var(--text);
@@ -994,12 +1041,12 @@ a:focus-visible,
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--accent-warm);
+  background: var(--accent);
   flex-shrink: 0;
 }
 
 .profile-connection-name {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-display);
   font-size: var(--fs-base);
   font-weight: 400;
   color: var(--text);
@@ -1056,7 +1103,7 @@ a:focus-visible,
 }
 
 .nav-active {
-  color: var(--accent-warm);
+  color: var(--accent);
 }
 
 .nav-icon {
@@ -1071,137 +1118,9 @@ a:focus-visible,
   font-weight: 500;
 }
 
-/* USER SWITCHER — Prototype only, reduced prominence */
-.user-switcher {
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-subtle);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  animation: slideDown var(--t-med) ease-out;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-100%); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.switcher-label {
-  display: block;
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-faint);
-  margin-bottom: var(--sp-xs);
-  font-weight: 500;
-}
-
-.switcher-buttons {
-  display: flex;
-  gap: var(--sp-sm);
-}
-
-.switcher-btn {
-  flex: 1;
-  padding: var(--sp-sm) var(--sp-md);
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  color: var(--text-dim);
-  background: var(--bg-deep);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  transition: all var(--t-fast);
-}
-
-.switcher-btn:hover,
-.switcher-btn:focus {
-  color: var(--text);
-  border-color: var(--border);
-  background: var(--bg-card);
-}
-
-.switcher-btn.active {
-  color: var(--accent-warm);
-  border-color: var(--accent-warm);
-  background: rgba(212, 168, 67, 0.1);
-}
-
-.switcher-btn:active {
-  background: var(--border);
-}
-
 /* ========================================================
-   APP SHELL LAYOUT
+   RESPONSIVE
    ======================================================== */
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  position: relative;
-  /* Subtle ambient warmth — streetlight glow */
-  background:
-    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(212, 168, 67, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 50% 110%, rgba(136, 180, 216, 0.02) 0%, transparent 50%);
-}
-
-.app-main {
-  flex: 1;
-  padding: var(--sp-lg) var(--sp-md);
-  padding-bottom: calc(var(--nav-h) + var(--sp-xl) + env(safe-area-inset-bottom, 0px));
-}
-
-/* SCREEN */
-.screen {
-  animation: fadeIn var(--t-med) ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.screen-header {
-  margin-bottom: var(--sp-xl);
-  padding-top: var(--sp-md);
-}
-
-.screen-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: var(--fs-2xl);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  line-height: 1.2;
-}
-
-.screen-subtitle {
-  font-size: var(--fs-sm);
-  color: var(--text-dim);
-  font-style: italic;
-  margin-top: var(--sp-xs);
-}
-
-/* FOCUS VISIBLE */
-button:focus-visible,
-a:focus-visible,
-[role="button"]:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent-warm);
-}
-
-/* REDUCE MOTION */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* RESPONSIVE */
 @media (max-width: 360px) {
   :root {
     --sp-lg: 1.25rem;
@@ -1259,23 +1178,9 @@ a:focus-visible,
   }
 }
 
-/* REDUCE MOTION */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* FOCUS VISIBLE */
-button:focus-visible,
-a:focus-visible,
-[role="button"]:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--accent-warm);
-}
-
-/* BASE (keep at end for override precedence) */
+/* ========================================================
+   BASE (keep at end for override precedence)
+   ======================================================== */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -1290,7 +1195,7 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-family: var(--font-ui);
   font-size: var(--fs-base);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
@@ -1313,5 +1218,5 @@ button:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-warm);
+  box-shadow: var(--focus-ring);
 }

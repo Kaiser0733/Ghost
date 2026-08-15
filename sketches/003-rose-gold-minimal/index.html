@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ghost — Rose Gold Noir: Variant 3 (Minimal)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #110d0e;
+      --bg-deep: #0a0708;
+      --bg-card: #1c1517;
+      --bg-card-hover: #241c1f;
+      --bg-elevated: #2c2225;
+      --text: #f0ebe5;
+      --text-dim: #c4b8b0;
+      --text-muted: #887c73;
+      --text-faint: #5c524a;
+      --accent: #B76E79;
+      --accent-light: #d4969e;
+      --accent-soft: #B76E79cc;
+      --accent-subtle: #B76E7933;
+      --accent-muted: #8b5a60;
+      --border: #35282b;
+      --border-subtle: #22191b;
+      --border-strong: #4a353a;
+      --focus: #B76E79;
+      --nav-h: 64px;
+      --max-w: 480px;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      --sp-xs: 0.375rem;
+      --sp-sm: 0.625rem;
+      --sp-md: 1rem;
+      --sp-lg: 1.5rem;
+      --sp-xl: 2rem;
+      --sp-2xl: 3rem;
+      --sp-3xl: 4rem;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', monospace;
+      --fs-xs: 0.6875rem;
+      --fs-sm: 0.8125rem;
+      --fs-base: 1rem;
+      --fs-lg: 1.125rem;
+      --fs-xl: 1.25rem;
+      --fs-2xl: 1.75rem;
+      --fs-3xl: 2.25rem;
+      --fs-4xl: 3rem;
+      --fs-5xl: 4rem;
+      --t-fast: 100ms ease-out;
+      --t-med: 200ms ease-out;
+      --t-slow: 300ms ease-out;
+      --t-slower: 500ms ease-out;
+      --t-reveal: 500ms ease-out;
+    }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: var(--fs-base);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-image:
+        radial-gradient(ellipse 100% 50% at 50% -10%, rgba(183, 110, 121, 0.03) 0%, transparent 60%);
+    }
+    button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    .app-shell { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; max-width: var(--max-w); margin: 0 auto; position: relative; }
+    .app-main { flex: 1; padding: var(--sp-lg) var(--sp-md); padding-bottom: calc(var(--nav-h) + var(--sp-xl) + env(safe-area-inset-bottom, 0px)); }
+    .screen { animation: fadeIn var(--t-med) ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .screen-header { margin-bottom: var(--sp-xl); padding-top: var(--sp-md); }
+    .screen-title { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 400; letter-spacing: -0.015em; color: var(--text); line-height: 1.2; }
+    .screen-subtitle { font-size: var(--fs-sm); color: var(--text-dim); font-style: italic; margin-top: var(--sp-xs); }
+    button:focus-visible, a:focus-visible, [role="button"]:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--focus); }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+    /* ===== CUSTOM SVG ICONS - Minimal line style ===== */
+    .icon { display: inline-flex; align-items: center; justify-content: center; width: 1em; height: 1em; flex-shrink: 0; }
+    .icon--nav { font-size: var(--fs-2xl); }
+    .icon--glyph { font-size: var(--fs-4xl); width: 72px; height: 72px; }
+    .icon--small { font-size: var(--fs-lg); width: 32px; height: 32px; }
+    .icon--connection { width: 10px; height: 10px; }
+    .icon-home svg, .icon-encounters svg, .icon-profile svg,
+    .icon-anonymous svg, .icon-waiting svg, .icon-incoming svg, .icon-mutual svg, .icon-faded svg {
+      width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .icon-anonymous svg, .icon-waiting svg, .icon-incoming svg, .icon-mutual svg, .icon-faded svg { stroke-width: 1.5; }
+
+    /* ===== USER SWITCHER ===== */
+    .user-switcher { padding: var(--sp-sm) var(--sp-md); background: var(--bg-card); border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 50; }
+    .switcher-label { display: block; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-faint); margin-bottom: var(--sp-xs); font-weight: 500; }
+    .switcher-buttons { display: flex; gap: var(--sp-sm); }
+    .switcher-btn { flex: 1; padding: var(--sp-sm) var(--sp-md); font-size: var(--fs-sm); font-weight: 500; color: var(--text-dim); background: var(--bg-deep); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); transition: all var(--t-fast); }
+    .switcher-btn:hover, .switcher-btn:focus { color: var(--text); border-color: var(--border); background: var(--bg-card); }
+    .switcher-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(183, 110, 121, 0.1); }
+    .switcher-btn:active { background: var(--border); }
+
+    /* ===== HOME - Minimal ===== */
+    .home { display: flex; flex-direction: column; min-height: 70vh; justify-content: center; }
+    .home-hero { text-align: center; padding: var(--sp-xl) 0; }
+    .home-wordmark { font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 400; letter-spacing: -0.02em; color: var(--text); margin-bottom: var(--sp-sm); line-height: 1.1; }
+    .home-tagline { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 300; font-style: italic; color: var(--text-dim); line-height: 1.4; max-width: 320px; margin: 0 auto var(--sp-md); }
+    .home-context { text-align: center; max-width: 340px; margin: 0 auto var(--sp-2xl); }
+    .home-context-text { font-size: var(--fs-base); color: var(--text-dim); line-height: 1.6; }
+    .home-state { margin: var(--sp-2xl) 0; padding: 0 var(--sp-md); }
+    .home-state-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: var(--sp-lg); font-weight: 500; }
+    .home-state-row { display: flex; align-items: center; gap: var(--sp-lg); margin-bottom: var(--sp-lg); padding: var(--sp-md) 0; }
+    .home-state-row:first-child { border-top: none; }
+    .home-state-glyph { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 50%; font-size: var(--fs-lg); color: var(--text-dim); flex-shrink: 0; background: var(--bg-deep); transition: all var(--t-med); }
+    .home-state-row:nth-child(1) .home-state-glyph { border-color: var(--border); color: var(--text-dim); }
+    .home-state-row:nth-child(2) .home-state-glyph { border-color: var(--accent); color: var(--accent); }
+    .home-state-row:nth-child(3) .home-state-glyph { border-color: var(--accent-muted); color: var(--accent-muted); }
+    .home-state-text { font-size: var(--fs-sm); color: var(--text-dim); line-height: 1.5; }
+    .home-cta { display: inline-block; margin: var(--sp-xl) auto 0; padding: var(--sp-md) var(--sp-2xl); font-size: var(--fs-base); font-weight: 500; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-md); transition: all var(--t-fast); background: transparent; }
+    .home-cta:hover, .home-cta:focus { border-color: var(--accent); color: var(--accent); }
+    .home-cta:active { background: var(--border); }
+    .home-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-faint); max-width: 320px; margin: var(--sp-xl) auto 0; line-height: 1.7; font-style: italic; }
+
+    /* ===== ENCOUNTERS ===== */
+    .encounters-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-faint); margin-top: var(--sp-xl); font-style: italic; }
+
+    /* ===== ENCOUNTER CARD - Minimal ===== */
+    .encounter-card {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: var(--sp-lg);
+      padding: var(--sp-xl) var(--sp-lg);
+      margin-bottom: var(--sp-lg);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      transition: background var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
+    }
+    .encounter-card:hover { background: var(--bg-card-hover); border-color: var(--border); }
+    .encounter-card:focus-within { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+
+    .encounter-presence { display: flex; align-items: center; justify-content: center; }
+    .presence-minimal { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid currentColor; position: relative; }
+    .presence-minimal::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; background: currentColor; border-radius: 50%; opacity: 0.4; animation: minimalPulse 3s ease-in-out infinite; }
+    @keyframes minimalPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; } 50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.1; } }
+
+    .encounter-glyph {
+      width: 72px; height: 72px;
+      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); border-radius: 50%;
+      font-size: var(--fs-4xl); line-height: 1; color: var(--text-dim);
+      background: var(--bg-deep);
+      transition: all var(--t-slower); position: relative; flex-shrink: 0;
+    }
+    .encounter-card:hover .encounter-glyph { border-color: var(--border); }
+    .encounter-card.anonymous .encounter-glyph { color: var(--text-dim); border-color: var(--border); background: var(--bg-deep); }
+    .encounter-card.waiting .encounter-glyph { color: var(--accent); border-color: var(--accent); background: rgba(183, 110, 121, 0.08); }
+    .encounter-card.notification .encounter-glyph { color: var(--accent); border-color: var(--accent); background: rgba(183, 110, 121, 0.1); }
+    .encounter-card.mutual .encounter-glyph,
+    .encounter-card.connected .encounter-glyph { color: var(--bg); border-color: var(--accent); background: var(--accent); box-shadow: 0 0 32px 8px rgba(183, 110, 121, 0.25); }
+
+    .encounter-card.waiting { border-color: var(--accent); }
+    .encounter-card.notification { border-color: var(--accent); }
+    .encounter-card.mutual,
+    .encounter-card.connected { border-color: var(--accent); background-image: linear-gradient(135deg, var(--bg-card) 0%, rgba(183, 110, 121, 0.04) 50%, var(--bg-card) 100%); }
+
+    .encounter-body { min-width: 0; }
+    .encounter-lead { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 400; line-height: 1.35; color: var(--text); margin-bottom: var(--sp-sm); letter-spacing: -0.01em; }
+    .encounter-meta { font-size: var(--fs-base); color: var(--text-dim); margin-bottom: var(--sp-xs); font-weight: 400; }
+    .encounter-context { font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.5; margin-bottom: var(--sp-xs); font-style: italic; }
+    .encounter-venue { font-size: var(--fs-xs); color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; }
+    .encounter-status { font-size: var(--fs-sm); color: var(--text-dim); margin-top: var(--sp-md); font-style: italic; line-height: 1.6; }
+    .encounter-status strong { font-weight: 500; color: var(--text); font-style: normal; }
+    .encounter-actions { grid-column: 1 / -1; display: flex; gap: var(--sp-md); margin-top: var(--sp-xl); padding-top: var(--sp-lg); border-top: 1px solid var(--border-subtle); }
+    .btn { flex: 1; padding: var(--sp-md) var(--sp-lg); font-size: var(--fs-sm); font-weight: 500; letter-spacing: 0.02em; transition: all var(--t-med); border-radius: var(--radius-md); font-family: var(--font-ui); }
+    .btn-primary { border: 1px solid var(--border); color: var(--text); background: transparent; }
+    .btn-primary:hover, .btn-primary:focus { border-color: var(--accent); color: var(--accent); }
+    .btn-primary:active { background: var(--border); }
+    .btn-primary:disabled { border-style: dashed; color: var(--text-faint); opacity: 0.5; }
+    .btn-secondary { border: 1px solid transparent; color: var(--text-dim); background: transparent; }
+    .btn-secondary:hover, .btn-secondary:focus { color: var(--text); border-color: var(--border); background: var(--bg-card); }
+
+    .encounter-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-faint); margin-top: var(--sp-xl); font-style: italic; }
+
+    /* ===== MUTUAL REVEAL - Minimal ===== */
+    .mutual-reveal { animation: mutualReveal var(--t-reveal) ease-out; }
+    @keyframes mutualReveal {
+      0% { opacity: 0; transform: translateY(16px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .mutual-header { text-align: center; margin-bottom: var(--sp-2xl); }
+    .mutual-lead { font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 400; letter-spacing: -0.02em; color: var(--text); margin-bottom: var(--sp-xs); line-height: 1.1; }
+    .mutual-sub { font-size: var(--fs-lg); color: var(--text-dim); font-style: italic; margin-bottom: var(--sp-xl); }
+    .mutual-profile { text-align: center; }
+    .mutual-avatar {
+      width: 112px; height: 112px; border-radius: 50%;
+      margin: 0 auto var(--sp-xl);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-deep); border: 2px solid var(--accent);
+      color: var(--accent); font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 300;
+      letter-spacing: 0.02em;
+      box-shadow: 0 0 32px 8px rgba(183, 110, 121, 0.2);
+      animation: avatarEmerge var(--t-reveal) ease-out both;
+    }
+    @keyframes avatarEmerge { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+    .mutual-username { font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; color: var(--text); margin-bottom: var(--sp-xs); letter-spacing: -0.01em; animation: fadeUp var(--t-reveal) ease-out 80ms both; }
+    .mutual-ghostid { font-size: var(--fs-xs); color: var(--text-faint); letter-spacing: 0.12em; font-family: var(--font-mono); margin-bottom: var(--sp-lg); animation: fadeUp var(--t-reveal) ease-out 160ms both; }
+    .mutual-bio { font-size: var(--fs-base); color: var(--text-dim); max-width: 360px; margin: 0 auto var(--sp-xl); line-height: 1.8; animation: fadeUp var(--t-reveal) ease-out 240ms both; }
+    .mutual-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-faint); margin-top: var(--sp-xl); font-style: italic; animation: fadeUp var(--t-reveal) ease-out 320ms both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .mutual-reveal-line { height: 1px; background: var(--accent); margin: var(--sp-xl) 0; opacity: 0.5; animation: lineDraw var(--t-reveal) ease-out both; }
+    @keyframes lineDraw { from { width: 0; margin-left: 50%; } to { width: 100%; margin-left: 0; } }
+
+    /* ===== CONNECTION RECORD ===== */
+    .connection-record { margin-top: var(--sp-xl); padding-top: var(--sp-xl); border-top: 1px solid var(--border-subtle); }
+    .connection-header { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: var(--sp-lg); font-weight: 500; }
+    .connection-item { display: flex; align-items: center; gap: var(--sp-lg); padding: var(--sp-lg) 0; border-top: 1px solid var(--border-subtle); }
+    .connection-item:first-child { border-top: none; }
+    .connection-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--bg-deep); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--accent); font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 400; flex-shrink: 0; }
+    .connection-info { flex: 1; min-width: 0; }
+    .connection-username { font-family: var(--font-display); font-size: var(--fs-base); font-weight: 400; color: var(--text); margin-bottom: 2px; }
+    .connection-meta { font-size: var(--fs-sm); color: var(--text-dim); margin-top: 2px; }
+    .connection-status { font-size: var(--fs-xs); color: var(--accent); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ===== PROFILE - Minimal ===== */
+    .profile { padding-top: var(--sp-xl); }
+    .profile-card { text-align: center; padding: var(--sp-2xl) var(--sp-md); margin-bottom: var(--sp-2xl); }
+    .profile-avatar { width: 104px; height: 104px; border-radius: 50%; margin: 0 auto var(--sp-lg); display: flex; align-items: center; justify-content: center; background: var(--bg-deep); border: 2px solid var(--border); color: var(--text-dim); font-family: var(--font-display); font-size: var(--fs-5xl); font-weight: 300; letter-spacing: 0.02em; transition: all var(--t-med); }
+    .profile-avatar:hover { border-color: var(--accent); color: var(--accent); }
+    .profile-username { font-family: var(--font-display); font-size: var(--fs-3xl); font-weight: 400; color: var(--text); margin-bottom: var(--sp-xs); letter-spacing: -0.01em; }
+    .profile-ghostid { font-size: var(--fs-xs); color: var(--text-faint); letter-spacing: 0.12em; font-family: var(--font-mono); margin-bottom: var(--sp-lg); }
+    .profile-bio { font-size: var(--fs-base); color: var(--text-dim); max-width: 340px; margin: 0 auto var(--sp-xl); line-height: 1.8; }
+    .profile-connections { padding: 0 var(--sp-md); }
+    .profile-section-label { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-faint); margin-bottom: var(--sp-lg); font-weight: 500; }
+    .profile-connection-item { display: flex; align-items: center; gap: var(--sp-md); padding: var(--sp-lg) 0; border-top: 1px solid var(--border-subtle); }
+    .profile-connection-item:first-child { border-top: none; }
+    .profile-connection-glyph { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .profile-connection-name { font-family: var(--font-display); font-size: var(--fs-base); font-weight: 400; color: var(--text); }
+    .profile-connection-date { font-size: var(--fs-sm); color: var(--text-dim); margin-left: auto; }
+    .profile-footnote { text-align: center; font-size: var(--fs-xs); color: var(--text-faint); margin-top: var(--sp-2xl); font-style: italic; }
+
+    /* ===== BOTTOM NAV - Minimal ===== */
+    .bottom-nav { display: flex; justify-content: space-around; align-items: center; height: var(--nav-h); position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-w); background: var(--bg); border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--sp-xs) 0; color: var(--text-dim); transition: color var(--t-med); }
+    .nav-item:active { color: var(--text-dim); }
+    .nav-active { color: var(--accent); }
+    .nav-icon { font-size: var(--fs-2xl); line-height: 1; }
+    .nav-label { font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 360px) { :root { --sp-lg: 1.25rem; --sp-xl: 2rem; --sp-2xl: 2.5rem; --sp-3xl: 3rem; --fs-base: 0.9375rem; --max-w: 100%; } .encounter-card { padding: var(--sp-lg) var(--sp-md); gap: var(--sp-md); grid-template-columns: 56px 1fr; } .encounter-glyph { width: 56px; height: 56px; font-size: var(--fs-3xl); } .encounter-actions { flex-direction: column; gap: var(--sp-sm); } .encounter-lead { font-size: var(--fs-lg); } .mutual-avatar { width: 96px; height: 96px; } .mutual-lead { font-size: var(--fs-4xl); } }
+    @media (min-width: 361px) and (max-width: 480px) { :root { --max-w: 100%; } }
+    @media (min-width: 768px) { :root { --max-w: 600px; --fs-5xl: 4.5rem; } }
+    @media (min-width: 1024px) { .app-shell { max-width: 700px; } .bottom-nav { max-width: 700px; } }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="user-switcher" role="region" aria-label="Prototype user switcher">
+      <span class="switcher-label">Prototype — viewing as</span>
+      <div class="switcher-buttons">
+        <button class="switcher-btn active" aria-pressed="true">@Nocturne</button>
+        <button class="switcher-btn" aria-pressed="false">@Marlow</button>
+      </div>
+    </div>
+    <main class="app-main">
+      <!-- HOME SCREEN -->
+      <section class="screen home" aria-label="Home">
+        <div class="home-hero">
+          <h1 class="home-wordmark">Ghost</h1>
+          <p class="home-tagline">The people you almost met.</p>
+        </div>
+        <div class="home-context">
+          <p class="home-context-text">Ghost notices when paths cross. No profiles to maintain. No feed to scroll. Just the world you already move through.</p>
+        </div>
+        <div class="home-state">
+          <p class="home-state-label">Currently</p>
+          <div class="home-state-row">
+            <span class="home-state-glyph" aria-hidden="true">
+              <span class="icon icon--small icon-anonymous"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></span>
+            </span>
+            <span class="home-state-text" style="opacity: 0.6">No active encounters</span>
+          </div>
+          <div class="home-state-row">
+            <span class="home-state-glyph" aria-hidden="true">
+              <span class="icon icon--small icon-waiting"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6v6l4 4"/></svg></span>
+            </span>
+            <span class="home-state-text">Awaiting response</span>
+          </div>
+          <div class="home-state-row">
+            <span class="home-state-glyph" aria-hidden="true">
+              <span class="icon icon--small icon-mutual"><svg viewBox="0 0 24 24"><path d="M17 11a5 5 0 0 1-10 0"/><path d="M7 13a5 5 0 0 1 10 0"/></svg></span>
+            </span>
+            <span class="home-state-text">1 connection</span>
+          </div>
+        </div>
+        <button class="home-cta">View encounters</button>
+        <p class="home-footnote">No profile to maintain. No feed to scroll. Just the world you already move through.</p>
+      </section>
+
+      <!-- ENCOUNTERS SCREEN (Anonymous) -->
+      <section class="screen encounters" aria-label="Encounters" style="display: none;">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+        <article class="encounter-card anonymous">
+          <div class="encounter-presence">
+            <div class="presence-minimal" style="color: var(--text-dim);"></div>
+          </div>
+          <div class="encounter-body">
+            <p class="encounter-lead">You crossed paths with someone.</p>
+            <p class="encounter-meta">You were near each other <strong>18 minutes ago</strong>.</p>
+            <p class="encounter-context">Your paths overlapped for about 23 minutes.</p>
+            <p class="encounter-venue">Indoor · Café</p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+        <p class="encounters-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+
+      <!-- ENCOUNTERS SCREEN (Waiting) -->
+      <section class="screen encounters" aria-label="Encounters" style="display: none;">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+        <article class="encounter-card waiting">
+          <div class="encounter-glyph" aria-hidden="true">
+            <span class="icon icon--glyph icon-waiting"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6v6l4 4" stroke-width="2.5"/></svg></span>
+          </div>
+          <div class="encounter-body">
+            <p class="encounter-lead">You remembered this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>18 minutes ago</strong>.</p>
+            <p class="encounter-context">Your paths overlapped for about 23 minutes.</p>
+            <p class="encounter-venue">Indoor · Café</p>
+            <p class="encounter-status">You've revealed yourself. <strong>Now it's their choice.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary" disabled>Waiting…</button>
+          </div>
+        </article>
+        <p class="encounters-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+
+      <!-- ENCOUNTERS SCREEN (Incoming Reveal) -->
+      <section class="screen encounters" aria-label="Encounters" style="display: none;">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+        <article class="encounter-card notification">
+          <div class="encounter-glyph" aria-hidden="true">
+            <span class="icon icon--glyph icon-incoming"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 18V12" stroke-width="2.5"/><path d="M9 15l3-3 3 3" stroke-width="2.5"/></svg></span>
+          </div>
+          <div class="encounter-body">
+            <p class="encounter-lead">Someone remembers this encounter.</p>
+            <p class="encounter-meta">You were near each other <strong>18 minutes ago</strong>.</p>
+            <p class="encounter-context">Your paths overlapped for about 23 minutes.</p>
+            <p class="encounter-venue">Indoor · Café</p>
+            <p class="encounter-status"><strong>They chose to reveal themselves.</strong></p>
+          </div>
+          <div class="encounter-actions">
+            <button class="btn btn-primary">Reveal back</button>
+            <button class="btn btn-secondary">Let it fade</button>
+          </div>
+        </article>
+        <p class="encounters-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+
+      <!-- ENCOUNTERS SCREEN (Mutual Reveal) -->
+      <section class="screen encounters" aria-label="Encounters" style="display: none;">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+        <article class="encounter-card mutual mutual-reveal">
+          <div class="encounter-glyph" aria-hidden="true">
+            <span class="icon icon--glyph icon-mutual"><svg viewBox="0 0 24 24"><path d="M17 11a5 5 0 0 1-10 0"/><path d="M7 13a5 5 0 0 1 10 0"/></svg></span>
+          </div>
+          <div class="encounter-body">
+            <div class="mutual-header">
+              <p class="mutual-lead">It's mutual.</p>
+              <p class="mutual-sub">You both remembered.</p>
+            </div>
+            <div class="mutual-reveal-line"></div>
+            <div class="mutual-profile">
+              <div class="mutual-avatar" aria-hidden="true">MA</div>
+              <p class="mutual-username">@Marlow</p>
+              <p class="mutual-ghostid">ghost-K9pL3m-12Qr</p>
+              <p class="mutual-bio">Coffee at dawn. Books at dusk.</p>
+              <p class="mutual-footnote">Revealed only after mutual encounter.</p>
+            </div>
+          </div>
+        </article>
+        <p class="encounters-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+
+      <!-- ENCOUNTERS SCREEN (Connected) -->
+      <section class="screen encounters" aria-label="Encounters" style="display: none;">
+        <header class="screen-header">
+          <h2 class="screen-title">Encounters</h2>
+          <p class="screen-subtitle">Moments where paths crossed.</p>
+        </header>
+        <article class="encounter-card connected">
+          <div class="encounter-glyph" aria-hidden="true">
+            <span class="icon icon--glyph icon-mutual"><svg viewBox="0 0 24 24"><path d="M17 11a5 5 0 0 1-10 0"/><path d="M7 13a5 5 0 0 1 10 0"/></svg></span>
+          </div>
+          <div class="encounter-body">
+            <div class="connection-record">
+              <p class="connection-header">Connection</p>
+              <div class="connection-item">
+                <div class="connection-avatar" aria-hidden="true">MA</div>
+                <div class="connection-info">
+                  <p class="connection-username">@Marlow</p>
+                  <p class="connection-meta">First crossed paths: Aug 14 · 7:42 PM</p>
+                </div>
+                <span class="connection-status">Mutual</span>
+              </div>
+            </div>
+          </div>
+        </article>
+        <p class="encounters-footnote">Prototype data — encounters are simulated for design validation.</p>
+      </section>
+
+      <!-- PROFILE SCREEN -->
+      <section class="screen profile" aria-label="Profile" style="display: none;">
+        <header class="screen-header">
+          <h2 class="screen-title">Profile</h2>
+          <p class="screen-subtitle">Simulated prototype user.</p>
+        </header>
+        <div class="profile-card">
+          <div class="profile-avatar" aria-hidden="true">NO</div>
+          <h3 class="profile-username">@Nocturne</h3>
+          <p class="profile-ghostid">ghost-7Xk2mQ-94Fp</p>
+          <p class="profile-bio">Quiet places, loud thoughts. Usually near the river.</p>
+        </div>
+        <div class="profile-connections">
+          <p class="profile-section-label">Connections</p>
+          <div class="profile-connection-item">
+            <span class="profile-connection-glyph" aria-hidden="true"></span>
+            <span class="profile-connection-name">@Marlow</span>
+            <span class="profile-connection-date">Connected Aug 14</span>
+          </div>
+        </div>
+        <p class="profile-footnote">Prototype data — revealed only after mutual encounter.</p>
+      </section>
+    </main>
+    <nav class="bottom-nav" role="navigation" aria-label="Primary">
+      <button class="nav-item nav-active" aria-current="page">
+        <span class="nav-icon icon icon--nav icon-home"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+        <span class="nav-label">Home</span>
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon icon icon--nav icon-encounters"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="nav-label">Encounters</span>
+      </button>
+      <button class="nav-item">
+        <span class="nav-icon icon icon--nav icon-profile"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <span class="nav-label">Profile</span>
+      </button>
+    </nav>
+  </div>
+  <script>
+    const screens = document.querySelectorAll('.screen');
+    const navItems = document.querySelectorAll('.nav-item');
+    let currentScreen = 0;
+    const encounterScreens = Array.from(document.querySelectorAll('.encounters'));
+    let currentEncounter = 0;
+
+    function showScreen(idx) {
+      screens.forEach((s, i) => s.style.display = i === idx ? 'block' : 'none');
+      navItems.forEach((n, i) => n.classList.toggle('nav-active', i === idx));
+      currentScreen = idx;
+    }
+
+    navItems.forEach((item, idx) => {
+      item.addEventListener('click', () => showScreen(idx));
+    });
+
+    encounterScreens.forEach(screen => {
+      screen.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-primary') && !e.target.disabled) {
+          currentEncounter = (currentEncounter + 1) % encounterScreens.length;
+          encounterScreens.forEach((s, i) => s.style.display = i === currentEncounter ? 'block' : 'none');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
