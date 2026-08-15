@@ -4,14 +4,7 @@
 import type { ScreenId } from '../types/ghost';
 import { useEncounter } from '../context/EncounterContext';
 
-// Custom SVG Icons for home state glyphs
-const HomeAnonymousIcon = () => (
-  <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-    <path d="M12 4a8 8 0 0 1 8 8c0 2.5-1.5 4.5-4 6-2.5-1.5-4-3.5-4-6a8 8 0 0 1 8-8z"/>
-    <circle cx="12" cy="12" r="3"/>
-  </svg>
-);
-
+// Custom SVG Icons for home state glyphs - specialized states only
 const HomeWaitingIcon = () => (
   <svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" fill="none" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
     <path d="M12 4a8 8 0 0 1 8 8c0 2.5-1.5 4.5-4 6-2.5-1.5-4-3.5-4-6a8 8 0 0 1 8-8z"/>
@@ -26,6 +19,20 @@ const HomeMutualIcon = () => (
   </svg>
 );
 
+// Founder-provided encounter asset for neutral/anonymous encounter state
+const HomeEncounterIcon = () => (
+  <img
+    src="/src/assets/encounter/encounter_optimized.png"
+    alt=""
+    className="home-encounter-icon"
+    width="32"
+    height="32"
+    loading="eager"
+    decoding="async"
+    aria-hidden="true"
+  />
+);
+
 interface HomeProps {
   onNavigate: (id: ScreenId) => void;
 }
@@ -36,12 +43,12 @@ export function Home({ onNavigate }: HomeProps) {
   // Determine home state from encounter
   let stateLabel = 'Currently';
   let stateRows = [
-    { Icon: HomeAnonymousIcon, text: 'No active encounters', dim: true },
+    { Icon: HomeEncounterIcon, text: 'No active encounters', dim: true },
   ];
 
   if (encounter) {
     if (encounter.phase === 'faded') {
-      stateRows = [{ Icon: HomeAnonymousIcon, text: '1 faded encounter', dim: true }];
+      stateRows = [{ Icon: HomeEncounterIcon, text: '1 faded encounter', dim: true }];
     } else if (encounter.phase === 'connected' || !!encounter.connectionId) {
       stateRows = [{ Icon: HomeMutualIcon, text: '1 connection', dim: false }];
     } else if (encounter.userARevealed && encounter.userBRevealed) {
@@ -49,7 +56,7 @@ export function Home({ onNavigate }: HomeProps) {
     } else if (encounter.userARevealed || encounter.userBRevealed) {
       stateRows = [{ Icon: HomeWaitingIcon, text: '1 awaiting response', dim: false }];
     } else {
-      stateRows = [{ Icon: HomeAnonymousIcon, text: '1 active encounter', dim: true }];
+      stateRows = [{ Icon: HomeEncounterIcon, text: '1 active encounter', dim: true }];
     }
   }
 
