@@ -168,12 +168,17 @@ export function encounterReducer(state: SimulationState, action: EncounterAction
         return state; // Can't fade if already mutual or faded
       }
 
-      // Fading only makes sense if the other user revealed first
+      // Allow fade in:
+      // - ANONYMOUS state (neither revealed)
+      // - INCOMING state (other revealed, I haven't)
+      // But NOT in WAITING state (I revealed, other hasn't) or MUTUAL/CONNECTED
       const perspective = action.perspective;
+      const meRevealed = perspective === 'user_a' ? encounter.userARevealed : encounter.userBRevealed;
       const otherRevealed = perspective === 'user_a' ? encounter.userBRevealed : encounter.userARevealed;
 
-      if (!otherRevealed) {
-        return state; // Nothing to fade if other hasn't revealed
+      // Don't allow fade if I revealed but other hasn't (WAITING state)
+      if (meRevealed && !otherRevealed) {
+        return state; // Can't fade if I'm waiting for other's response
       }
 
       const newEncounter: Encounter = {
