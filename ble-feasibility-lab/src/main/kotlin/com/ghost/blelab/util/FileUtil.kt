@@ -2,6 +2,7 @@ package com.ghost.blelab.util
 
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.nio.charset.StandardCharsets
 
 object FileUtil {
@@ -68,10 +69,12 @@ object FileUtil {
     /**
      * List all experiment files in a directory matching a pattern.
      */
-    fun listExperimentFiles(dir: File, extension: String = ".json"): List<File> = try {
-        if (!dir.exists()) return emptyList()
-        dir.listFiles()?.filter { it.isFile && it.name.endsWith(extension) }?.toList() ?: emptyList()
-    } catch (e: Exception) {
-        emptyList()
+    fun listExperimentFiles(dir: File, extension: String = ".json"): List<File> {
+        return try {
+            if (!dir.exists()) return emptyList()
+            dir.listFiles()?.filter { it.isFile && it.name.endsWith(extension) }?.toList() ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 }

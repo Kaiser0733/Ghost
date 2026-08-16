@@ -36,11 +36,11 @@ object TimeUtil {
         val ms = absMillis % MILLIS_PER_SECOND
         
         return buildString {
-            if (days > 0) append("${days}d ")
-            if (hours > 0) append("${hours}h ")
-            if (minutes > 0) append("${minutes}m ")
-            if (seconds > 0 || (days == 0 && hours == 0 && minutes == 0)) append("${seconds}s ")
-            if (ms > 0 && days == 0 && hours == 0 && minutes == 0 && seconds == 0) append("${ms}ms")
+            if (days > 0L) append("${days}d ")
+            if (hours > 0L) append("${hours}h ")
+            if (minutes > 0L) append("${minutes}m ")
+            if (seconds > 0L || (days == 0L && hours == 0L && minutes == 0L)) append("${seconds}s ")
+            if (ms > 0L && days == 0L && hours == 0L && minutes == 0L && seconds == 0L) append("${ms}ms")
         }.trim()
     }
 
