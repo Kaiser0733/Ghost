@@ -50,6 +50,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE,NOTICE}"
         }
     }
+    
+    // Configure source sets to use java directory for Kotlin files
+    sourceSets {
+        main {
+            kotlin.srcDirs("src/main/java")
+        }
+        test {
+            kotlin.srcDirs("src/test/java")
+        }
+        androidTest {
+            kotlin.srcDirs("src/androidTest/java")
+        }
+    }
 }
 
 dependencies {
