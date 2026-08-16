@@ -146,7 +146,7 @@ jobs:
               
               fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray {
                   val secretKey = javax.crypto.spec.SecretKeySpec(key, "HmacSHA256")
-                  val mac = javax.crypto.Mac.getInstance("HmacSHA256")
+                  val mac = Mac.getInstance("HmacSHA256")
                   mac.init(secretKey)
                   return mac.doFinal(data)
               }
@@ -167,24 +167,7 @@ jobs:
                   val secretKey = javax.crypto.spec.SecretKeySpec(dailyKey, "HmacSHA256")
                   val mac = Mac.getInstance("HmacSHA256")
                   mac.init(secretKey)
-                  return mac.doFinal(data)
-              }
-              // Fix: need to pass data to hmacSha256
-              fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray {
-                  val secretKey = javax.crypto.spec.SecretKeySpec(key, "HmacSHA256")
-                  val mac = Mac.getInstance("HmacSHA256")
-                  mac.init(secretKey)
-                  return mac.doFinal(data)
-              }
-              
-              fun deriveEphemeralId(dailyKey: ByteArray, timeSlot: Long): ByteArray {
-                  require(dailyKey.size == 16)
-                  val timeSlotBytes = ByteArray(4)
-                  timeSlotBytes[0] = (timeSlot shr 24).toByte()
-                  timeSlotBytes[1] = (timeSlot shr 16).toByte()
-                  timeSlotBytes[2] = (timeSlot shr 8).toByte()
-                  timeSlotBytes[3] = (timeSlot and 0xFF).toByte()
-                  return hmacSha256(dailyKey, timeSlotBytes)
+                  return mac.doFinal(timeSlotBytes)
               }
               
               fun generateDailyKey(): ByteArray {
@@ -194,38 +177,6 @@ jobs:
               }
               
               assertEquals("default rotation", 10, 10)
-              val dk = generateDailyKey()
-              assertTrue("dk not null", dk != null)
-              assertEquals("dk length", 16, dk.size)
-              
-              val dk2 = generateDailyKey()
-              assertFalse("different keys", Arrays.equals(dk, dk2))
-              
-              val tSlot = 12345L
-              fun hmacSha256(key: ByteArray, data: ByteArray): ByteArray {
-                  val secretKey = javax.crypto.spec.SecretKeySpec(key, "HmacSHA256")
-                  val mac = Mac.getInstance("HmacSHA256")
-                  mac.init(secretKey)
-                  return mac.doFinal(data)
-              }
-              fun deriveEphemeralId(dailyKey: ByteArray, timeSlot: Long): ByteArray {
-                  require(dailyKey.size == 16)
-                  val timeSlotBytes = ByteArray(4)
-                  timeSlotBytes[0] = (timeSlot shr 24).toByte()
-                  timeSlotBytes[1] = (timeSlot shr 16).toByte()
-                  timeSlotBytes[2] = (timeSlot shr 8).toByte()
-                  timeSlotBytes[3] = (timeSlot and 0xFF).toByte()
-                  val secretKey = javax.crypto.spec.SecretKeySpec(dailyKey, "HmacSHA256")
-                  val mac = Mac.getInstance("HmacSHA256")
-                  mac.init(secretKey)
-                  val timeSlotBytes = ByteArray(4)
-                  timeSlotBytes[0] = (timeSlot shr 24).toByte()
-                  timeSlotBytes[1] = (timeSlot shr 16).toByte()
-                  timeSlotBytes[2] = (timeSlot shr 8).toByte()
-                  timeSlotBytes[3] = (timeSlot and 0xFF).toByte()
-                  return mac.doFinal(timeSlotBytes)
-              }
-              
               val dk = generateDailyKey()
               assertTrue("dk not null", dk != null)
               assertEquals("dk length", 16, dk.size)
@@ -268,7 +219,8 @@ jobs:
                   try {
                       file.parentFile?.mkdirs()
                       val needsHeader = !file.exists() && header != null
-                      file.outputStream(append = true).use { out ->
+                      val out = java.io.FileOutputStream(file, true)
+                      out.use { 
                           if (needsHeader) out.write("$header\n".toByteArray())
                           out.write("$line\n".toByteArray())
                       }
@@ -296,7 +248,8 @@ jobs:
               
               val csvFile = File(tempDir, "test.csv")
               val csvHeader = "timestamp,value"
-              assertTrue("csv append 1", csvFile.appendText("$csvHeader\n1000,42\n2000,84\n"))
+              val csvContent = "$csvHeader\n1000,42\n2000,84\n"
+              assertTrue("csv append 1", testFile.appendText(csvContent))
               val csvLines = csvFile.readText().lines().toList()
               assertEquals("csv lines", 3, csvLines.size)
               assertEquals("csv header", "timestamp,value", csvLines[0])
