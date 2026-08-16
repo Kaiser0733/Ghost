@@ -29,7 +29,6 @@ jobs:
     env:
       JAVA_VERSION: '17'
       GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -Dfile.encoding=UTF-8"'
-      # Use ANDROID_HOME (pre-existing on runner) instead of ANDROID_SDK_ROOT to avoid conflict
       ANDROID_HOME: '/usr/local/lib/android/sdk'
 
     steps:
@@ -47,19 +46,12 @@ jobs:
 
       - name: Install Android SDK packages (using pre-existing ANDROID_HOME)
         run: |
-          # The runner has Android SDK at /usr/local/lib/android/sdk (ANDROID_HOME)
-          # Just install required packages
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager \
             "platforms;android-34" \
             "build-tools;34.0.0" \
             "platform-tools" \
             "cmake;3.22.1"
-          
-          # Verify installation
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          ls -la $ANDROID_HOME/
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --list_installed
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v4
@@ -77,11 +69,11 @@ jobs:
       - name: Verify Gradle wrapper
         run: ./gradlew --version
 
-      - name: Run unit tests
+      - name: Run unit tests (JVM only)
         id: test
         run: |
-          echo "Running unit tests for ble-feasibility-lab..."
-          ./gradlew :ble-feasibility-lab:test --info --stacktrace
+          echo "Running JVM unit tests for ble-feasibility-lab..."
+          ./gradlew :ble-feasibility-lab:testDebugUnitTest --info --stacktrace
         continue-on-error: false
 
       - name: Upload test reports
@@ -90,8 +82,8 @@ jobs:
         with:
           name: unit-test-reports
           path: |
-            ble-feasibility-lab/build/reports/tests/
-            ble-feasibility-lab/build/test-results/
+            ble-feasibility-lab/build/reports/tests/testDebugUnitTest/
+            ble-feasibility-lab/build/test-results/testDebugUnitTest/
           retention-days: 7
 
       - name: Upload test logs
