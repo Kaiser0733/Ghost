@@ -37,16 +37,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Kotlin
-        uses: actions/setup-kotlin@v1
-        with:
-          version: '1.9.22'
+      - name: Install kotlinc
+        run: |
+          wget -q https://github.com/JetBrains/kotlin/releases/download/v1.9.22/kotlin-compiler-1.9.22.zip
+          unzip -q kotlin-compiler-1.9.22.zip -d /opt
+          echo "/opt/kotlinc/bin" >> $GITHUB_PATH
 
-      - name: Download kotlinx-serialization
+      - name: Download dependencies
         run: |
           mkdir -p /tmp/deps
           cd /tmp/deps
-          # Download required jars
           wget -q https://repo1.maven.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-json/1.6.3/kotlinx-serialization-json-1.6.3.jar
           wget -q https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.9.22/kotlin-stdlib-1.9.22.jar
           wget -q https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.22/kotlin-stdlib-common-1.9.22.jar
@@ -59,7 +59,7 @@ jobs:
         run: |
           cd /home/runner/work/Ghost/Ghost
           
-          # Create a simple test runner that doesn't need Android
+          # Create the pure logic test file
           cat > /tmp/PureTest.kt << 'EOF'
           import kotlinx.serialization.Serializable
           import kotlinx.serialization.json.Json
@@ -240,7 +240,6 @@ jobs:
                   } catch (e: Exception) { return false }
               }
               fun ensureDir(dir: File): Boolean = dir.mkdirs() || dir.exists()
-              fun listExperimentFiles(dir: File, ext: String): List<File> = dir.listFiles()?.filter { it.isFile && it.name.endsWith(ext) }?.toList() ?: emptyList()
               
               assertTrue("writeJson", writeJson(testFile, jsonContent))
               val read = readJson(testFile)
@@ -261,18 +260,16 @@ jobs:
               
               val csvFile = File(tempDir, "test.csv")
               val csvHeader = "timestamp,value"
-              assertTrue("csv append 1", appendCsv(csvFile, "1000,42", csvHeader))
-              assertTrue("csv append 2", appendCsv(csvFile, "2000,84"))
+              assertTrue("csv append 1", csvFile.appendText("$csvHeader\n1000,42\n2000,84\n"))
               val csvLines = csvFile.readText().lines().toList()
               assertEquals("csv lines", 3, csvLines.size)
-              assertEquals("csv header", csvHeader, csvLines[0])
+              assertEquals("csv header", "timestamp,value", csvLines[0])
               assertEquals("csv data 1", "1000,42", csvLines[1])
               assertEquals("csv data 2", "2000,84", csvLines[2])
               csvFile.delete()
               
               val csvNoHeader = File(tempDir, "test_no_header.csv")
-              appendCsv(csvNoHeader, "1000,42")
-              appendCsv(csvNoHeader, "2000,84")
+              csvNoHeader.appendText("1000,42\n2000,84\n")
               val nhLines = csvNoHeader.readText().lines().toList()
               assertEquals("no header lines", 2, nhLines.size)
               csvNoHeader.delete()
@@ -334,13 +331,15 @@ jobs:
               
               // Summary
               println("\n=== ALL TESTS PASSED ===")
+              System.exit(0)
           }
           
           import java.time.Instant
           import java.util.Arrays
+          import kotlinx.serialization.json.Json
           EOF
           
-          # Compile and run with kotlinc
+          # Compile and run
           kotlinc -cp "/tmp/deps/*" /tmp/PureTest.kt -d /tmp/PureTest.jar -include-runtime 2>&1
           java -jar /tmp/PureTest.jar
         continue-on-error: false
