@@ -41,7 +41,7 @@ object FileUtil {
      */
     fun appendCsv(file: File, line: String, header: String? = null): Result<Unit> = try {
         file.parentFile?.mkdirs()
-        val needsHeader = header != null && (!file.exists() || file.length() == 0L)
+        val needsHeader = header != null && !file.exists()
         FileOutputStream(file, true).use { out ->
             if (needsHeader) {
                 out.write("$header\n".toByteArray(StandardCharsets.UTF_8))
