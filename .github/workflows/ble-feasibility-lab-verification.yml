@@ -170,12 +170,6 @@ jobs:
                   return mac.doFinal(timeSlotBytes)
               }
               
-              fun generateDailyKey(): ByteArray {
-                  val key = ByteArray(16)
-                  SecureRandom().nextBytes(key)
-                  return key
-              }
-              
               assertEquals("default rotation", 10, 10)
               val dk = generateDailyKey()
               assertTrue("dk not null", dk != null)
