@@ -39,7 +39,7 @@ object TimeUtil {
             if (days > 0L) append("${days}d ")
             if (hours > 0L) append("${hours}h ")
             if (minutes > 0L) append("${minutes}m ")
-            if (seconds > 0L || (days == 0L && hours == 0L && minutes == 0L)) append("${seconds}s ")
+            if (seconds > 0L || (days == 0L && hours == 0L && minutes == 0L && ms == 0L)) append("${seconds}s ")
             if (ms > 0L && days == 0L && hours == 0L && minutes == 0L && seconds == 0L) append("${ms}ms")
         }.trim()
     }

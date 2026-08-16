@@ -49,7 +49,9 @@ class EphemeralIdGeneratorImpl : EphemeralIdGenerator {
         // Then: RPI = HMAC-SHA256(PRK, info || 0x01)
         // Simplified: Use HMAC-SHA256 with dailyKey as key, timeSlot as message
         // GAEN uses HKDF but for this experiment HMAC-SHA256 is sufficient
-        return hmacSha256(dailyKey, timeSlotBytes)
+        val hmac = hmacSha256(dailyKey, timeSlotBytes)
+        // Return first 16 bytes (RPI_KEY_LENGTH)
+        return hmac.copyOf(RPI_KEY_LENGTH)
     }
 
     override fun getCurrentEphemeralId(dailyKey: ByteArray, rotationIntervalMinutes: Int): ByteArray {
