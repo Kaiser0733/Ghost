@@ -28,14 +28,14 @@ object JsonUtil {
     }
 
     /**
-     * Serialize list to JSON string.
+     * Serialize list wrapper to JSON string.
      */
-    fun <T> listToJson(serializer: KSerializer<List<T>>, value: List<T>): String = json.encodeToString(serializer, value)
+    fun <T> listToJson(serializer: KSerializer<T>, value: T): String = json.encodeToString(serializer, value)
 
     /**
-     * Deserialize JSON string to list.
+     * Deserialize JSON string to list wrapper.
      */
-    fun <T> listFromJson(serializer: KSerializer<List<T>>, jsonString: String): Result<List<T>> = try {
+    fun <T> listFromJson(serializer: KSerializer<T>, jsonString: String): Result<T> = try {
         Result.success(json.decodeFromString(serializer, jsonString))
     } catch (e: Exception) {
         Result.failure(e)
