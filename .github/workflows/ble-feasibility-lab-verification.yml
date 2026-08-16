@@ -37,10 +37,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Kotlin
-        uses: actions/setup-kotlin@v1
-        with:
-          version: '1.9.23'
+      - name: Install kotlinc
+        run: |
+          wget -q https://github.com/JetBrains/kotlin/releases/download/v1.9.23/kotlin-compiler-1.9.23.zip
+          unzip -q kotlin-compiler-1.9.23.zip -d /opt
+          echo "/opt/kotlinc/bin" >> $GITHUB_PATH
 
       - name: Download dependencies
         run: |
