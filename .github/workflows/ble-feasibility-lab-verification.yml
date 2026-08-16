@@ -24,7 +24,7 @@ jobs:
   verify:
     name: Build Verification (x86_64 Ubuntu)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     env:
       JAVA_VERSION: '17'
@@ -47,11 +47,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          api-level: 34
-          build-tools-version: '34.0.0'
           cmdline-tools-version: 'latest'
-          ndk-version: 'r26c'
-          cache: 'gradle'
+          accept-android-sdk-licenses: 'true'
+          log-accepted-android-sdk-licenses: 'true'
+
+      - name: Install Android SDK packages
+        run: |
+          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
+            "platforms;android-34" \
+            "build-tools;34.0.0" \
+            "platform-tools" \
+            "cmake;3.22.1"
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v4
@@ -105,6 +112,7 @@ jobs:
 
       - name: Verify APK exists and non-empty
         if: ${{ !inputs.skip_apk && steps.test.outcome == 'success' }}
+        id: verify_apk
         run: |
           APK_PATH=$(find ble-feasibility-lab/build/outputs/apk -name "*.apk" -type f | head -1)
           if [ -z "$APK_PATH" ]; then
@@ -123,6 +131,7 @@ jobs:
 
       - name: Calculate APK SHA-256
         if: ${{ !inputs.skip_apk && steps.test.outcome == 'success' }}
+        id: apk_sha256
         run: |
           APK_PATH=$(find ble-feasibility-lab/build/outputs/apk -name "*.apk" -type f | head -1)
           SHA256=$(sha256sum "$APK_PATH" | cut -d' ' -f1)
@@ -163,7 +172,7 @@ jobs:
             if [ -n "${{ steps.verify_apk.outputs.apk_path }}" ]; then
               echo "APK path: ${{ steps.verify_apk.outputs.apk_path }}"
               echo "APK size: ${{ steps.verify_apk.outputs.apk_size }} bytes"
-              echo "APK SHA-256: ${{ steps.verify_apk.outputs.apk_sha256 }}"
+              echo "APK SHA-256: ${{ steps.apk_sha256.outputs.apk_sha256 }}"
             fi
           fi
           echo "Java: $(java -version 2>&1 | head -1)"
