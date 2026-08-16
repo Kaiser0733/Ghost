@@ -71,7 +71,9 @@ object FileUtil {
      */
     fun listExperimentFiles(dir: File, extension: String = ".json"): List<File> {
         return try {
-            if (!dir.exists()) return emptyList()
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
             dir.listFiles()?.filter { it.isFile && it.name.endsWith(extension) }?.toList() ?: emptyList()
         } catch (e: Exception) {
             emptyList()

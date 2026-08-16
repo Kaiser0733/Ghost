@@ -84,7 +84,7 @@ class TimeUtilTest {
         val start = TimeUtil.getTimeSlotStartMillis(slot, intervalMinutes)
         val end = TimeUtil.getTimeSlotEndMillis(slot, intervalMinutes)
         
-        assertEquals("Slot duration should be interval minutes", intervalMinutes * 60 * 1000, end - start + 1)
+        assertEquals("Slot duration should be interval minutes", intervalMinutes.toLong() * 60 * 1000, end - start + 1)
     }
 
     @Test
