@@ -67,6 +67,9 @@ dependencies {
     // Core Android
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    
+    // Material3 for theme
+    implementation("androidx.compose.material3:material3:1.2.1")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
