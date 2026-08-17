@@ -44,13 +44,14 @@ interface BleAdvertiser {
 
     /**
      * Callback for advertising lifecycle events.
+     * Implemented as an interface with default methods for optional callbacks.
      */
-    sealed interface AdvertisingCallback {
-        data class OnStartSuccess(val settings: AdvertiseSettings) : AdvertisingCallback
-        data class OnStartFailure(val errorCode: Int) : AdvertisingCallback
-        object OnStopSuccess : AdvertisingCallback
-        data class OnStopFailure(val errorCode: Int) : AdvertisingCallback
-        data class OnRotationUpdated(val newEphemeralId: ByteArray) : AdvertisingCallback
+    interface AdvertisingCallback {
+        fun onStartSuccess(settings: AdvertiseSettings) {}
+        fun onStartFailure(errorCode: Int) {}
+        fun onStopSuccess() {}
+        fun onStopFailure(errorCode: Int) {}
+        fun onRotationUpdated(newEphemeralId: ByteArray) {}
     }
 
     /**
