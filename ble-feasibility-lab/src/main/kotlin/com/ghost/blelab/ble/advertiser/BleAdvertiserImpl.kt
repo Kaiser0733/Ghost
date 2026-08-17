@@ -9,6 +9,7 @@ import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.ParcelUuid
 import android.util.Log
 import com.ghost.blelab.ble.advertiser.BleAdvertiser.AdvertisingCallback
 import com.ghost.blelab.ble.advertiser.AdvertisePayload
@@ -54,7 +55,7 @@ class BleAdvertiserImpl(
         }
     }
 
-    override fun startAdvertising(ephemeralId: ByteArray, txPowerLevel: Int): Result<Unit> = try {
+    override fun startAdvertising(ephemeralId: ByteArray, txPowerLevel: Int): Result<Unit> {
         // Validate BLE availability
         val validationResult = validateBleAvailable()
         if (validationResult.isFailure) {
@@ -96,18 +97,16 @@ class BleAdvertiserImpl(
 
         val data = AdvertiseData.Builder()
             .setIncludeDeviceName(false) // No device name per privacy requirements
-            .addServiceData(BleConstants.EXPERIMENT_SERVICE_UUID, serviceData)
+            .addServiceData(ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID), serviceData)
             .build()
 
         // Start advertising
         advertiser.startAdvertising(settings, data, advertiseCallback)
 
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
+        return Result.success(Unit)
     }
 
-    override fun stopAdvertising(): Result<Unit> = try {
+    override fun stopAdvertising(): Result<Unit> {
         val advertiser = bluetoothLeAdvertiser ?: return Result.failure(
             IllegalStateException("BluetoothLeAdvertiser not available")
         )
@@ -122,14 +121,10 @@ class BleAdvertiserImpl(
 
         callbackRef?.let { it.OnStopSuccess }
         Log.d("BleAdvertiser", "Advertising stopped")
-        Result.success(Unit)
-    } catch (e: Exception) {
-        isAdvertisingRef.set(false)
-        callbackRef?.let { it.OnStopFailure(-1) }
-        Result.failure(e)
+        return Result.success(Unit)
     }
 
-    override fun updateEphemeralId(newEphemeralId: ByteArray): Result<Unit> = try {
+    override fun updateEphemeralId(newEphemeralId: ByteArray): Result<Unit> {
         if (newEphemeralId.size != BleConstants.EPHEMERAL_ID_LENGTH) {
             return Result.failure(IllegalArgumentException(
                 "Ephemeral ID must be ${BleConstants.EPHEMERAL_ID_LENGTH} bytes"
@@ -159,7 +154,7 @@ class BleAdvertiserImpl(
 
             val data = AdvertiseData.Builder()
                 .setIncludeDeviceName(false)
-                .addServiceData(BleConstants.EXPERIMENT_SERVICE_UUID, serviceData)
+                .addServiceData(ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID), serviceData)
                 .build()
 
             advertiser.startAdvertising(settings, data, advertiseCallback)
@@ -167,9 +162,7 @@ class BleAdvertiserImpl(
 
         callbackRef?.let { it.OnRotationUpdated(newEphemeralId) }
         Log.d("BleAdvertiser", "Ephemeral ID rotated")
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
+        return Result.success(Unit)
     }
 
     override fun setTxPowerLevel(txPowerLevel: Int) {
@@ -185,7 +178,7 @@ class BleAdvertiserImpl(
     /**
      * Validate BLE is available and advertising is supported.
      */
-    private fun validateBleAvailable(): Result<Unit> = try {
+    private fun validateBleAvailable(): Result<Unit> {
         if (bluetoothLeAdvertiser == null) {
             return Result.failure(IllegalStateException("Bluetooth LE advertising not supported on this device"))
         }
@@ -202,21 +195,20 @@ class BleAdvertiserImpl(
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!pm.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE_PERIPHERAL)) {
+            // Use string constant since FEATURE_BLUETOOTH_LE_PERIPHERAL may not be available in all SDKs
+            if (!pm.hasSystemFeature("android.hardware.bluetooth_le.peripheral")) {
                 // Peripheral role might not be explicitly declared but could still work
                 Log.w("BleAdvertiser", "FEATURE_BLUETOOTH_LE_PERIPHERAL not declared, advertising may not work")
             }
         }
 
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
+        return Result.success(Unit)
     }
 
     /**
      * Validate required permissions for advertising.
      */
-    private fun validatePermissions(): Result<Unit> = try {
+    private fun validatePermissions(): Result<Unit> {
         // Check BLUETOOTH_ADVERTISE permission (Android 12+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val permission = android.Manifest.permission.BLUETOOTH_ADVERTISE
@@ -225,9 +217,7 @@ class BleAdvertiserImpl(
             }
         }
 
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
+        return Result.success(Unit)
     }
 
     /**

@@ -38,7 +38,7 @@ data class AdvertisePayload(
         }
         val data = ByteArray(1 + BleConstants.EPHEMERAL_ID_LENGTH)
         data[0] = protocolVersion
-        data.copyFrom(ephemeralId, 1, 0, ephemeralId.size)
+        ephemeralId.copyInto(data, 1)
         return data
     }
 

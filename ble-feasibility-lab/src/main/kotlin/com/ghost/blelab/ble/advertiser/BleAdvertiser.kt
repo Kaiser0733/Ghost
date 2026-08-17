@@ -48,7 +48,7 @@ interface BleAdvertiser {
     sealed interface AdvertisingCallback {
         data class OnStartSuccess(val settings: AdvertiseSettings) : AdvertisingCallback
         data class OnStartFailure(val errorCode: Int) : AdvertisingCallback
-        data class OnStopSuccess : AdvertisingCallback
+        object OnStopSuccess : AdvertisingCallback
         data class OnStopFailure(val errorCode: Int) : AdvertisingCallback
         data class OnRotationUpdated(val newEphemeralId: ByteArray) : AdvertisingCallback
     }
