@@ -112,6 +112,7 @@ class ScanResultProcessorTest {
     }
 
     // Helper to create mock scan result with our service data
+    // Using ScanResult(ScanRecord, int, long) constructor available since API 26
     private fun createMockScanResult(serviceData: ByteArray?, rssi: Int, timestampNanos: Long): ScanResult {
         val scanRecordBuilder = ScanRecord.Builder()
         if (serviceData != null) {
@@ -130,6 +131,7 @@ class ScanResultProcessorTest {
             scanRecordBuilder.setServiceData(ParcelUuid(differentUuid), serviceData)
         }
         val scanRecord = scanRecordBuilder.build()
+        
         return ScanResult(scanRecord, rssi, timestampNanos)
     }
 }
