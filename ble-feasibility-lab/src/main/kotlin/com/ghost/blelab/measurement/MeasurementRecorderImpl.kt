@@ -11,9 +11,11 @@ import kotlin.Result
 
 class MeasurementRecorderImpl(private val context: android.content.Context) : MeasurementRecorder {
 
-    private val experimentsDir = FileUtil.ensureDir(
-        File(FileUtil.getFilesDir(context), "experiments")
-    ).getOrThrow()
+    private val experimentsDir: File by lazy {
+        val dir = File(FileUtil.getFilesDir(context), "experiments")
+        FileUtil.ensureDir(dir).getOrThrow()
+        dir
+    }
 
     private val json = Json { prettyPrint = true }
 

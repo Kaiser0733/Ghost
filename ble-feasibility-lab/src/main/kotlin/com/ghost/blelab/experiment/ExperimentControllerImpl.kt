@@ -17,9 +17,11 @@ class ExperimentControllerImpl(
 
     private var currentRun: ExperimentRun? = null
     private var currentConfig: ExperimentConfig? = null
-    private val runsDir = FileUtil.ensureDir(
-        File(FileUtil.getFilesDir(context), "runs")
-    ).getOrThrow()
+    private val runsDir: File by lazy {
+        val dir = File(FileUtil.getFilesDir(context), "runs")
+        FileUtil.ensureDir(dir).getOrThrow()
+        dir
+    }
 
     override fun startExperiment(config: ExperimentConfig): Result<Unit> {
         if (isRunning()) {
