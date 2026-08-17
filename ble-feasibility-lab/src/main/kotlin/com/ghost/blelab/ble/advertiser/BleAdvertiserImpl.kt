@@ -43,7 +43,7 @@ class BleAdvertiserImpl(
     private val advertiseCallback = object : AdvertiseCallback() {
         override fun onStartSuccess(settingsInEffect: AdvertiseSettings) {
             isAdvertisingRef.set(true)
-            callbackRef?.let { it.OnStartSuccess(settingsInEffect) }
+            callbackRef?.let { it.AdvertisingCallback.OnStartSuccess(settingsInEffect) }
             Log.d("BleAdvertiser", "Advertising started successfully with settings: $settingsInEffect")
         }
 
@@ -51,7 +51,7 @@ class BleAdvertiserImpl(
             isAdvertisingRef.set(false)
             val errorMsg = advertiseErrorToString(errorCode)
             Log.e("BleAdvertiser", "Advertising failed to start: $errorMsg (code: $errorCode)")
-            callbackRef?.let { it.OnStartFailure(errorCode) }
+            callbackRef?.let { it.AdvertisingCallback.OnStartFailure(errorCode) }
         }
     }
 
@@ -119,7 +119,7 @@ class BleAdvertiserImpl(
         currentEphemeralIdRef.set(null)
         advertiser.stopAdvertising(advertiseCallback)
 
-        callbackRef?.let { it.OnStopSuccess }
+        callbackRef?.let { it.AdvertisingCallback.OnStopSuccess }
         Log.d("BleAdvertiser", "Advertising stopped")
         return Result.success(Unit)
     }
@@ -160,7 +160,7 @@ class BleAdvertiserImpl(
             advertiser.startAdvertising(settings, data, advertiseCallback)
         }
 
-        callbackRef?.let { it.OnRotationUpdated(newEphemeralId) }
+        callbackRef?.let { it.AdvertisingCallback.OnRotationUpdated(newEphemeralId) }
         Log.d("BleAdvertiser", "Ephemeral ID rotated")
         return Result.success(Unit)
     }
