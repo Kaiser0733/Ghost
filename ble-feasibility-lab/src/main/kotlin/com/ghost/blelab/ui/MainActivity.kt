@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val appContext = this
         setContent {
             BleLabTheme {
                 Surface(
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                             bleScanner = app.bleScanner,
                             measurementRecorder = app.measurementRecorder,
                             experimentExporter = app.experimentExporter,
-                            context = this
+                            context = appContext
                         )
                     }
                 }

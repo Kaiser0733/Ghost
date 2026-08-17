@@ -46,7 +46,7 @@ class ExperimentExporterImpl(
         context: Context,
         singleExperiment: Boolean
     ): Result<ExportResult> {
-        val recordsResult = if (singleExperiment) {
+        val recordsResult: Result<List<DetectionRecord>> = if (singleExperiment) {
             measurementRecorder.getAllRecords(experimentId)
         } else {
             // Get all experiment files
@@ -72,8 +72,8 @@ class ExperimentExporterImpl(
                 val fileName = generateFileName(format, singleExperiment, experimentId)
                 val fileResult = createExportFile(context, fileName, format)
 
-                fileResult.flatMap { uri ->
-                    writeExportFile(uri, records, format).map { bytesWritten ->
+                fileResult.flatMap { uri: Uri ->
+                    writeExportFile(uri, records, format).map { bytesWritten: Int ->
                         ExportResult(
                             fileUri = uri,
                             format = format,

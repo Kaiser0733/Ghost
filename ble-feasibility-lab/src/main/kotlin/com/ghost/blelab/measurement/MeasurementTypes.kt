@@ -1,5 +1,6 @@
 package com.ghost.blelab.measurement
 
+import com.ghost.blelab.experiment.TestCondition
 import kotlinx.serialization.Serializable
 import java.util.UUID
 

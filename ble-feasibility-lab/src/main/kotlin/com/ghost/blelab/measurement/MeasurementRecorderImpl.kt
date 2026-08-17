@@ -98,7 +98,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
         val experimentFile = File(experimentsDir, "${experimentId}.json")
         
         if (!experimentFile.exists()) {
-            return Result.success(emptyList())
+            return Result.success(emptyList<DetectionRecord>())
         }
 
         return FileUtil.readJson(experimentFile)
