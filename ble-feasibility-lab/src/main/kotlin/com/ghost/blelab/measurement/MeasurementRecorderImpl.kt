@@ -22,7 +22,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
     override fun recordDetection(record: DetectionRecord): Result<Unit> {
         val experimentFile = File(experimentsDir, "${record.deviceLocalExperimentId}.json")
         
-        val existingRecords = if (experimentFile.exists()) {
+        val existingRecords: List<DetectionRecord> = if (experimentFile.exists()) {
             FileUtil.readJson(experimentFile).getOrElse { "[]" }
                 .let { JsonUtil.listFromJson(DetectionRecord.serializer(), it).getOrElse { emptyList() } }
         } else {
@@ -44,9 +44,9 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
 
         val recordsResult = FileUtil.readJson(experimentFile)
             .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-            .getOrElse { emptyList() }
+            .getOrElse { emptyList<DetectionRecord>() }
 
-        return recordsResult.map { records ->
+        return recordsResult.map { records: List<DetectionRecord> ->
             if (records.isEmpty()) {
                 AggregatedStats(
                     totalScans = 0,
@@ -102,7 +102,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
 
         return FileUtil.readJson(experimentFile)
             .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-            .getOrElse { emptyList() }
+            .getOrElse { emptyList<DetectionRecord>() }
     }
 
     override fun clearExperiment(experimentId: String): Result<Unit> {

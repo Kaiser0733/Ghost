@@ -159,7 +159,7 @@ class ExperimentExporterImpl(
         val builder = StringBuilder()
         builder.append("BLE Feasibility Lab - Export\n")
         builder.append("Generated: %s\n".format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())))
-        builder.append("Records: ${records.size}\n\n")
+        builder.append("Records: %d\n\n".format(records.size))
 
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
