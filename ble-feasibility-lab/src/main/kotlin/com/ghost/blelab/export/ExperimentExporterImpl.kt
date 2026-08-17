@@ -23,8 +23,6 @@ class ExperimentExporterImpl(
     private val measurementRecorder: MeasurementRecorder
 ) : ExperimentExporter {
 
-    private val json = Json { prettyPrint = true }
-
     override fun exportExperiment(
         experimentId: String,
         exportFormat: ExportFormat,
@@ -58,10 +56,10 @@ class ExperimentExporterImpl(
             if (files != null) {
                 for (file in files) {
                     if (file.name.endsWith(".json")) {
-                        val result = FileUtil.readJson(file)
+                        val result: Result<List<DetectionRecord>> = FileUtil.readJson(file)
                             .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
                             .getOrElse { emptyList<DetectionRecord>() }
-                        allRecords.addAll(result)
+                        allRecords.addAll(result.getOrElse { emptyList() })
                     }
                 }
             }
