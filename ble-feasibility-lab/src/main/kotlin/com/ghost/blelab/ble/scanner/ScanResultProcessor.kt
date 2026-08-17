@@ -1,9 +1,9 @@
 package com.ghost.blelab.ble.scanner
 
 import android.bluetooth.le.ScanResult
+import android.os.ParcelUuid
 import com.ghost.blelab.ble.advertiser.AdvertisePayload
 import com.ghost.blelab.ble.common.BleConstants
-import android.os.ParcelUuid
 import java.util.Locale
 
 /**

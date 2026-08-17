@@ -41,10 +41,11 @@ interface BleScanner {
 
     /**
      * Callback for scanning lifecycle events.
+     * Implemented as interface with default methods.
      */
-    sealed interface ScanCallback {
-        data class OnScanResult(val result: ScanResult) : ScanCallback
-        data class OnBatchScanResults(val results: List<ScanResult>) : ScanCallback
-        data class OnScanFailed(val errorCode: Int) : ScanCallback
+    interface ScanCallback {
+        fun onScanResult(result: ScanResult) {}
+        fun onBatchScanResults(results: List<ScanResult>) {}
+        fun onScanFailed(errorCode: Int) {}
     }
 }

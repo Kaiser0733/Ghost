@@ -44,20 +44,20 @@ class BleScannerImpl(
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             if (callbackType == ScanSettings.CALLBACK_TYPE_FIRST_MATCH ||
                 callbackType == ScanSettings.CALLBACK_TYPE_ALL_MATCHES) {
-                callbackRef?.OnScanResult(result)
+                callbackRef?.onScanResult(result)
             }
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {
             if (results.isNotEmpty()) {
-                callbackRef?.OnBatchScanResults(results)
+                callbackRef?.onBatchScanResults(results)
             }
         }
 
         override fun onScanFailed(errorCode: Int) {
             val errorMsg = scanErrorToString(errorCode)
             Log.e("BleScanner", "Scan failed: $errorMsg (code: $errorCode)")
-            callbackRef?.OnScanFailed(errorCode)
+            callbackRef?.onScanFailed(errorCode)
         }
     }
 
@@ -172,7 +172,7 @@ class BleScannerImpl(
     companion object {
         fun createExperimentScanFilter(): ScanFilter {
             return ScanFilter.Builder()
-                .setServiceUuid(BleConstants.EXPERIMENT_SERVICE_UUID)
+                .setServiceUuid(android.os.ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID))
                 .build()
         }
 
