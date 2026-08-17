@@ -27,22 +27,22 @@ class ExperimentExporterImpl(
 
     override fun exportExperiment(
         experimentId: String,
-        format: ExportFormat,
+        exportFormat: ExportFormat,
         context: Context
     ): Result<ExportResult> {
-        return exportRecords(experimentId, format, context, singleExperiment = true)
+        return exportRecords(experimentId, exportFormat, context, singleExperiment = true)
     }
 
     override fun exportAllExperiments(
-        format: ExportFormat,
+        exportFormat: ExportFormat,
         context: Context
     ): Result<ExportResult> {
-        return exportRecords("", format, context, singleExperiment = false)
+        return exportRecords("", exportFormat, context, singleExperiment = false)
     }
 
     private fun exportRecords(
         experimentId: String,
-        format: ExportFormat,
+        exportFormat: ExportFormat,
         context: Context,
         singleExperiment: Boolean
     ): Result<ExportResult> {
@@ -55,12 +55,16 @@ class ExperimentExporterImpl(
             ).getOrThrow()
 
             val allRecords = mutableListOf<DetectionRecord>()
-            val files: Array<File> = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
-            for (file in files) {
-                val result = FileUtil.readJson(file)
-                    .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-                    .getOrElse { emptyList<DetectionRecord>() }
-                allRecords.addAll(result)
+            val files = experimentsDir.listFiles()
+            if (files != null) {
+                for (file in files) {
+                    if (file.name.endsWith(".json")) {
+                        val result = FileUtil.readJson(file)
+                            .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
+                            .getOrElse { emptyList<DetectionRecord>() }
+                        allRecords.addAll(result)
+                    }
+                }
             }
             Result.success(allRecords)
         }
@@ -69,42 +73,32 @@ class ExperimentExporterImpl(
             if (records.isEmpty()) {
                 Result.failure(IllegalStateException("No records to export"))
             } else {
-                val fileName = generateFileName(format, singleExperiment, experimentId)
-                val fileResult = createExportFile(context, fileName, format)
+                val fileName = generateFileName(records.size)
+                val fileResult = createExportFile(context, fileName)
 
                 fileResult.flatMap { uri: Uri ->
-                    writeExportFile(uri, records, format).map { bytesWritten: Int ->
+                    writeExportFile(uri, records).map { bytesWritten: Int ->
                         ExportResult(
                             fileUri = uri,
-                            format = format,
+                            format = ExportFormat.CSV,
                             recordCount = records.size,
                             fileSizeBytes = bytesWritten.toLong()
                         )
                     }
-                }
+                )
             }
         }
     }
 
-    private fun generateFileName(format: ExportFormat, singleExperiment: Boolean, experimentId: String): String {
+    private fun generateFileName(recordCount: Int): String {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        val prefix = if (singleExperiment) "experiment_$experimentId" else "all_experiments"
-        val extension = when (format) {
-            ExportFormat.CSV -> "csv"
-            ExportFormat.JSON -> "json"
-            ExportFormat.PLAIN_TEXT -> "txt"
-        }
-        return "${prefix}_$timestamp.$extension"
+        return "ble_experiment_${recordCount}_records_$timestamp.csv"
     }
 
-    private fun createExportFile(context: Context, fileName: String, format: ExportFormat): Result<Uri> {
+    private fun createExportFile(context: Context, fileName: String): Result<Uri> {
         val contentValues = android.content.ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, when (format) {
-                ExportFormat.CSV -> "text/csv"
-                ExportFormat.JSON -> "application/json"
-                ExportFormat.PLAIN_TEXT -> "text/plain"
-            })
+            put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
             put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/BLE_Feasibility_Lab/")
         }
 
@@ -116,16 +110,12 @@ class ExperimentExporterImpl(
         }
     }
 
-    private fun writeExportFile(uri: Uri, records: List<DetectionRecord>, format: ExportFormat): Result<Long> {
+    private fun writeExportFile(uri: Uri, records: List<DetectionRecord>): Result<Long> {
         return try {
             val outputStream = context.contentResolver.openOutputStream(uri)
                 ?: return Result.failure(IOException("Failed to open output stream"))
 
-            val bytesWritten = when (format) {
-                ExportFormat.JSON -> writeJson(outputStream, records)
-                ExportFormat.CSV -> writeCsv(outputStream, records)
-                ExportFormat.PLAIN_TEXT -> writePlainText(outputStream, records)
-            }
+            val bytesWritten = writeCsv(outputStream)
             outputStream.close()
             Result.success(bytesWritten.toLong())
         } catch (e: Exception) {
@@ -133,14 +123,7 @@ class ExperimentExporterImpl(
         }
     }
 
-    private fun writeJson(outputStream: OutputStream, records: List<DetectionRecord>): Int {
-        val jsonString = JsonUtil.listToJson(DetectionRecord.serializer(), records)
-        val bytes = jsonString.toByteArray(java.nio.charset.StandardCharsets.UTF_8)
-        outputStream.write(bytes)
-        return bytes.size
-    }
-
-    private fun writeCsv(outputStream: OutputStream, records: List<DetectionRecord>): Int {
+    private fun writeCsv(outputStream: OutputStream): Int {
         val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters\n"
         val csvString = StringBuilder(header)
 
@@ -151,27 +134,6 @@ class ExperimentExporterImpl(
         }
 
         val bytes = csvString.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
-        outputStream.write(bytes)
-        return bytes.size
-    }
-
-    private fun writePlainText(outputStream: OutputStream, records: List<DetectionRecord>): Int {
-        val builder = StringBuilder()
-        builder.append("BLE Feasibility Lab - Export\n")
-        builder.append("Generated: %s\n".format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())))
-        builder.append("Records: %d\n\n".format(records.size))
-
-        for (record in records) {
-            val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
-            builder.append("Timestamp: " + record.localTimestamp + "\n")
-            builder.append("  Ephemeral ID: " + ephemeralIdHex + "\n")
-            builder.append("  RSSI: " + record.rssi + " dBm\n")
-            builder.append("  Scan Timestamp: " + record.scanResultTimestamp + "\n")
-            builder.append("  Experiment ID: " + record.deviceLocalExperimentId + "\n")
-            builder.append("  Distance Label: " + (record.distanceLabelMeters?.toString() ?: "N/A") + "m\n\n")
-        }
-
-        val bytes = builder.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
         outputStream.write(bytes)
         return bytes.size
     }
