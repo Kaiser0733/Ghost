@@ -30,19 +30,18 @@ class ExperimentExporterImpl(
         exportFormat: ExportFormat,
         context: Context
     ): Result<ExportResult> {
-        return exportRecords(experimentId, exportFormat, context, singleExperiment = true)
+        return exportRecords(experimentId, context, singleExperiment = true)
     }
 
     override fun exportAllExperiments(
         exportFormat: ExportFormat,
         context: Context
     ): Result<ExportResult> {
-        return exportRecords("", exportFormat, context, singleExperiment = false)
+        return exportRecords("", context, singleExperiment = false)
     }
 
     private fun exportRecords(
         experimentId: String,
-        exportFormat: ExportFormat,
         context: Context,
         singleExperiment: Boolean
     ): Result<ExportResult> {
@@ -85,7 +84,7 @@ class ExperimentExporterImpl(
                             fileSizeBytes = bytesWritten.toLong()
                         )
                     }
-                )
+                }
             }
         }
     }
@@ -115,7 +114,7 @@ class ExperimentExporterImpl(
             val outputStream = context.contentResolver.openOutputStream(uri)
                 ?: return Result.failure(IOException("Failed to open output stream"))
 
-            val bytesWritten = writeCsv(outputStream)
+            val bytesWritten = writeCsv(outputStream, records)
             outputStream.close()
             Result.success(bytesWritten.toLong())
         } catch (e: Exception) {
@@ -123,7 +122,7 @@ class ExperimentExporterImpl(
         }
     }
 
-    private fun writeCsv(outputStream: OutputStream): Int {
+    private fun writeCsv(outputStream: OutputStream, records: List<DetectionRecord>): Int {
         val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters\n"
         val csvString = StringBuilder(header)
 
