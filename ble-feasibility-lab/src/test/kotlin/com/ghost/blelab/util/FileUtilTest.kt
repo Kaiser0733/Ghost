@@ -65,7 +65,8 @@ class FileUtilTest {
         assertTrue("Second append should succeed", result2.isSuccess)
         
         val content = testFile.readText()
-        val lines = content.lines().toList()
+        // Filter out trailing empty strings from Kotlin lines() behavior (includes trailing empty after final \n)
+        val lines = content.lines().filter { it.isNotBlank() }.toList()
         assertEquals("Should have 3 lines (header + 2 data)", 3, lines.size)
         assertEquals("First line should be header", header, lines[0])
         assertEquals("Second line should be first data", line1, lines[1])
@@ -89,7 +90,8 @@ class FileUtilTest {
         assertTrue("Second append should succeed", result2.isSuccess)
         
         val content = testFile.readText()
-        val lines = content.lines().toList()
+        // Filter out trailing empty strings from Kotlin lines() behavior (includes trailing empty after final \n)
+        val lines = content.lines().filter { it.isNotBlank() }.toList()
         assertEquals("Should have 2 lines (no header)", 2, lines.size)
         assertEquals("First line should be data", line1, lines[0])
         assertEquals("Second line should be data", line2, lines[1])
@@ -114,6 +116,9 @@ class FileUtilTest {
     fun testListExperimentFiles() {
         val tempDir = java.io.File.createTempFile("test", "").parentFile!!
         val testDir = java.io.File(tempDir, "experiments")
+        
+        // Must create directory first - createNewFile() fails if parent doesn't exist
+        testDir.mkdirs()
         
         java.io.File(testDir, "exp1.json").createNewFile()
         java.io.File(testDir, "exp2.json").createNewFile()
