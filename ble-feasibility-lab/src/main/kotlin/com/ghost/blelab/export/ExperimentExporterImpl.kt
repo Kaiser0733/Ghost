@@ -6,17 +6,16 @@ import android.os.Environment
 import android.provider.MediaStore
 import com.ghost.blelab.measurement.DetectionRecord
 import com.ghost.blelab.measurement.MeasurementRecorder
-import com.ghost.blelab.measurement.MeasurementRecorderImpl
 import com.ghost.blelab.util.FileUtil
 import com.ghost.blelab.util.JsonUtil
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
 import kotlin.Result
 
 class ExperimentExporterImpl(
@@ -56,7 +55,8 @@ class ExperimentExporterImpl(
             ).getOrThrow()
 
             val allRecords = mutableListOf<DetectionRecord>()
-            experimentsDir.listFiles()?.filter { it.name.endsWith(".json") }?.forEach { file ->
+            val files = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
+            for (file in files) {
                 val result = FileUtil.readJson(file)
                     .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
                     .getOrElse { emptyList() }
@@ -143,13 +143,13 @@ class ExperimentExporterImpl(
     private fun writeCsv(outputStream: OutputStream, records: List<DetectionRecord>): Int {
         val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters\n"
         val csvString = StringBuilder(header)
-        
+
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
             val distanceLabel = record.distanceLabelMeters?.toString() ?? ""
             csvString.append("${record.localTimestamp},$ephemeralIdHex,${record.rssi},${record.scanResultTimestamp},${record.deviceLocalExperimentId},$distanceLabel\n")
         }
-        
+
         val bytes = csvString.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
         outputStream.write(bytes)
         return bytes.size
@@ -158,9 +158,9 @@ class ExperimentExporterImpl(
     private fun writePlainText(outputStream: OutputStream, records: List<DetectionRecord>): Int {
         val builder = StringBuilder()
         builder.append("BLE Feasibility Lab - Export\n")
-        builder.append("Generated: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(java.util.Date())}\n")
+        builder.append("Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())}\n")
         builder.append("Records: ${records.size}\n\n")
-        
+
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
             builder.append("Timestamp: ${record.localTimestamp}\n")
@@ -170,7 +170,7 @@ class ExperimentExporterImpl(
             builder.append("  Experiment ID: ${record.deviceLocalExperimentId}\n")
             builder.append("  Distance Label: ${record.distanceLabelMeters?.toString() ?: "N/A"}m\n\n")
         }
-        
+
         val bytes = builder.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
         outputStream.write(bytes)
         return bytes.size

@@ -2,6 +2,7 @@ package com.ghost.blelab.export
 
 import android.net.Uri
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Contextual
 
 @Serializable
 enum class ExportFormat {
@@ -10,7 +11,7 @@ enum class ExportFormat {
 
 @Serializable
 data class ExportResult(
-    val fileUri: Uri,
+    @Contextual val fileUri: Uri,
     val format: ExportFormat,
     val recordCount: Int,
     val fileSizeBytes: Long,
