@@ -13,6 +13,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import com.ghost.blelab.ble.common.BleConstants
+import com.ghost.blelab.ble.scanner.ScannerBroadcastReceiver
+import com.ghost.blelab.ble.scanner.ScannerCallbackHolder
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.Result
@@ -45,12 +47,14 @@ class BleScannerImpl(
             if (callbackType == ScanSettings.CALLBACK_TYPE_FIRST_MATCH ||
                 callbackType == ScanSettings.CALLBACK_TYPE_ALL_MATCHES) {
                 callbackRef?.onScanResult(result)
+                ScannerCallbackHolder.callbackRef?.onScanResult(result)
             }
         }
 
         override fun onBatchScanResults(results: List<ScanResult>) {
             if (results.isNotEmpty()) {
                 callbackRef?.onBatchScanResults(results)
+                ScannerCallbackHolder.callbackRef?.onBatchScanResults(results)
             }
         }
 
@@ -58,6 +62,7 @@ class BleScannerImpl(
             val errorMsg = scanErrorToString(errorCode)
             Log.e("BleScanner", "Scan failed: $errorMsg (code: $errorCode)")
             callbackRef?.onScanFailed(errorCode)
+            ScannerCallbackHolder.callbackRef?.onScanFailed(errorCode)
         }
     }
 
@@ -189,6 +194,22 @@ class BleScannerImpl(
                 .setLegacy(true)
                 .setPhy(ScanSettings.PHY_LE_ALL_SUPPORTED)
                 .build()
+        }
+
+        /**
+         * Create a PendingIntent for the scanner callback.
+         * This enables background scanning delivery.
+         */
+        @Suppress("UNUSED_PARAMETER")
+        fun createExperimentPendingIntent(applicationContext: Context): PendingIntent {
+            val intent = android.content.Intent(applicationContext, ScannerBroadcastReceiver::class.java)
+            intent.action = "com.ghost.blelab.SCAN_RESULTS"
+            return PendingIntent.getBroadcast(
+                applicationContext,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
     }
 

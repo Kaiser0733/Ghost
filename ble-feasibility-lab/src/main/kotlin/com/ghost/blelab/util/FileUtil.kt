@@ -79,4 +79,9 @@ object FileUtil {
             emptyList()
         }
     }
+
+    /**
+     * Get the app's internal files directory.
+     */
+    fun getFilesDir(context: android.content.Context): File = context.filesDir
 }
