@@ -55,7 +55,7 @@ class ExperimentExporterImpl(
             ).getOrThrow()
 
             val allRecords = mutableListOf<DetectionRecord>()
-            val files = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
+            val files: Array<File> = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
             for (file in files) {
                 val result = FileUtil.readJson(file)
                     .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
@@ -163,12 +163,12 @@ class ExperimentExporterImpl(
 
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
-            builder.append("Timestamp: ${record.localTimestamp}\n")
-            builder.append("  Ephemeral ID: $ephemeralIdHex\n")
-            builder.append("  RSSI: ${record.rssi} dBm\n")
-            builder.append("  Scan Timestamp: ${record.scanResultTimestamp}\n")
-            builder.append("  Experiment ID: ${record.deviceLocalExperimentId}\n")
-            builder.append("  Distance Label: ${record.distanceLabelMeters?.toString() ?: \"N/A\"}m\n\n")
+            builder.append("Timestamp: " + record.localTimestamp + "\n")
+            builder.append("  Ephemeral ID: " + ephemeralIdHex + "\n")
+            builder.append("  RSSI: " + record.rssi + " dBm\n")
+            builder.append("  Scan Timestamp: " + record.scanResultTimestamp + "\n")
+            builder.append("  Experiment ID: " + record.deviceLocalExperimentId + "\n")
+            builder.append("  Distance Label: " + (record.distanceLabelMeters?.toString() ?: "N/A") + "m\n\n")
         }
 
         val bytes = builder.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
