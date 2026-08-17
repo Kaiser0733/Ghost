@@ -49,13 +49,18 @@ class ExperimentExporterImpl(
         val recordsResult: Result<List<DetectionRecord>> = if (singleExperiment) {
             measurementRecorder.getAllRecords(experimentId)
         } else {
-            // Get all experiment files
+            // Get all experiment files using listFiles with FilenameFilter
             val experimentsDir = FileUtil.ensureDir(
                 File(FileUtil.getFilesDir(context), "experiments")
             ).getOrThrow()
 
             val allRecords = mutableListOf<DetectionRecord>()
-            val files: Array<File> = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
+            val files = experimentsDir.listFiles(object : File.FilenameFilter {
+                override fun accept(dir: File?, name: String): Boolean {
+                    return name.endsWith(".json")
+                }
+            }) ?: emptyArray()
+            
             for (file in files) {
                 val result = FileUtil.readJson(file)
                     .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
@@ -81,7 +86,7 @@ class ExperimentExporterImpl(
                             fileSizeBytes = bytesWritten.toLong()
                         )
                     }
-                }
+                )
             }
         }
     }
