@@ -158,7 +158,7 @@ class ExperimentExporterImpl(
     private fun writePlainText(outputStream: OutputStream, records: List<DetectionRecord>): Int {
         val builder = StringBuilder()
         builder.append("BLE Feasibility Lab - Export\n")
-        builder.append("Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())}\n")
+        builder.append("Generated: %s\n".format(SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())))
         builder.append("Records: ${records.size}\n\n")
 
         for (record in records) {
