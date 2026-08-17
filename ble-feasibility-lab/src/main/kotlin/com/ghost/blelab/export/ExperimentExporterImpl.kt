@@ -168,7 +168,7 @@ class ExperimentExporterImpl(
             builder.append("  RSSI: ${record.rssi} dBm\n")
             builder.append("  Scan Timestamp: ${record.scanResultTimestamp}\n")
             builder.append("  Experiment ID: ${record.deviceLocalExperimentId}\n")
-            builder.append("  Distance Label: ${record.distanceLabelMeters?.toString() ?: "N/A"}m\n\n")
+            builder.append("  Distance Label: ${record.distanceLabelMeters?.toString() ?: \"N/A\"}m\n\n")
         }
 
         val bytes = builder.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
