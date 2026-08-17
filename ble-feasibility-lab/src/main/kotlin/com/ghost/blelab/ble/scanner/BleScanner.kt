@@ -32,7 +32,7 @@ interface BleScanner {
     /**
      * Set callback for scan events.
      */
-    fun setCallback(callback: ScanCallback?)
+    fun setCallback(callback: BleScanner.ScanCallback?)
 
     /**
      * Current scanning state.

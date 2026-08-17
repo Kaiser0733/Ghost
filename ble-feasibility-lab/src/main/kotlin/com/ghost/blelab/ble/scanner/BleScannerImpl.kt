@@ -37,7 +37,7 @@ class BleScannerImpl(
     private val bluetoothLeScanner: BluetoothLeScanner? = bluetoothAdapter.bluetoothLeScanner
     private val isScanningRef = AtomicBoolean(false)
     private val currentPendingIntentRef = AtomicReference<PendingIntent?>(null)
-    private var callbackRef: ScanCallback? = null
+    private var callbackRef: BleScanner.ScanCallback? = null
     private val scanResultProcessor = ScanResultProcessor()
 
     private val scanCallback = object : ScanCallback() {
@@ -110,7 +110,7 @@ class BleScannerImpl(
         return Result.success(Unit)
     }
 
-    override fun setCallback(callback: ScanCallback?) {
+    override fun setCallback(callback: BleScanner.ScanCallback?) {
         callbackRef = callback
     }
 
@@ -184,7 +184,6 @@ class BleScannerImpl(
             return ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
                 .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES_AUTO_BATCH)
-                .setReportDelayMillis(0) // Let system batch
                 .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
                 .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
                 .setLegacy(true)

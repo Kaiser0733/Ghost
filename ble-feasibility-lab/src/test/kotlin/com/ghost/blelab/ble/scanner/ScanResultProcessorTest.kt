@@ -1,5 +1,8 @@
 package com.ghost.blelab.ble.scanner
 
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanRecord
+import android.os.ParcelUuid
 import com.ghost.blelab.ble.advertiser.AdvertisePayload
 import com.ghost.blelab.ble.common.BleConstants
 import org.junit.Assert.*
@@ -109,30 +112,24 @@ class ScanResultProcessorTest {
     }
 
     // Helper to create mock scan result with our service data
-    private fun createMockScanResult(serviceData: ByteArray?, rssi: Int, timestampNanos: Long): android.bluetooth.le.ScanResult {
-        val scanRecordBuilder = android.bluetooth.le.ScanRecord.Builder()
+    private fun createMockScanResult(serviceData: ByteArray?, rssi: Int, timestampNanos: Long): ScanResult {
+        val scanRecordBuilder = ScanRecord.Builder()
         if (serviceData != null) {
-            scanRecordBuilder.setServiceData(android.os.ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID), serviceData)
+            scanRecordBuilder.setServiceData(ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID), serviceData)
         }
         val scanRecord = scanRecordBuilder.build()
         
-        // Use reflection to create ScanResult since constructor is not public
-        return createScanResultWithReflection(scanRecord, rssi, timestampNanos)
+        return ScanResult(scanRecord, rssi, timestampNanos)
     }
 
-    private fun createMockScanResultWithDifferentUuid(serviceData: ByteArray?, rssi: Int, timestampNanos: Long): android.bluetooth.le.ScanResult {
-        val scanRecordBuilder = android.bluetooth.le.ScanRecord.Builder()
+    private fun createMockScanResultWithDifferentUuid(serviceData: ByteArray?, rssi: Int, timestampNanos: Long): ScanResult {
+        val scanRecordBuilder = ScanRecord.Builder()
         if (serviceData != null) {
             // Use a different UUID
             val differentUuid = java.util.UUID.fromString("00000000-0000-0000-0000-000000000001")
-            scanRecordBuilder.setServiceData(android.os.ParcelUuid(differentUuid), serviceData)
+            scanRecordBuilder.setServiceData(ParcelUuid(differentUuid), serviceData)
         }
         val scanRecord = scanRecordBuilder.build()
-        return createScanResultWithReflection(scanRecord, rssi, timestampNanos)
-    }
-
-    private fun createScanResultWithReflection(scanRecord: android.bluetooth.le.ScanRecord, rssi: Int, timestampNanos: Long): android.bluetooth.le.ScanResult {
-        // ScanResult constructor: public ScanResult(ScanRecord scanRecord, int rssi, long timestampNanos)
-        return android.bluetooth.le.ScanResult(scanRecord, rssi, timestampNanos)
+        return ScanResult(scanRecord, rssi, timestampNanos)
     }
 }

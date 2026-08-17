@@ -3,7 +3,7 @@ package com.ghost.blelab.ble.scanner
 import android.bluetooth.le.ScanResult
 import com.ghost.blelab.ble.advertiser.AdvertisePayload
 import com.ghost.blelab.ble.common.BleConstants
-import java.nio.charset.StandardCharsets
+import android.os.ParcelUuid
 import java.util.Locale
 
 /**
@@ -41,7 +41,7 @@ class ScanResultProcessor {
         }
 
         // Find our experiment service UUID
-        val parcelUuid = BleConstants.EXPERIMENT_SERVICE_UUID
+        val parcelUuid = ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID)
         val serviceData = serviceDataMap[parcelUuid]
         if (serviceData == null) {
             return ProcessResult.Invalid("Experiment service UUID not found in service data")
@@ -77,6 +77,7 @@ class ScanResultProcessor {
         if (serviceDataMap == null || serviceDataMap.isEmpty()) {
             return false
         }
-        return serviceDataMap.containsKey(BleConstants.EXPERIMENT_SERVICE_UUID)
+        val parcelUuid = ParcelUuid(BleConstants.EXPERIMENT_SERVICE_UUID)
+        return serviceDataMap.containsKey(parcelUuid)
     }
 }
