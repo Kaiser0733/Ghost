@@ -8,6 +8,7 @@ import java.io.File
 import java.io.IOException
 import java.util.UUID
 import kotlin.Result
+import kotlin.math.pow
 
 class MeasurementRecorderImpl(private val context: android.content.Context) : MeasurementRecorder {
 

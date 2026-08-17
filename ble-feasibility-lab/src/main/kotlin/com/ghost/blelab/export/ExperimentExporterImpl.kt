@@ -55,17 +55,17 @@ class ExperimentExporterImpl(
             ).getOrThrow()
 
             val allRecords = mutableListOf<DetectionRecord>()
-            val files = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
+            val files: Array<File> = experimentsDir.listFiles()?.filter { it.name.endsWith(".json") } ?: emptyArray()
             for (file in files) {
                 val result = FileUtil.readJson(file)
                     .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-                    .getOrElse { emptyList() }
+                    .getOrElse { emptyList<DetectionRecord>() }
                 allRecords.addAll(result)
             }
             Result.success(allRecords)
         }
 
-        return recordsResult.flatMap { records ->
+        return recordsResult.flatMap { records: List<DetectionRecord> ->
             if (records.isEmpty()) {
                 Result.failure(IllegalStateException("No records to export"))
             } else {
