@@ -45,11 +45,10 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
 
         val recordsResult = FileUtil.readJson(experimentFile)
             .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-            .getOrElse { emptyList<DetectionRecord>() }
 
-        return recordsResult.map { records: List<DetectionRecord> -> @Suppress("UNUSED_PARAMETER")
+        return recordsResult.flatMap { records ->
             if (records.isEmpty()) {
-                AggregatedStats(
+                Result.success(AggregatedStats(
                     totalScans = 0,
                     detections = 0,
                     detectionRate = 0.0,
@@ -58,7 +57,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
                     minRssi = 0,
                     maxRssi = 0,
                     latencyStats = LatencyStats(0, 0, 0.0, 0)
-                )
+                ))
             } else {
                 val rssiValues = records.map { it.rssi }
                 val totalScans = records.size.toLong()
@@ -75,7 +74,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
                 val avgLatency = if (timestamps.size > 1) (timestamps.last() - timestamps.first()) / 1_000_000.0 / (timestamps.size - 1) else 0.0
                 val medianLatency = if (timestamps.size > 1) (timestamps[timestamps.size / 2] - timestamps[timestamps.size / 2 - 1]) / 1_000_000 else 0L
 
-                AggregatedStats(
+                Result.success(AggregatedStats(
                     totalScans = totalScans,
                     detections = detections,
                     detectionRate = 1.0,
@@ -89,8 +88,8 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
                         avgLatencyMs = avgLatency,
                         medianLatencyMs = medianLatency
                     )
-                )
-            } as AggregatedStats
+                ))
+            }
         }
     }
 
