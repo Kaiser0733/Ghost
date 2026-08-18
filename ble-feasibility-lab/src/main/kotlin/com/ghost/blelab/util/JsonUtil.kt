@@ -31,13 +31,13 @@ object JsonUtil {
      * Serialize list to JSON string.
      */
     fun <T> listToJson(elementSerializer: KSerializer<T>, value: List<T>): String =
-        json.encodeToString(elementSerializer.listSerializer(), value)
+        json.encodeToString(elementSerializer.listSerializer, value)
 
     /**
      * Deserialize JSON string to list.
      */
     fun <T> listFromJson(elementSerializer: KSerializer<T>, jsonString: String): Result<List<T>> = try {
-        Result.success(json.decodeFromString(elementSerializer.listSerializer(), jsonString))
+        Result.success(json.decodeFromString(elementSerializer.listSerializer, jsonString))
     } catch (e: Exception) {
         Result.failure(e)
     }

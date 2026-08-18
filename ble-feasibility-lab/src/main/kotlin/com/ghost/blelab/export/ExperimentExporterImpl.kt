@@ -52,7 +52,7 @@ class ExperimentExporterImpl(
             ).getOrThrow()
 
             val allRecords = mutableListOf<DetectionRecord>()
-            val files = experimentsDir.listFiles()
+            val files: Array<File>? = experimentsDir.listFiles()
             if (files != null) {
                 for (file in files) {
                     if (file.name.endsWith(".json")) {
@@ -66,15 +66,15 @@ class ExperimentExporterImpl(
             Result.success(allRecords)
         }
 
-        return recordsResult.flatMap { records ->
+        return recordsResult.flatMap { records: List<DetectionRecord> ->
             if (records.isEmpty()) {
                 Result.failure(IllegalStateException("No records to export"))
             } else {
                 val fileName = generateFileName(records.size)
                 val fileResult = createExportFile(context, fileName)
 
-                fileResult.flatMap { uri ->
-                    writeExportFile(uri, records).map { bytesWritten ->
+                fileResult.flatMap { uri: Uri ->
+                    writeExportFile(uri, records).map { bytesWritten: Long ->
                         ExportResult(
                             fileUri = uri,
                             format = ExportFormat.CSV,
