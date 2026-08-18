@@ -47,7 +47,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
             .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
             .getOrElse { emptyList<DetectionRecord>() }
 
-        return recordsResult.map { records: List<DetectionRecord> ->
+        return recordsResult.map { records: List<DetectionRecord> -> @Suppress("UNUSED_PARAMETER")
             if (records.isEmpty()) {
                 AggregatedStats(
                     totalScans = 0,
@@ -90,7 +90,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
                         medianLatencyMs = medianLatency
                     )
                 )
-            }
+            } as AggregatedStats
         }
     }
 

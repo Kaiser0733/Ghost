@@ -6,9 +6,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 object JsonUtil {
-    
-    private val json = Json { 
-        ignoreUnknownKeys = true 
+
+    private val json = Json {
+        ignoreUnknownKeys = true
         isLenient = true
         prettyPrint = true
     }
@@ -28,15 +28,16 @@ object JsonUtil {
     }
 
     /**
-     * Serialize list wrapper to JSON string.
+     * Serialize list to JSON string.
      */
-    fun <T> listToJson(serializer: KSerializer<T>, value: T): String = json.encodeToString(serializer, value)
+    fun <T> listToJson(elementSerializer: KSerializer<T>, value: List<T>): String =
+        json.encodeToString(elementSerializer.listSerializer(), value)
 
     /**
-     * Deserialize JSON string to list wrapper.
+     * Deserialize JSON string to list.
      */
-    fun <T> listFromJson(serializer: KSerializer<T>, jsonString: String): Result<T> = try {
-        Result.success(json.decodeFromString(serializer, jsonString))
+    fun <T> listFromJson(elementSerializer: KSerializer<T>, jsonString: String): Result<List<T>> = try {
+        Result.success(json.decodeFromString(elementSerializer.listSerializer(), jsonString))
     } catch (e: Exception) {
         Result.failure(e)
     }
