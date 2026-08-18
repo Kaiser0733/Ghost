@@ -121,13 +121,15 @@ class ExperimentExporterImpl(
     }
 
     private fun writeCsv(outputStream: OutputStream, records: List<DetectionRecord>): Int {
-        val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters\n"
+        val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters
+"
         val csvString = StringBuilder(header)
 
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
             val distanceLabel = record.distanceLabelMeters?.toString() ?? ""
-            csvString.append("${record.localTimestamp},$ephemeralIdHex,${record.rssi},${record.scanResultTimestamp},${record.deviceLocalExperimentId},$distanceLabel\n")
+            csvString.append("${record.localTimestamp},$ephemeralIdHex,${record.rssi},${record.scanResultTimestamp},${record.deviceLocalExperimentId},$distanceLabel
+")
         }
 
         val bytes = csvString.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
