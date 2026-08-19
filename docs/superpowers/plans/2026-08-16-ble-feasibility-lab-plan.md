@@ -15,7 +15,7 @@
 | G | Experiment state & config | IMPLEMENTED + BUILD-VERIFIED | Run persistence implemented; ServiceController delivered in Phase F (714b85c) |
 | H | Battery monitor | NOT STARTED | No BatteryMonitor source exists |
 | I | Export | IMPLEMENTED + BUILD-VERIFIED (CSV only) | JSON/PLAIN_TEXT formats removed per commit 99acdf2; physical export UNVERIFIED |
-| J | Minimal experiment UI | IMPLEMENTED + BUILD-VERIFIED | TelemetryScreen (J5) and BatteryScreen (J8) NOT implemented; 2026-08-19 UI usability fix pass (commit e227730, CI 32236766077): scrolling+insets on all screens, working dropdowns, runtime permissions, error surfacing, observable service state; on-device usability PHYSICALLY UNVERIFIED |
+| J | Minimal experiment UI | IMPLEMENTED + BUILD-VERIFIED | TelemetryScreen (J5) and BatteryScreen (J8) NOT implemented; 2026-08-19 UI usability fix pass (e227730) + end-to-end audit fix pass (a4c2d13, CI 32244881362, 74/74 tests): dropdowns rewritten without ExposedDropdownMenuBox, lazy BLE handle resolution, observable StartStatus with actionable failure reasons, wall condition per protocol, CSV protocol columns; on-device usability PHYSICALLY UNVERIFIED |
 | K | Automated tests | PARTIAL | 53 tests pass; AggregationTest and BatteryRateTest missing |
 | L | Documentation | PARTIAL | Protocol + pilot report exist; final implementation report not written |
 | M | Verification & finalization | PARTIAL | Build/test verification done via CI; all physical verification steps NOT done |
@@ -1035,7 +1035,7 @@ dependencies {
 - [ ] Background/locked testing can be performed — UNBLOCKED: Phase F implemented + build-verified (714b85c); physical trial pending
 - [ ] Battery experiments can be run — BLOCKED: Phase H (battery monitor) not implemented
 - [ ] Results can be exported (CSV/JSON/plain text) — CSV implemented + build-verified; JSON/plain text removed (commit 99acdf2); physical export UNVERIFIED
-- [x] Deterministic logic has unit tests (all passing) — 63/63 passing, CI 32236766077
+- [x] Deterministic logic has unit tests (all passing) — 74/74 passing, CI 32244881362
 - [x] Lab remains isolated from Ghost product code — verified: zero diffs to src/, package.json, Vite/TS files since freeze commit 645cb99
 - [ ] Documentation complete — PARTIAL: protocol + pilot report exist; lab README not written
 - [ ] Implementation report complete with FACT/IMPLEMENTED/UNTESTED/UNKNOWN labels — NOT WRITTEN
