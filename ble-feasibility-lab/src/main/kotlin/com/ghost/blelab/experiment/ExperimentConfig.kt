@@ -40,6 +40,7 @@ data class TestCondition(
     val deviceState: DeviceState = DeviceState.UNSPECIFIED,
     val orientation: Orientation = Orientation.UNSPECIFIED,
     val pocketState: PocketState = PocketState.UNSPECIFIED,
+    val wallCondition: WallCondition = WallCondition.UNSPECIFIED,
 ) {
     companion object {
         val UNSPECIFIED = TestCondition()
@@ -81,6 +82,19 @@ enum class PocketState {
     UNSPECIFIED,
     NOT_IN_POCKET,
     IN_POCKET
+}
+
+/**
+ * Wall condition per the physical experiment protocol
+ * (BLE_FEASIBILITY_EXPERIMENT_PROTOCOL.md: wall_condition =
+ * "none" / "drywall" / "concrete"). UNSPECIFIED means not recorded.
+ */
+@Serializable
+enum class WallCondition {
+    UNSPECIFIED,
+    NONE,
+    DRYWALL,
+    CONCRETE
 }
 
 @Serializable

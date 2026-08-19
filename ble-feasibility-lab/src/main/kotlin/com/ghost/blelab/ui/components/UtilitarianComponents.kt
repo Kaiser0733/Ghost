@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,8 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -166,7 +165,17 @@ fun RadioOption(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Dropdown field built on a plain [DropdownMenu] popup.
+ *
+ * Deliberately does NOT use ExposedDropdownMenuBox/menuAnchor: on Material3
+ * 1.2.x the anchor's internal click handling conflicts with any explicit
+ * clickable on the same composable (the two toggle handlers fight and the
+ * expanded state resets within the same gesture — the menu never appears).
+ * This version has exactly ONE click handler and ONE state write per gesture.
+ * The menu is a PopupWindow, so it is never clipped by the parent
+ * verticalScroll and always renders above the screen content.
+ */
 @Composable
 fun DropdownField(
     label: String,
@@ -179,21 +188,16 @@ fun DropdownField(
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = label, fontSize = 14.sp, color = Color.Black.copy(alpha = 0.6f))
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier
-                    .menuAnchor()
                     .fillMaxWidth()
-                    .clickable { expanded = !expanded }
                     .background(
                         color = Color.White,
                         shape = RoundedCornerShape(8.dp)
                     )
                     .border(BorderStroke(1.dp, Color(0xFFBDBDBD)), RoundedCornerShape(8.dp))
+                    .clickable { expanded = true }
                     .padding(horizontal = 16.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically

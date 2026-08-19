@@ -44,6 +44,10 @@ fun ControlScreen(
     // Observe the foreground service so this screen recomposes when the
     // experiment starts/stops (including stops from the notification).
     val serviceRunning by BleExperimentService.runningState.collectAsState()
+    // Observe the start status so service-side failures (Bluetooth off,
+    // missing permission, scan registration failed) are shown here instead
+    // of disappearing into logcat.
+    val startStatus by BleExperimentService.startStatus.collectAsState()
 
     val config = experimentController.getCurrentConfig()
     val isRunning = experimentController.isRunning() || serviceRunning
@@ -56,10 +60,15 @@ fun ControlScreen(
     var actionError by remember { mutableStateOf(initialError) }
     var exportMessage by remember { mutableStateOf<String?>(null) }
 
+    // Service-side failure reason, if the last start attempt failed.
+    val serviceFailure = (startStatus as? BleExperimentService.StartStatus.Failed)?.reason
+    val isStarting = startStatus is BleExperimentService.StartStatus.Starting
+
     val statusMessage = when {
         isRunning && isAdvertising -> "Advertising"
         isRunning && isScanning -> "Scanning"
         isRunning -> "Running"
+        isStarting -> "Starting..."
         else -> "Stopped"
     }
 
@@ -81,6 +90,7 @@ fun ControlScreen(
 
         // Errors / feedback surfaced inline instead of failing silently
         actionError?.let { ErrorBanner(message = it) }
+        serviceFailure?.let { ErrorBanner(message = it) }
         exportMessage?.let { InfoBanner(message = it) }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -109,6 +119,7 @@ fun ControlScreen(
         InfoRow("Device State", testCondition.deviceState.name)
         InfoRow("Orientation", testCondition.orientation.name)
         InfoRow("Pocket State", testCondition.pocketState.name)
+        InfoRow("Wall Condition", testCondition.wallCondition.name)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -118,6 +129,8 @@ fun ControlScreen(
             onClick = {
                 actionError = null
                 exportMessage = null
+                // Clear any stale service failure from a previous attempt.
+                BleExperimentService.startStatus.value = BleExperimentService.StartStatus.Idle
                 if (isRunning) {
                     serviceController.stopExperiment().onFailure {
                         actionError = "Failed to stop experiment: ${it.message}"

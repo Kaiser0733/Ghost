@@ -36,7 +36,19 @@ class BleScannerImpl(
     private val bluetoothAdapter: BluetoothAdapter,
 ) : BleScanner {
 
-    private val bluetoothLeScanner: BluetoothLeScanner? = bluetoothAdapter.bluetoothLeScanner
+    // Resolved lazily at call time, NOT captured at construction.
+    // BluetoothLeScanner is null while Bluetooth is off; capturing it once in
+    // the constructor would make scanning permanently broken for any session
+    // where BT was disabled at app launch (even after the user enables it).
+    // A SecurityException (permission revoked mid-session) is treated as
+    // "unavailable" instead of crashing.
+    private val bluetoothLeScanner: BluetoothLeScanner?
+        get() = try {
+            bluetoothAdapter.bluetoothLeScanner
+        } catch (e: SecurityException) {
+            Log.e("BleScanner", "SecurityException resolving scanner: ${e.message}")
+            null
+        }
     private val isScanningRef = AtomicBoolean(false)
     private val currentPendingIntentRef = AtomicReference<PendingIntent?>(null)
     private var callbackRef: BleScanner.ScanCallback? = null

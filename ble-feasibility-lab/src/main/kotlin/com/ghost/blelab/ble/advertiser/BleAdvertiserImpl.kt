@@ -34,7 +34,18 @@ class BleAdvertiserImpl(
     private val bluetoothAdapter: BluetoothAdapter,
 ) : BleAdvertiser {
 
-    private val bluetoothLeAdvertiser: BluetoothLeAdvertiser? = bluetoothAdapter.bluetoothLeAdvertiser
+    // Resolved lazily at call time, NOT captured at construction.
+    // BluetoothLeAdvertiser is null while Bluetooth is off; capturing it once
+    // in the constructor would make advertising permanently broken for any
+    // session where BT was disabled at app launch. A SecurityException
+    // (permission revoked mid-session) is treated as "unavailable".
+    private val bluetoothLeAdvertiser: BluetoothLeAdvertiser?
+        get() = try {
+            bluetoothAdapter.bluetoothLeAdvertiser
+        } catch (e: SecurityException) {
+            Log.e("BleAdvertiser", "SecurityException resolving advertiser: ${e.message}")
+            null
+        }
     private val isAdvertisingRef = AtomicBoolean(false)
     private val currentEphemeralIdRef = AtomicReference<ByteArray?>(null)
     private var currentTxPowerLevel = BleConstants.DEFAULT_TX_POWER_LEVEL

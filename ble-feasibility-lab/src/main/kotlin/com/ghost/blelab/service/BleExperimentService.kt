@@ -86,6 +86,32 @@ class BleExperimentService : Service() {
             set(value) {
                 runningState.value = value
             }
+
+        /**
+         * Observable start status so the UI can show WHY a start failed.
+         * The service runs in its own component; without this channel every
+         * failure (Bluetooth off, permission missing, scan registration
+         * failed) was only visible in logcat while the UI showed "Stopped"
+         * with no explanation.
+         */
+        sealed class StartStatus {
+            /** No start attempted in this process yet. */
+            object Idle : StartStatus()
+
+            /** Start requested; waiting for foreground + BLE startup. */
+            object Starting : StartStatus()
+
+            /** Experiment running. */
+            object Running : StartStatus()
+
+            /** Start failed with an actionable reason. */
+            data class Failed(val reason: String) : StartStatus()
+
+            /** Experiment stopped normally. */
+            object Stopped : StartStatus()
+        }
+
+        val startStatus = kotlinx.coroutines.flow.MutableStateFlow<StartStatus>(StartStatus.Idle)
     }
 
     private val app: BleLabApplication by lazy { application as BleLabApplication }
@@ -126,11 +152,16 @@ class BleExperimentService : Service() {
                 }
                 if (config == null) {
                     Log.e(TAG, "ACTION_START received without valid config; stopping")
+                    startStatus.value = StartStatus.Failed("Start intent carried no valid experiment config")
                     stopExperimentAndSelf()
                     return START_NOT_STICKY
                 }
+                startStatus.value = StartStatus.Starting
                 if (!startForegroundWithNotification(config)) {
                     Log.e(TAG, "Foreground start failed; experiment not started")
+                    startStatus.value = StartStatus.Failed(
+                        "Could not start the foreground service. Check that notifications are allowed for this app."
+                    )
                     stopExperimentAndSelf()
                     return START_NOT_STICKY
                 }
@@ -142,6 +173,7 @@ class BleExperimentService : Service() {
                 val persisted = loadPersistedConfig()
                 if (persisted != null && startForegroundWithNotification(persisted)) {
                     Log.i(TAG, "Resuming experiment after process restart")
+                    startStatus.value = StartStatus.Starting
                     startExperimentInternal(persisted)
                 } else {
                     Log.i(TAG, "Restarted with no persisted config or foreground failed; stopping")
@@ -176,20 +208,31 @@ class BleExperimentService : Service() {
         if (app.experimentController.isRunning()) {
             Log.w(TAG, "ExperimentController already running; not double-starting")
             serviceRunning = true
+            startStatus.value = StartStatus.Running
             return
         }
 
         // Guard: Bluetooth must be available and enabled before we begin.
-        if (!isBluetoothAvailable(config)) {
-            Log.e(TAG, "Bluetooth unavailable/disabled or permissions missing; experiment not started")
+        bluetoothAvailabilityProblem(config)?.let { problem ->
+            Log.e(TAG, "Experiment not started: $problem")
+            startStatus.value = StartStatus.Failed(problem)
             stopExperimentAndSelf()
             return
         }
 
-        val result = app.experimentController.startExperiment(config)
+        val result = try {
+            app.experimentController.startExperiment(config)
+        } catch (e: Exception) {
+            // BLE framework calls (startScan/startAdvertising) can throw
+            // SecurityException or IllegalStateException on some OEM/Android
+            // versions instead of returning an error code. Convert to Result
+            // so the failure is reported to the UI instead of crashing.
+            Result.failure(e)
+        }
         result.fold(
             onSuccess = {
                 serviceRunning = true
+                startStatus.value = StartStatus.Running
                 persistConfig(config)
                 registerBluetoothStateReceiver()
                 when (config.role) {
@@ -201,6 +244,9 @@ class BleExperimentService : Service() {
             },
             onFailure = { error ->
                 Log.e(TAG, "Experiment failed to start: ${error.message}")
+                startStatus.value = StartStatus.Failed(
+                    "${config.role.name} failed to start: ${error.message ?: error::class.simpleName}"
+                )
                 stopExperimentAndSelf()
             }
         )
@@ -215,6 +261,12 @@ class BleExperimentService : Service() {
         }
         deletePersistedConfig()
         serviceRunning = false
+        // Never overwrite a Failed status — the UI must keep showing the
+        // failure reason. Only a normal stop transitions to Stopped.
+        val status = startStatus.value
+        if (status is StartStatus.Running || status is StartStatus.Starting) {
+            startStatus.value = StartStatus.Stopped
+        }
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -299,6 +351,9 @@ class BleExperimentService : Service() {
 
             override fun onScanFailed(errorCode: Int) {
                 Log.e(TAG, "Scan failed with code $errorCode")
+                startStatus.value = StartStatus.Failed(
+                    "BLE scan failed (error code $errorCode). Try stopping and starting again."
+                )
             }
         }
         scanResultsReceiver = ScannerBroadcastReceiver()
@@ -353,11 +408,19 @@ class BleExperimentService : Service() {
         bluetoothReceiverRegistered = true
     }
 
-    private fun isBluetoothAvailable(config: ExperimentConfig): Boolean {
-        val manager = getSystemService(BluetoothManager::class.java) ?: return false
-        val adapter = manager.adapter ?: return false
-        if (!adapter.isEnabled) return false
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    /**
+     * Returns null when Bluetooth is usable for the given role, otherwise a
+     * human-readable, actionable reason string for the UI.
+     */
+    private fun bluetoothAvailabilityProblem(config: ExperimentConfig): String? {
+        val manager = getSystemService(BluetoothManager::class.java)
+            ?: return "Bluetooth system service is unavailable on this device"
+        val adapter = manager.adapter
+            ?: return "This device has no Bluetooth adapter"
+        if (!adapter.isEnabled) {
+            return "Bluetooth is turned off. Enable Bluetooth and try again."
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val needed = when (config.role) {
                 Role.ADVERTISER -> arrayOf(
                     android.Manifest.permission.BLUETOOTH_ADVERTISE,
@@ -369,10 +432,13 @@ class BleExperimentService : Service() {
                 )
                 else -> arrayOf(android.Manifest.permission.BLUETOOTH_CONNECT)
             }
-            needed.all { checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED }
-        } else {
-            true
+            val missing = needed.filter { checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }
+            if (missing.isNotEmpty()) {
+                return "Missing permission(s): ${missing.joinToString(", ") { it.substringAfterLast('.') }}. " +
+                    "Grant them in Android settings and try again."
+            }
         }
+        return null
     }
 
     // -------------------------------------------------------------------------

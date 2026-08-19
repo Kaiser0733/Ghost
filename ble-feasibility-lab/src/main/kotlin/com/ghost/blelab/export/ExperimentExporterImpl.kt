@@ -118,17 +118,39 @@ class ExperimentExporterImpl(
     }
 
     private fun writeCsv(outputStream: OutputStream, records: List<DetectionRecord>): Int {
-        val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters\n"
+        val bytes = DetectionCsvWriter.toCsv(records)
+            .toByteArray(java.nio.charset.StandardCharsets.UTF_8)
+        outputStream.write(bytes)
+        return bytes.size
+    }
+}
+
+/**
+ * Pure CSV serialization for detection records — no Android dependencies,
+ * unit-testable on the JVM.
+ *
+ * Columns per BLE_FEASIBILITY_EXPERIMENT_PROTOCOL.md section 8:
+ * distance_m, environment_id and wall_condition are protocol-required
+ * manual-condition fields carried on each detection's test condition.
+ */
+object DetectionCsvWriter {
+
+    fun toCsv(records: List<DetectionRecord>): String {
+        val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId," +
+            "distance_m,environment_id,wall_condition\n"
         val csvString = StringBuilder(header)
 
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
             val distanceLabel = record.distanceLabelMeters?.toString() ?: ""
-            csvString.append("${record.localTimestamp},$ephemeralIdHex,${record.rssi},${record.scanResultTimestamp},${record.deviceLocalExperimentId},$distanceLabel\n")
+            val environment = record.testCondition.environment.name
+            val wall = record.testCondition.wallCondition.name
+            csvString.append(
+                "${record.localTimestamp},$ephemeralIdHex,${record.rssi}," +
+                    "${record.scanResultTimestamp},${record.deviceLocalExperimentId}," +
+                    "$distanceLabel,$environment,$wall\n"
+            )
         }
-
-        val bytes = csvString.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)
-        outputStream.write(bytes)
-        return bytes.size
+        return csvString.toString()
     }
 }
