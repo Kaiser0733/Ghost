@@ -195,12 +195,28 @@ class BleScannerImpl(
 
         /**
          * Create scan settings for low-power background scanning.
-         * Uses auto-batching for screen-off operation.
+         *
+         * Configuration is resolved via [ScanConfigResolver] so it is valid on
+         * every API level in the test fleet. The previous hardcoded
+         * CALLBACK_TYPE_ALL_MATCHES_AUTO_BATCH failed on both physical test
+         * devices:
+         *  - API 33 (Galaxy A03): constant does not exist below API 34 ->
+         *    "invalid callback type-8"
+         *  - API 36 (Galaxy Tab A9+): AUTO_BATCH requires reportDelayMillis
+         *    >= 600000, which was never set -> "report delay for auto batch
+         *    must be >= 600000"
+         *
+         * Resolved config: CALLBACK_TYPE_ALL_MATCHES + reportDelayMillis 0
+         * (immediate per-advertisement delivery via PendingIntent). See
+         * ScanConfigResolver and DECISIONS.md DECISION-008 for the documented
+         * methodology change (framework screen-off batch cadence dropped).
          */
-        fun createLowPowerScanSettings(): ScanSettings {
+        fun createLowPowerScanSettings(sdkInt: Int = android.os.Build.VERSION.SDK_INT): ScanSettings {
+            val resolved = ScanConfigResolver.resolve(sdkInt)
             return ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-                .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES_AUTO_BATCH)
+                .setCallbackType(resolved.callbackType)
+                .setReportDelay(resolved.reportDelayMillis)
                 .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
                 .setNumOfMatches(ScanSettings.MATCH_NUM_ONE_ADVERTISEMENT)
                 .setLegacy(true)
