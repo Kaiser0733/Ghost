@@ -1,9 +1,10 @@
 # Phase 3 Physical BLE Experiment Protocol
 
 **Status:** DRAFT — For Physical Experimentation Preparation  
-**Lab Version:** Phase C (Advertiser) + Phase D (Scanner) Verified  
-**Commit:** 1131bef09f5d58733145532583f0288dfe1b83a1  
-**GitHub Actions Run:** 32022290322 (Success)  
+**Lab Version:** Phases A–E, G, I, J implemented and build-verified; F (foreground service) and H (battery monitor) NOT implemented  
+**Commit:** 125a998532e7acec02a99a46aa3d1d8d0bf9da59  
+**GitHub Actions Run:** 32213571392 (Success — 53/53 unit tests, APK build successful)  
+**Reconciled:** 2026-08-19 — device matrix updated to the two actually available devices; build checkpoint updated from 1131bef to 125a998  
 
 ---
 
@@ -17,27 +18,32 @@ This protocol defines the measurement framework. It does NOT declare GO/NO-GO. A
 
 ## 2. Equipment
 
-### Required Hardware (Minimum Viable)
+### Available Hardware (Actual, as of 2026-08-19)
+
+| Role | Device | Model | Android | API | Purpose |
+|------|--------|-------|---------|-----|---------|
+| Advertiser or Scanner | Samsung Galaxy Tab (owner's primary device) | SM-X216B | 16 | 36 | One side of the pair |
+| Advertiser or Scanner | Samsung Galaxy A03 | SM-A035F/DS | 13 (One UI Core 5.1) | 33 | Other side of the pair |
+
+Both devices exceed the lab's minimum requirement (Android 12 / API 31). Roles (which device advertises, which scans) should be swapped across trials to control for device-specific behavior.
+
+**OEM coverage limitation:** Both devices are Samsung. Results from this matrix describe Samsung/One UI behavior only. Do NOT extrapolate findings to Pixel/AOSP, Xiaomi/HyperOS, OnePlus/OxygenOS, or any other OEM. The ideal multi-OEM matrix below is retained as a future aspiration, not a claim of coverage.
+
+### Ideal Multi-OEM Hardware (NOT currently available — future aspiration)
 
 | Role | Device | Android | Purpose |
 |------|--------|---------|---------|
-| Advertiser | Google Pixel 7/8 (or available Pixel) | 14+ | Reference advertiser |
-| Scanner | Google Pixel 7/8 (or available Pixel) | 14+ | Reference scanner |
-
-### Optional OEM Devices (If Available)
-
-| Role | Device | Android | Purpose |
-|------|--------|---------|---------|
-| Advertiser/Scanner | Samsung Galaxy S23/24 | 14+ | One UI behavior |
-| Advertiser/Scanner | Xiaomi/Redmi 13/14 | 14+ | HyperOS behavior |
-| Advertiser/Scanner | OnePlus 11/12 | 14+ | OxygenOS behavior |
+| Advertiser | Google Pixel 7/8 | 14+ | Reference advertiser |
+| Scanner | Google Pixel 7/8 | 14+ | Reference scanner |
+| Advertiser/Scanner | Xiaomi/Redmi | 14+ | HyperOS behavior |
+| Advertiser/Scanner | OnePlus | 14+ | OxygenOS behavior |
 
 **If fewer devices are available:** Clearly state the reduced matrix in results. Do not extrapolate to unavailable OEMs.
 
 ### Software
 
-- BLE Feasibility Lab APK (built from commit 1131bef)
-- ADB for installation and log retrieval
+- BLE Feasibility Lab APK (built from commit 125a998, CI run 32213571392)
+- ADB for installation and log retrieval (note: Termux on the SM-X216B cannot `pm install` due to SELinux; manual install via file manager or adb from a host machine is required)
 - USB cables for charging during long tests
 - nRF Connect (or similar) for independent BLE verification
 - Stopwatch/timer for manual timing
@@ -47,7 +53,16 @@ This protocol defines the measurement framework. It does NOT declare GO/NO-GO. A
 
 ## 3. Device Matrix
 
-### Ideal Matrix (4 OEMs × 2 Roles = 8 Device Pairs)
+### Actual Matrix (2 Samsung devices, roles swapped = 2 Device Pairs)
+
+| Pair ID | Advertiser | Scanner | Notes |
+|---------|------------|---------|-------|
+| 1 | SM-X216B (Android 16) | Galaxy A03 (Android 13) | Primary pair |
+| 2 | Galaxy A03 (Android 13) | SM-X216B (Android 16) | Role swap — controls for device-specific advertising/scanning behavior |
+
+This is the complete available matrix. It covers one OEM (Samsung) across two Android generations (13 and 16). It does NOT cover other OEMs.
+
+### Ideal Matrix (4 OEMs × 2 Roles = 8 Device Pairs) — NOT currently achievable
 
 | Pair ID | Advertiser | Scanner | Notes |
 |---------|------------|---------|-------|
@@ -60,13 +75,7 @@ This protocol defines the measurement framework. It does NOT declare GO/NO-GO. A
 | 7 | Pixel | OnePlus | Cross-OEM |
 | 8 | Samsung | Xiaomi | Non-reference cross |
 
-### Minimum Viable Matrix (1 OEM × 2 Roles = 2 Device Pairs)
-
-| Pair ID | Advertiser | Scanner | Notes |
-|---------|------------|---------|-------|
-| 1 | Pixel | Pixel | Reference only |
-
-**If only one device is available:** Cannot run advertiser+scanner simultaneously. Document as limitation.
+**If only one device is available:** Cannot run advertiser+scanner simultaneously. Document as limitation. (As of 2026-08-19, two devices ARE available, so this limitation no longer applies.)
 
 ---
 
@@ -172,8 +181,8 @@ For BOTH advertiser and scanner independently:
 | rssi_dbm | int | ScanResult | Raw measurement |
 | scan_timestamp_nanos | long | ScanResult | Nanos since boot |
 | raw_service_data | hex string | service data | 17 bytes |
-| advertiser_device | string | manual | e.g., "Pixel_8_adv" |
-| scanner_device | string | manual | e.g., "Pixel_8_scan" |
+| advertiser_device | string | manual | e.g., "SM-X216B_adv" |
+| scanner_device | string | manual | e.g., "GalaxyA03_scan" |
 | distance_m | int | manual | From matrix |
 | environment_id | string | manual | E1–E4 |
 | wall_condition | string | manual | "none"/"drywall"/"concrete" |
@@ -418,18 +427,22 @@ Measure battery consumption of continuous scanning + advertising.
 
 ### 15.4 Reporting
 
+Template (values are placeholders — no measurements exist yet):
+
 | Test | Device | Role | Start % | End % | Duration | Rate (%/hr) |
 |------|--------|------|---------|-------|----------|-------------|
-| Foreground | Pixel | Adv | 100 | 96 | 4h | 1.0 |
-| Foreground | Pixel | Scan | 100 | 94 | 4h | 1.5 |
-| Background | Pixel | Adv | 100 | 97 | 4h | 0.75 |
-| Background | Pixel | Scan | 100 | 95 | 4h | 1.25 |
+| Foreground | SM-X216B | Adv | 100 | 96 | 4h | 1.0 |
+| Foreground | Galaxy A03 | Scan | 100 | 94 | 4h | 1.5 |
+| Background | SM-X216B | Adv | 100 | 97 | 4h | 0.75 |
+| Background | Galaxy A03 | Scan | 100 | 95 | 4h | 1.25 |
 
 **Extrapolate to daily:** Rate × 24h. Compare to PROPOSED threshold <5%/day.
 
 ---
 
 ## 16. OEM Comparison Method
+
+> **Current limitation (2026-08-19):** Only Samsung devices are available (SM-X216B, Galaxy A03). A true cross-OEM comparison cannot be performed. This section applies as a within-Samsung comparison (two devices, two Android generations, roles swapped). Cross-OEM columns below are aspirational.
 
 ### 16.1 Standardized Test Suite
 

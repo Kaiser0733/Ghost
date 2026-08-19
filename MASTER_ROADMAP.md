@@ -10,10 +10,10 @@
 
 | Phase | Name | Status | Objective |
 |-------|------|--------|-----------|
-| 0 | Foundation | PLANNED | Establish project infrastructure, constitution, spec, tooling |
-| 1 | Web Prototype | PLANNED | Build React/TS prototype simulating encounter experience |
-| 2 | Prototype Testing | PLANNED | Validate emotional resonance and UX with real users |
-| 3 | Proximity Feasibility | PLANNED | Research privacy-preserving proximity detection |
+| 0 | Foundation | COMPLETE | Establish project infrastructure, constitution, spec, tooling |
+| 1 | Web Prototype | COMPLETE (FROZEN at 645cb99) | Build React/TS prototype simulating encounter experience |
+| 2 | Prototype Testing | DEFERRED — no user-pair testing performed; requires explicit decision (see DECISION-006) | Validate emotional resonance and UX with real users |
+| 3 | Proximity Feasibility | IN PROGRESS — research complete, BLE lab build-verified, physical experiment NOT started, feasibility UNDECIDED | Research privacy-preserving proximity detection |
 | 4 | Native Android Prototype | PLANNED | Build Kotlin/Compose app with real proximity |
 | 5 | Closed Testing | PLANNED | Small-group real-world testing |
 | 6 | Privacy/Security Hardening | PLANNED | Audit, threat model, harden |
@@ -32,11 +32,11 @@
 - [x] PROJECT_CONSTITUTION.md (permanent principles)
 - [x] MASTER_ROADMAP.md (this document)
 - [x] PRODUCT_SPEC.md (product definition)
-- [ ] DECISIONS.md (decision log template)
-- [ ] Git repository initialized
-- [ ] Development environment documented
-- [ ] Agent onboarding guide (AGENTS.md or similar)
-- [ ] Basic project structure created
+- [x] DECISIONS.md (decision log template)
+- [x] Git repository initialized
+- [x] Development environment documented
+- [ ] Agent onboarding guide (AGENTS.md or similar) — NOT YET CREATED
+- [x] Basic project structure created
 
 **What Must NOT Be Built Yet:**
 - Any application code (React, Android, backend)
@@ -437,9 +437,22 @@ DECISION-002: TECH-SELECT | Proximity: Bluetooth LE + PSI | Phase 3 research con
 
 ---
 
-## CURRENT PHASE: 0 (FOUNDATION)
+## CURRENT PHASE: 3 (PROXIMITY FEASIBILITY) — IN PROGRESS
 
-**Next Action:** Complete foundation documents, human review, then advance to Phase 1.
+**Verified state as of 2026-08-19 (commit 125a998):**
+
+- Phase 0: COMPLETE (DECISION-001).
+- Phase 1: COMPLETE and FROZEN at commit 645cb995d04bc357d488679a6b738ee93608dd59. Product code untouched since freeze.
+- Phase 2: DEFERRED in practice — no user-pair testing has been performed and no Go/No-Go exists. Recorded honestly in DECISION-006. An explicit decision is still required on whether to run Phase 2 testing, defer it further, or waive it.
+- Phase 3: IN PROGRESS.
+  - Research survey: COMPLETE (Ghost_Phase3_Proximity_Feasibility_Research.md, commit 9bd84c3). BLE is the experimental candidate.
+  - BLE Feasibility Lab (ble-feasibility-lab/): build-verified green checkpoint at commit 125a998 (CI run 32213571392, 53/53 unit tests, APK build successful). Lab phases A–E, G, I, J implemented; F (foreground service) and H (battery monitor) NOT started.
+  - Physical experiment: NOT STARTED. No physical measurements exist.
+  - BLE feasibility verdict: UNKNOWN. No GO/NO-GO decision exists.
+
+**Next Action:** Resolve the Phase 2 decision (DECISION-006), then continue Phase 3 per its exit criteria: complete the physical experiment and record a feasibility Go/No-Go in DECISIONS.md.
+
+**Note:** Phase statuses in the table above were reconciled with the verified repository state on 2026-08-19. Phase objectives, scope, and exit criteria are unchanged.
 
 ---
 

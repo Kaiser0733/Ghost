@@ -1,5 +1,31 @@
 # BLE Feasibility Lab — Implementation Plan
 
+> **RECONCILIATION NOTE (2026-08-19):** This plan's checkbox state was reconciled against the verified repository state at commit 125a998 (CI run 32213571392, 53/53 unit tests passed, APK build successful). Checkboxes now reflect build-verified implementation. Hardware-dependent steps (manual device tests, physical verification) remain UNCHECKED because no physical experiment has been executed. See the Phase Status Table below.
+
+## Phase Status Table (as of commit 125a998, 2026-08-19)
+
+| Phase | Scope | Status | Evidence |
+|-------|-------|--------|----------|
+| A | Project/build skeleton + core utilities | IMPLEMENTED + BUILD-VERIFIED | CI 32213571392 green |
+| B | Ephemeral ID generator | IMPLEMENTED + BUILD-VERIFIED + UNIT-TESTED | EphemeralIdGeneratorTest |
+| C | BLE advertiser | IMPLEMENTED + BUILD-VERIFIED + UNIT-TESTED (payload) | AdvertisePayloadTest; physical advertising UNVERIFIED |
+| D | BLE scanner | IMPLEMENTED + BUILD-VERIFIED | Physical scanning UNVERIFIED |
+| E | Detection recorder | IMPLEMENTED + BUILD-VERIFIED | Planned AggregationTest.kt NOT written |
+| F | Foreground service | NOT STARTED | BleExperimentService declared in AndroidManifest.xml but NO source file exists |
+| G | Experiment state & config | IMPLEMENTED + BUILD-VERIFIED | Run persistence implemented; ServiceController dependency (Phase F) missing |
+| H | Battery monitor | NOT STARTED | No BatteryMonitor source exists |
+| I | Export | IMPLEMENTED + BUILD-VERIFIED (CSV only) | JSON/PLAIN_TEXT formats removed per commit 99acdf2; physical export UNVERIFIED |
+| J | Minimal experiment UI | IMPLEMENTED + BUILD-VERIFIED | TelemetryScreen (J5) and BatteryScreen (J8) NOT implemented |
+| K | Automated tests | PARTIAL | 53 tests pass; AggregationTest and BatteryRateTest missing |
+| L | Documentation | PARTIAL | Protocol + pilot report exist; final implementation report not written |
+| M | Verification & finalization | PARTIAL | Build/test verification done via CI; all physical verification steps NOT done |
+
+**Key facts:**
+- BLE feasibility is UNDECIDED. No physical measurements exist.
+- The lab cannot run background experiments until Phase F (foreground service) is implemented.
+- Battery impact cannot be measured until Phase H (battery monitor) is implemented.
+- All "manual test on device" steps remain physically unverified.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a disposable Android BLE feasibility lab (single-module Gradle app) to measure real-world proximity detection reliability, privacy compatibility, background capability, and battery impact.
@@ -178,13 +204,13 @@ plugins {
 ```
 
 **Steps:**
-- [ ] Step 1: Create `settings.gradle.kts`
-- [ ] Step 2: Create `build.gradle.kts` with Compose, Kotlin, Android plugin
-- [ ] Step 3: Create `AndroidManifest.xml` with all permissions
-- [ ] Step 4: Create `BleLabApplication.kt` (minimal Application subclass)
-- [ ] Step 5: Create `strings.xml` with app name
-- [ ] Step 6: Create `file_paths.xml` for FileProvider
-- [ ] Step 7: Verify build: `./gradlew :ble-feasibility-lab:assembleDebug`
+- [x] Step 1: Create `settings.gradle.kts`
+- [x] Step 2: Create `build.gradle.kts` with Compose, Kotlin, Android plugin
+- [x] Step 3: Create `AndroidManifest.xml` with all permissions
+- [x] Step 4: Create `BleLabApplication.kt` (minimal Application subclass)
+- [x] Step 5: Create `strings.xml` with app name
+- [x] Step 6: Create `file_paths.xml` for FileProvider
+- [x] Step 7: Verify build: `./gradlew :ble-feasibility-lab:assembleDebug`
 
 ---
 
@@ -199,11 +225,11 @@ plugins {
 - Produces: `FileUtil.writeJson()`, `FileUtil.readJson()`, `FileUtil.appendCsv()`, `JsonUtil.toJson()`, `JsonUtil.fromJson()`, `TimeUtil.nowMillis()`, `TimeUtil.formatDuration()`
 
 **Steps:**
-- [ ] Step 1: Write `FileUtil` with atomic write, CSV append, directory management
-- [ ] Step 2: Write `JsonUtil` using Kotlinx serialization
-- [ ] Step 3: Write `TimeUtil` for timestamps and formatting
-- [ ] Step 4: Add `kotlinx-serialization-json` to dependencies
-- [ ] Step 5: Build verify
+- [x] Step 1: Write `FileUtil` with atomic write, CSV append, directory management
+- [x] Step 2: Write `JsonUtil` using Kotlinx serialization
+- [x] Step 3: Write `TimeUtil` for timestamps and formatting
+- [x] Step 4: Add `kotlinx-serialization-json` to dependencies
+- [x] Step 5: Build verify
 
 ---
 
@@ -239,15 +265,15 @@ class EphemeralIdGeneratorImpl : EphemeralIdGenerator { ... }
 ```
 
 **Steps:**
-- [ ] Step 1: Write failing test `EphemeralIdGeneratorTest.testRotationIntervalDefault10Minutes`
-- [ ] Step 2: Run test → verify RED
-- [ ] Step 3: Implement `TimeSlotCalculator` (pure math)
-- [ ] Step 4: Implement `EphemeralIdGeneratorImpl` using HKDF-SHA256
-- [ ] Step 5: Run test → verify GREEN
-- [ ] Step 6: Write remaining tests (same time slot = same ID, different slot = different ID, different key = different ID, ID length 16 bytes, no device info)
-- [ ] Step 7: Run all tests → verify GREEN
-- [ ] Step 8: Refactor if needed
-- [ ] Step 9: Commit
+- [x] Step 1: Write failing test `EphemeralIdGeneratorTest.testRotationIntervalDefault10Minutes`
+- [x] Step 2: Run test → verify RED
+- [x] Step 3: Implement `TimeSlotCalculator` (pure math)
+- [x] Step 4: Implement `EphemeralIdGeneratorImpl` using HKDF-SHA256
+- [x] Step 5: Run test → verify GREEN
+- [x] Step 6: Write remaining tests (same time slot = same ID, different slot = different ID, different key = different ID, ID length 16 bytes, no device info)
+- [x] Step 7: Run all tests → verify GREEN
+- [x] Step 8: Refactor if needed
+- [x] Step 9: Commit
 
 **Test Commands:**
 ```bash
@@ -287,10 +313,10 @@ data class AdvertisePayload(
 ```
 
 **Steps:**
-- [ ] Step 1: Generate a real 128-bit UUID for the experiment (use `uuidgen` or similar)
-- [ ] Step 2: Write `BleConstants.kt` with the UUID
-- [ ] Step 3: Write `AdvertisePayload.kt` with serialization/deserialization
-- [ ] Step 4: Build verify
+- [x] Step 1: Generate a real 128-bit UUID for the experiment (use `uuidgen` or similar)
+- [x] Step 2: Write `BleConstants.kt` with the UUID
+- [x] Step 3: Write `AdvertisePayload.kt` with serialization/deserialization
+- [x] Step 4: Build verify
 
 ---
 
@@ -331,10 +357,10 @@ class BleAdvertiserImpl(
 - Rotates advertisement when ephemeral ID changes (called by service)
 
 **Steps:**
-- [ ] Step 1: Write `BleAdvertiser` interface and `AdvertisingCallback`
-- [ ] Step 2: Implement `BleAdvertiserImpl` with advertiser lifecycle
-- [ ] Step 3: Add rotation support: `updateEphemeralId(newId: ByteArray)`
-- [ ] Step 4: Build verify
+- [x] Step 1: Write `BleAdvertiser` interface and `AdvertisingCallback`
+- [x] Step 2: Implement `BleAdvertiserImpl` with advertiser lifecycle
+- [x] Step 3: Add rotation support: `updateEphemeralId(newId: ByteArray)`
+- [x] Step 4: Build verify
 - [ ] Step 5: Manual test on device (install, start advertising, verify with nRF Connect)
 
 ---
@@ -378,10 +404,10 @@ class ScanResultProcessor {
 - Handles Android 12+ permission checks
 
 **Steps:**
-- [ ] Step 1: Write `BleScanner` interface and `ScanCallback`
-- [ ] Step 2: Implement `BleScannerImpl` with PendingIntent-based scanning
-- [ ] Step 3: Implement `ScanResultProcessor` to parse service data
-- [ ] Step 4: Build verify
+- [x] Step 1: Write `BleScanner` interface and `ScanCallback`
+- [x] Step 2: Implement `BleScannerImpl` with PendingIntent-based scanning
+- [x] Step 3: Implement `ScanResultProcessor` to parse service data
+- [x] Step 4: Build verify
 - [ ] Step 5: Manual test on device (advertiser on device A, scanner on device B)
 
 ---
@@ -448,12 +474,12 @@ interface MeasurementRecorder {
 - `testCondition` = current test condition at time of detection
 
 **Steps:**
-- [ ] Step 1: Write `DetectionRecord`, `AggregatedStats`, `LatencyStats` data classes
-- [ ] Step 2: Write `MeasurementRecorder` interface
-- [ ] Step 3: Implement `MeasurementRecorderImpl` with file I/O
+- [x] Step 1: Write `DetectionRecord`, `AggregatedStats`, `LatencyStats` data classes
+- [x] Step 2: Write `MeasurementRecorder` interface
+- [x] Step 3: Implement `MeasurementRecorderImpl` with file I/O
 - [ ] Step 4: Write unit tests for aggregation logic (`AggregationTest.kt`)
 - [ ] Step 5: Run tests → verify GREEN
-- [ ] Step 6: Build verify
+- [x] Step 6: Build verify
 
 ---
 
@@ -574,11 +600,11 @@ interface ExperimentController {
 ```
 
 **Steps:**
-- [ ] Step 1: Write all data classes and enums with `@Serializable`
-- [ ] Step 2: Write `ExperimentController` interface
-- [ ] Step 3: Implement `ExperimentControllerImpl` coordinating `ServiceController` and `MeasurementRecorder`
-- [ ] Step 4: Persist current run to file for survival
-- [ ] Step 5: Build verify
+- [x] Step 1: Write all data classes and enums with `@Serializable`
+- [x] Step 2: Write `ExperimentController` interface
+- [x] Step 3: Implement `ExperimentControllerImpl` coordinating `ServiceController` and `MeasurementRecorder`
+- [x] Step 4: Persist current run to file for survival
+- [x] Step 5: Build verify
 
 ---
 
@@ -685,9 +711,9 @@ interface ExperimentExporter {
 - No network
 
 **Steps:**
-- [ ] Step 1: Write `ExperimentExporter` interface
+- [x] Step 1: Write `ExperimentExporter` interface
 - [ ] Step 2: Implement `ExperimentExporterImpl` with all three formats
-- [ ] Step 3: Build verify
+- [x] Step 3: Build verify
 - [ ] Step 4: Manual test export on device
 
 ---
@@ -705,9 +731,9 @@ interface ExperimentExporter {
 - No Ghost branding, no animations
 
 **Steps:**
-- [ ] Step 1: Write `BleLabTheme.kt` with Material3 colors/typography
-- [ ] Step 2: Write reusable components (dense text, status indicators, etc.)
-- [ ] Step 3: Build verify
+- [x] Step 1: Write `BleLabTheme.kt` with Material3 colors/typography
+- [x] Step 2: Write reusable components (dense text, status indicators, etc.)
+- [x] Step 3: Build verify
 
 ---
 
@@ -726,9 +752,9 @@ interface ExperimentExporter {
 6. BatteryScreen
 
 **Steps:**
-- [ ] Step 1: Write `BleLabNavHost` with navigation graph
-- [ ] Step 2: Write `MainActivity` with Compose setup
-- [ ] Step 3: Build verify
+- [x] Step 1: Write `BleLabNavHost` with navigation graph
+- [x] Step 2: Write `MainActivity` with Compose setup
+- [x] Step 3: Build verify
 
 ---
 
@@ -743,9 +769,9 @@ interface ExperimentExporter {
 - Utilitarian styling
 
 **Steps:**
-- [ ] Step 1: Write `RoleScreen` Composable
-- [ ] Step 2: Connect to `ExperimentController` to set role
-- [ ] Step 3: Build verify
+- [x] Step 1: Write `RoleScreen` Composable
+- [x] Step 2: Connect to `ExperimentController` to set role
+- [x] Step 3: Build verify
 
 ---
 
@@ -763,9 +789,9 @@ interface ExperimentExporter {
 - Current experiment status display
 
 **Steps:**
-- [ ] Step 1: Write `ControlScreen` Composable
-- [ ] Step 2: Connect to `ExperimentController.startExperiment()` / `stopExperiment()`
-- [ ] Step 3: Build verify
+- [x] Step 1: Write `ControlScreen` Composable
+- [x] Step 2: Connect to `ExperimentController.startExperiment()` / `stopExperiment()`
+- [x] Step 3: Build verify
 - [ ] Step 4: Manual test end-to-end: advertiser on device A, scanner on device B
 
 ---
@@ -804,9 +830,9 @@ interface ExperimentExporter {
 - Apply button
 
 **Steps:**
-- [ ] Step 1: Write `TestConditionScreen` Composable
-- [ ] Step 2: Connect to `ExperimentController.setTestCondition()`
-- [ ] Step 3: Build verify
+- [x] Step 1: Write `TestConditionScreen` Composable
+- [x] Step 2: Connect to `ExperimentController.setTestCondition()`
+- [x] Step 3: Build verify
 
 ---
 
@@ -825,9 +851,9 @@ interface ExperimentExporter {
 - Latency stats (min/max/avg/median)
 
 **Steps:**
-- [ ] Step 1: Write `ResultsScreen` Composable
-- [ ] Step 2: Call `MeasurementRecorder.getAggregatedStats()`
-- [ ] Step 3: Build verify
+- [x] Step 1: Write `ResultsScreen` Composable
+- [x] Step 2: Call `MeasurementRecorder.getAggregatedStats()`
+- [x] Step 3: Build verify
 
 ---
 
@@ -943,16 +969,16 @@ interface ExperimentExporter {
 #### Task M1: Build & Test Verification
 
 **Steps:**
-- [ ] Step 1: Clean build: `./gradlew :ble-feasibility-lab:clean assembleDebug`
-- [ ] Step 2: Run all unit tests: `./gradlew :ble-feasibility-lab:test`
+- [x] Step 1: Clean build: `./gradlew :ble-feasibility-lab:clean assembleDebug`
+- [x] Step 2: Run all unit tests: `./gradlew :ble-feasibility-lab:test`
 - [ ] Step 3: Install on two physical devices (advertiser + scanner)
 - [ ] Step 4: Verify foreground detection works
 - [ ] Step 5: Verify background/screen-off/locked detection works
 - [ ] Step 6: Verify rotation works (wait 10+ minutes)
 - [ ] Step 7: Verify export works (CSV/JSON)
 - [ ] Step 8: Verify battery monitoring records data
-- [ ] Step 9: Verify no Ghost web prototype files modified
-- [ ] Step 10: Verify no Constitution/Roadmap/Spec/Decisions modified
+- [x] Step 9: Verify no Ghost web prototype files modified
+- [x] Step 10: Verify no Constitution/Roadmap/Spec/Decisions modified
 
 ---
 
@@ -999,18 +1025,20 @@ dependencies {
 
 ## Success Criteria Checklist
 
-- [ ] Two physical Android devices can advertise and detect one another
-- [ ] Rotating identifiers work (10-min default, configurable)
-- [ ] No location permission requested
-- [ ] Detection records contain no GPS or hardware identity
-- [ ] Foreground detection works
-- [ ] Background/locked testing can be performed
-- [ ] Battery experiments can be run
-- [ ] Results can be exported (CSV/JSON/plain text)
-- [ ] Deterministic logic has unit tests (all passing)
-- [ ] Lab remains isolated from Ghost product code
-- [ ] Documentation complete
-- [ ] Implementation report complete with FACT/IMPLEMENTED/UNTESTED/UNKNOWN labels
+> Reconciled 2026-08-19 against commit 125a998 (CI run 32213571392). Checked = verified by build/test/static analysis. Unchecked = physically unverified or not implemented.
+
+- [ ] Two physical Android devices can advertise and detect one another — PHYSICALLY UNVERIFIED (no trials executed)
+- [x] Rotating identifiers work (10-min default, configurable) — unit-tested (EphemeralIdGeneratorTest); physical rotation UNVERIFIED
+- [x] No location permission requested — static manifest verification
+- [x] Detection records contain no GPS or hardware identity — static code verification
+- [ ] Foreground detection works — PHYSICALLY UNVERIFIED
+- [ ] Background/locked testing can be performed — BLOCKED: Phase F (foreground service) not implemented
+- [ ] Battery experiments can be run — BLOCKED: Phase H (battery monitor) not implemented
+- [ ] Results can be exported (CSV/JSON/plain text) — CSV implemented + build-verified; JSON/plain text removed (commit 99acdf2); physical export UNVERIFIED
+- [x] Deterministic logic has unit tests (all passing) — 53/53 passing, CI 32213571392
+- [x] Lab remains isolated from Ghost product code — verified: zero diffs to src/, package.json, Vite/TS files since freeze commit 645cb99
+- [ ] Documentation complete — PARTIAL: protocol + pilot report exist; lab README not written
+- [ ] Implementation report complete with FACT/IMPLEMENTED/UNTESTED/UNKNOWN labels — NOT WRITTEN
 
 ---
 
