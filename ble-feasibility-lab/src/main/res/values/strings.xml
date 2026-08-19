@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">BLE Feasibility Lab</string>
+
+    <!-- Phase F: foreground service notification -->
+    <string name="ble_lab_notification_channel_name">BLE Feasibility Lab experiment</string>
+    <string name="ble_lab_notification_channel_description">Keeps the BLE feasibility experiment running in the background</string>
+    <string name="ble_lab_notification_title">BLE Feasibility Lab is running</string>
+    <string name="ble_lab_notification_text">Experiment active (%1$s). This is a feasibility experiment, not a production service. Tap to open.</string>
+    <string name="ble_lab_notification_stop">Stop experiment</string>
+    <string name="ble_lab_role_advertiser">Advertiser</string>
+    <string name="ble_lab_role_scanner">Scanner</string>
 </resources>

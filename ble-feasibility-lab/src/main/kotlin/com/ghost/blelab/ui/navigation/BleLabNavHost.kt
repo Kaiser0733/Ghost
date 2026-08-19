@@ -1,6 +1,7 @@
 package com.ghost.blelab.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,17 +23,19 @@ fun BleLabNavHost(
     context: android.content.Context
 ) {
     val navController = rememberNavController()
+    val serviceController = remember { com.ghost.blelab.service.ServiceController(context) }
     NavHost(navController, startDestination = "role") {
         composable("role") {
             RoleScreen(onRoleSelected = { role ->
                 val config = ExperimentConfig(role = role)
-                experimentController.startExperiment(config).getOrElse { throw it }
+                serviceController.startExperiment(config).getOrElse { throw it }
                 navController.navigate("control")
             })
         }
         composable("control") {
             ControlScreen(
                 experimentController = experimentController,
+                serviceController = serviceController,
                 bleAdvertiser = bleAdvertiser,
                 bleScanner = bleScanner,
                 measurementRecorder = measurementRecorder,

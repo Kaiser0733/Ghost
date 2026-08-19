@@ -25,6 +25,7 @@ import com.ghost.blelab.ui.components.StatusBadge
 @Composable
 fun ControlScreen(
     experimentController: com.ghost.blelab.experiment.ExperimentController,
+    serviceController: com.ghost.blelab.service.ServiceController,
     bleAdvertiser: com.ghost.blelab.ble.advertiser.BleAdvertiser,
     bleScanner: com.ghost.blelab.ble.scanner.BleScanner,
     measurementRecorder: com.ghost.blelab.measurement.MeasurementRecorder,
@@ -35,7 +36,7 @@ fun ControlScreen(
     modifier: Modifier = Modifier
 ) {
     val config = experimentController.getCurrentConfig()
-    val isRunning = experimentController.isRunning()
+    val isRunning = experimentController.isRunning() || serviceController.isRunning()
     val isAdvertising = bleAdvertiser.isAdvertising()
     val isScanning = bleScanner.isScanning()
 
@@ -104,14 +105,14 @@ fun ControlScreen(
             text = if (isRunning) "Stop Experiment" else "Start Experiment",
             onClick = {
                 if (isRunning) {
-                    experimentController.stopExperiment()
+                    serviceController.stopExperiment()
                 } else {
-                    config?.copy(
+                    val baseConfig = config ?: com.ghost.blelab.experiment.ExperimentConfig()
+                    val updatedConfig = baseConfig.copy(
                         rotationIntervalMinutes = rotationInterval,
                         txPowerLevel = txPower
-                    )?.let { updatedConfig ->
-                        experimentController.startExperiment(updatedConfig)
-                    }
+                    )
+                    serviceController.startExperiment(updatedConfig)
                 }
             }
         )
