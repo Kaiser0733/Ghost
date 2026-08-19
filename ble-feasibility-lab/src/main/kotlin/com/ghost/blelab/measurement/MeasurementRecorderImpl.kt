@@ -3,6 +3,7 @@ package com.ghost.blelab.measurement
 import com.ghost.blelab.experiment.TestCondition
 import com.ghost.blelab.util.FileUtil
 import com.ghost.blelab.util.JsonUtil
+import com.ghost.blelab.util.flatMap
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.IOException
@@ -43,8 +44,8 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
             return Result.failure(IllegalStateException("Experiment not found: $experimentId"))
         }
 
-        val recordsResult = FileUtil.readJson(experimentFile)
-            .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
+        val recordsResult: Result<List<DetectionRecord>> = FileUtil.readJson(experimentFile)
+            .flatMap { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
 
         return recordsResult.flatMap { records: List<DetectionRecord> ->
             if (records.isEmpty()) {
@@ -101,8 +102,7 @@ class MeasurementRecorderImpl(private val context: android.content.Context) : Me
         }
 
         return FileUtil.readJson(experimentFile)
-            .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-            .getOrElse { emptyList<DetectionRecord>() }
+            .flatMap { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
     }
 
     override fun clearExperiment(experimentId: String): Result<Unit> {

@@ -8,15 +8,13 @@ import com.ghost.blelab.measurement.DetectionRecord
 import com.ghost.blelab.measurement.MeasurementRecorder
 import com.ghost.blelab.util.FileUtil
 import com.ghost.blelab.util.JsonUtil
-import kotlinx.serialization.json.Json
+import com.ghost.blelab.util.flatMap
 import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.Result
 
 class ExperimentExporterImpl(
     private val context: Context,
@@ -47,19 +45,18 @@ class ExperimentExporterImpl(
             measurementRecorder.getAllRecords(experimentId)
         } else {
             // Get all experiment files
-            val experimentsDir = FileUtil.ensureDir(
-                File(FileUtil.getFilesDir(context), "experiments")
-            ).getOrThrow()
+            val experimentsDir = File(FileUtil.getFilesDir(context), "experiments")
+            FileUtil.ensureDir(experimentsDir)
 
             val allRecords = mutableListOf<DetectionRecord>()
             val files: Array<File>? = experimentsDir.listFiles()
             if (files != null) {
                 for (file in files) {
                     if (file.name.endsWith(".json")) {
-                        val result = FileUtil.readJson(file)
-                            .map { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
-                            .getOrElse { emptyList<DetectionRecord>() }
-                        allRecords.addAll(result.getOrElse { emptyList() })
+                        val records: List<DetectionRecord> = FileUtil.readJson(file)
+                            .flatMap { JsonUtil.listFromJson(DetectionRecord.serializer(), it) }
+                            .getOrElse { emptyList() }
+                        allRecords.addAll(records)
                     }
                 }
             }
@@ -121,15 +118,13 @@ class ExperimentExporterImpl(
     }
 
     private fun writeCsv(outputStream: OutputStream, records: List<DetectionRecord>): Int {
-        val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters
-"
+        val header = "localTimestamp,ephemeralId,rssi,scanResultTimestamp,deviceLocalExperimentId,distanceLabelMeters\n"
         val csvString = StringBuilder(header)
 
         for (record in records) {
             val ephemeralIdHex = record.ephemeralId.joinToString("") { "%02X".format(it) }
-            val distanceLabel = record.distanceLabelMeters?.toString() ?? ""
-            csvString.append("${record.localTimestamp},$ephemeralIdHex,${record.rssi},${record.scanResultTimestamp},${record.deviceLocalExperimentId},$distanceLabel
-")
+            val distanceLabel = record.distanceLabelMeters?.toString() ?: ""
+            csvString.append("${record.localTimestamp},$ephemeralIdHex,${record.rssi},${record.scanResultTimestamp},${record.deviceLocalExperimentId},$distanceLabel\n")
         }
 
         val bytes = csvString.toString().toByteArray(java.nio.charset.StandardCharsets.UTF_8)

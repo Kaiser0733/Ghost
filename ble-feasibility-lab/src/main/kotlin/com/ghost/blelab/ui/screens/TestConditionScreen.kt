@@ -2,6 +2,7 @@ package com.ghost.blelab.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ghost.blelab.ui.components.DropdownField
+import com.ghost.blelab.ui.components.PrimaryButton
+import com.ghost.blelab.ui.components.SecondaryButton
 
 @Composable
 fun TestConditionScreen(
@@ -23,11 +27,11 @@ fun TestConditionScreen(
     val config = experimentController.getCurrentConfig()
     val testCondition = config?.testCondition ?: com.ghost.blelab.experiment.TestCondition.UNSPECIFIED
 
-    val distance by remember { mutableStateOf(testCondition.distanceMeters) }
-    val environment by remember { mutableStateOf(testCondition.environment) }
-    val deviceState by remember { mutableStateOf(testCondition.deviceState) }
-    val orientation by remember { mutableStateOf(testCondition.orientation) }
-    val pocketState by remember { mutableStateOf(testCondition.pocketState) }
+    var distance by remember { mutableStateOf(testCondition.distanceMeters) }
+    var environment by remember { mutableStateOf(testCondition.environment) }
+    var deviceState by remember { mutableStateOf(testCondition.deviceState) }
+    var orientation by remember { mutableStateOf(testCondition.orientation) }
+    var pocketState by remember { mutableStateOf(testCondition.pocketState) }
 
     val distanceOptions = listOf("Not set", "1", "3", "5", "10", "20")
     val environmentOptions = com.ghost.blelab.experiment.Environment.values().map { it.name }
@@ -45,7 +49,7 @@ fun TestConditionScreen(
             text = "Test Condition",
             fontSize = 24.sp,
             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-            color = androidx.compose.graphics.Color(0xFF1565C0)
+            color = androidx.compose.ui.graphics.Color(0xFF1565C0)
         )
 
         DropdownField(

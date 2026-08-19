@@ -1,13 +1,16 @@
 package com.ghost.blelab.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -15,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -30,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -117,9 +121,9 @@ fun SecondaryButton(
             .fillMaxWidth()
             .padding(vertical = 12.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Color(0xFF1565C0),
-            border = BorderStroke(1.dp, Color(0xFF1565C0))
-        )
+            contentColor = Color(0xFF1565C0)
+        ),
+        border = BorderStroke(1.dp, Color(0xFF1565C0))
     ) {
         Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.Medium)
     }
@@ -132,33 +136,27 @@ fun RadioOption(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var selectedState by remember { mutableStateOf(selected) }
-    
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 16.dp)
             .background(
-                color = if (selectedState) Color(0xFFE3F2FD) else Color.Transparent,
+                color = if (selected) Color(0xFFE3F2FD) else Color.Transparent,
                 shape = RoundedCornerShape(8.dp)
             )
             .border(
-                width = if (selectedState) 2.dp else 1.dp,
-                color = if (selectedState) Color(0xFF1565C0) else Color(0xFFBDBDBD),
+                width = if (selected) 2.dp else 1.dp,
+                color = if (selected) Color(0xFF1565C0) else Color(0xFFBDBDBD),
                 shape = RoundedCornerShape(8.dp)
             )
-            .fillMaxWidth()
-            .clickable { 
-                selectedState = !selectedState
-                onClick()
-            },
+            .clickable { onClick() },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = text, fontSize = 16.sp, color = if (selectedState) Color(0xFF1565C0) else Color.Black.copy(alpha = 0.87f))
+        Text(text = text, fontSize = 16.sp, color = if (selected) Color(0xFF1565C0) else Color.Black.copy(alpha = 0.87f))
         RadioButton(
-            selected = selectedState,
-            onClick = { selectedState = !selectedState; onClick() },
+            selected = selected,
+            onClick = onClick,
             colors = RadioButtonDefaults.colors(
                 selectedColor = Color(0xFF1565C0),
                 unselectedColor = Color(0xFFBDBDBD)
@@ -167,6 +165,7 @@ fun RadioOption(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownField(
     label: String,
@@ -176,7 +175,7 @@ fun DropdownField(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = label, fontSize = 14.sp, color = Color.Black.copy(alpha = 0.6f))
         ExposedDropdownMenuBox(
@@ -205,13 +204,12 @@ fun DropdownField(
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
+                        text = { Text(text = option) },
                         onClick = {
                             onValueChange(option)
                             expanded = false
                         }
-                    ) {
-                        Text(text = option, modifier = Modifier.padding(16.dp))
-                    }
+                    )
                 }
             }
         }

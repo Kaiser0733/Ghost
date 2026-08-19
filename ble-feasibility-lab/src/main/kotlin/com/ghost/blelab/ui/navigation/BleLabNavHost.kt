@@ -7,7 +7,6 @@ import androidx.navigation.compose.rememberNavController
 import com.ghost.blelab.experiment.ExperimentController
 import com.ghost.blelab.experiment.ExperimentConfig
 import com.ghost.blelab.experiment.Role
-import com.ghost.blelab.ui.screens.CommonScreens
 import com.ghost.blelab.ui.screens.ControlScreen
 import com.ghost.blelab.ui.screens.RoleScreen
 import com.ghost.blelab.ui.screens.TestConditionScreen

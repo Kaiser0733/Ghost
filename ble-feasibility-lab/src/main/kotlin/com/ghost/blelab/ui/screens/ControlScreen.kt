@@ -3,6 +3,7 @@ package com.ghost.blelab.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -15,6 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ghost.blelab.ui.components.InfoRow
+import com.ghost.blelab.ui.components.PrimaryButton
+import com.ghost.blelab.ui.components.SecondaryButton
+import com.ghost.blelab.ui.components.SectionTitle
+import com.ghost.blelab.ui.components.StatusBadge
 
 @Composable
 fun ControlScreen(
@@ -60,7 +66,7 @@ fun ControlScreen(
                 text = config?.role?.name ?: "No role selected",
                 fontSize = 18.sp,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                color = androidx.compose.graphics.Color.Black.copy(alpha = 0.87f)
+                color = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.87f)
             )
         }
 
@@ -100,11 +106,12 @@ fun ControlScreen(
                 if (isRunning) {
                     experimentController.stopExperiment()
                 } else {
-                    val updatedConfig = config?.copy(
+                    config?.copy(
                         rotationIntervalMinutes = rotationInterval,
                         txPowerLevel = txPower
-                    ) ?: return@PrimaryButton
-                    experimentController.startExperiment(updatedConfig)
+                    )?.let { updatedConfig ->
+                        experimentController.startExperiment(updatedConfig)
+                    }
                 }
             }
         )

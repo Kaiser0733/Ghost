@@ -2,6 +2,7 @@ package com.ghost.blelab.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,6 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ghost.blelab.ui.components.InfoRow
+import com.ghost.blelab.ui.components.SecondaryButton
+import com.ghost.blelab.ui.components.SectionTitle
 
 @Composable
 fun ResultsScreen(
@@ -30,7 +34,7 @@ fun ResultsScreen(
             text = "Results",
             fontSize = 24.sp,
             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-            color = androidx.compose.graphics.Color(0xFF1565C0)
+            color = androidx.compose.ui.graphics.Color(0xFF1565C0)
         )
 
         stats?.let { s ->
@@ -58,7 +62,7 @@ fun ResultsScreen(
         } ?: Text(
             text = "No experiment data available. Start an experiment first.",
             fontSize = 16.sp,
-            color = androidx.compose.graphics.Color.Black.copy(alpha = 0.6f),
+            color = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f),
             modifier = Modifier.fillMaxWidth()
         )
 

@@ -1,6 +1,7 @@
 package com.ghost.blelab.util
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -31,13 +32,13 @@ object JsonUtil {
      * Serialize list to JSON string.
      */
     fun <T> listToJson(elementSerializer: KSerializer<T>, value: List<T>): String =
-        json.encodeToString(elementSerializer.listSerializer(), value)
+        json.encodeToString(ListSerializer(elementSerializer), value)
 
     /**
      * Deserialize JSON string to list.
      */
     fun <T> listFromJson(elementSerializer: KSerializer<T>, jsonString: String): Result<List<T>> = try {
-        Result.success(json.decodeFromString(elementSerializer.listSerializer(), jsonString))
+        Result.success(json.decodeFromString(ListSerializer(elementSerializer), jsonString))
     } catch (e: Exception) {
         Result.failure(e)
     }
