@@ -11,7 +11,7 @@
 | C | BLE advertiser | IMPLEMENTED + BUILD-VERIFIED + UNIT-TESTED (payload) | AdvertisePayloadTest; physical advertising UNVERIFIED |
 | D | BLE scanner | IMPLEMENTED + BUILD-VERIFIED | Physical scanning UNVERIFIED |
 | E | Detection recorder | IMPLEMENTED + BUILD-VERIFIED | Planned AggregationTest.kt NOT written |
-| F | Foreground service | NOT STARTED | BleExperimentService declared in AndroidManifest.xml but NO source file exists |
+| F | Foreground service | IMPLEMENTED + BUILD-VERIFIED + UNIT-TESTED (rotation logic) | BleExperimentService + ServiceController + RotationCoordinator at commit 714b85c (CI run 32229842724, 60/60 unit tests, APK build successful); physical foreground/notification/rotation behavior UNVERIFIED |
 | G | Experiment state & config | IMPLEMENTED + BUILD-VERIFIED | Run persistence implemented; ServiceController dependency (Phase F) missing |
 | H | Battery monitor | NOT STARTED | No BatteryMonitor source exists |
 | I | Export | IMPLEMENTED + BUILD-VERIFIED (CSV only) | JSON/PLAIN_TEXT formats removed per commit 99acdf2; physical export UNVERIFIED |
@@ -22,7 +22,7 @@
 
 **Key facts:**
 - BLE feasibility is UNDECIDED. No physical measurements exist.
-- The lab cannot run background experiments until Phase F (foreground service) is implemented.
+- Phase F (foreground service) is implemented and build-verified; background experiments can now be attempted on physical devices (physical verification still pending).
 - Battery impact cannot be measured until Phase H (battery monitor) is implemented.
 - All "manual test on device" steps remain physically unverified.
 
@@ -525,12 +525,12 @@ class ServiceController(private val context: Context) {
 - Graceful shutdown
 
 **Steps:**
-- [ ] Step 1: Write `BleExperimentService` with foreground service boilerplate
-- [ ] Step 2: Implement advertiser/scanner lifecycle management
-- [ ] Step 3: Implement rotation timer using `Handler`/`Coroutines`
-- [ ] Step 4: Write `ServiceController` for UI communication
-- [ ] Step 5: Build verify
-- [ ] Step 6: Manual test: start service, verify notification, verify survival after screen off/lock
+- [x] Step 1: Write `BleExperimentService` with foreground service boilerplate
+- [x] Step 2: Implement advertiser/scanner lifecycle management
+- [x] Step 3: Implement rotation timer using `Handler`/`Coroutines` (coroutines + RotationCoordinator driven by existing TimeSlotCalculator)
+- [x] Step 4: Write `ServiceController` for UI communication
+- [x] Step 5: Build verify (CI run 32229842724, commit 714b85c)
+- [ ] Step 6: Manual test: start service, verify notification, verify survival after screen off/lock — PHYSICALLY UNVERIFIED
 
 ---
 
@@ -1032,10 +1032,10 @@ dependencies {
 - [x] No location permission requested — static manifest verification
 - [x] Detection records contain no GPS or hardware identity — static code verification
 - [ ] Foreground detection works — PHYSICALLY UNVERIFIED
-- [ ] Background/locked testing can be performed — BLOCKED: Phase F (foreground service) not implemented
+- [ ] Background/locked testing can be performed — UNBLOCKED: Phase F implemented + build-verified (714b85c); physical trial pending
 - [ ] Battery experiments can be run — BLOCKED: Phase H (battery monitor) not implemented
 - [ ] Results can be exported (CSV/JSON/plain text) — CSV implemented + build-verified; JSON/plain text removed (commit 99acdf2); physical export UNVERIFIED
-- [x] Deterministic logic has unit tests (all passing) — 53/53 passing, CI 32213571392
+- [x] Deterministic logic has unit tests (all passing) — 60/60 passing, CI 32229842724
 - [x] Lab remains isolated from Ghost product code — verified: zero diffs to src/, package.json, Vite/TS files since freeze commit 645cb99
 - [ ] Documentation complete — PARTIAL: protocol + pilot report exist; lab README not written
 - [ ] Implementation report complete with FACT/IMPLEMENTED/UNTESTED/UNKNOWN labels — NOT WRITTEN
