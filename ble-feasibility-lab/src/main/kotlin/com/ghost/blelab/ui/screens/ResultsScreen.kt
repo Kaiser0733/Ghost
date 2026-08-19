@@ -2,15 +2,16 @@ package com.ghost.blelab.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ghost.blelab.ui.components.InfoRow
+import com.ghost.blelab.ui.components.LabScrollScreen
 import com.ghost.blelab.ui.components.SecondaryButton
 import com.ghost.blelab.ui.components.SectionTitle
 
@@ -24,12 +25,7 @@ fun ResultsScreen(
     val run = experimentController.getCurrentRun()
     val stats = run?.let { measurementRecorder.getAggregatedStats(it.id).getOrNull() }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LabScrollScreen(modifier = modifier) {
         Text(
             text = "Results",
             fontSize = 24.sp,
@@ -46,13 +42,13 @@ fun ResultsScreen(
                 InfoRow("Total Scans", s.totalScans.toString())
                 InfoRow("Detections", s.detections.toString())
                 InfoRow("Detection Rate", "%.1f%%".format(s.detectionRate * 100))
-                
+
                 SectionTitle("RSSI Statistics")
                 InfoRow("Average RSSI", "%.1f dBm".format(s.averageRssi))
                 InfoRow("RSSI Variance", "%.1f".format(s.rssiVariance))
                 InfoRow("Min RSSI", "${s.minRssi} dBm")
                 InfoRow("Max RSSI", "${s.maxRssi} dBm")
-                
+
                 SectionTitle("Latency Statistics")
                 InfoRow("Min Latency", "${s.latencyStats.minLatencyMs} ms")
                 InfoRow("Max Latency", "${s.latencyStats.maxLatencyMs} ms")
@@ -66,7 +62,7 @@ fun ResultsScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         SecondaryButton(
             text = "Back",

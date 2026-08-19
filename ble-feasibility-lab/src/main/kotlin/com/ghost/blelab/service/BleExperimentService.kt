@@ -74,12 +74,18 @@ class BleExperimentService : Service() {
         private const val CONFIG_FILE_NAME = "active_experiment_config.json"
 
         /**
-         * Process-wide running flag, maintained by the service itself.
-         * [ServiceController.isRunning] reads this. It reflects whether the
-         * foreground experiment service is active, independent of UI state.
+         * Process-wide running state, maintained by the service itself.
+         * [ServiceController.isRunning] reads [serviceRunning]; the UI
+         * observes [runningState] so screens recompose when the service
+         * starts or stops.
          */
-        @Volatile
-        internal var serviceRunning: Boolean = false
+        val runningState = kotlinx.coroutines.flow.MutableStateFlow(false)
+
+        internal var serviceRunning: Boolean
+            get() = runningState.value
+            set(value) {
+                runningState.value = value
+            }
     }
 
     private val app: BleLabApplication by lazy { application as BleLabApplication }

@@ -2,12 +2,12 @@ package com.ghost.blelab.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,7 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ghost.blelab.service.BleExperimentService
+import com.ghost.blelab.ui.components.ErrorBanner
+import com.ghost.blelab.ui.components.InfoBanner
 import com.ghost.blelab.ui.components.InfoRow
+import com.ghost.blelab.ui.components.LabScrollScreen
 import com.ghost.blelab.ui.components.PrimaryButton
 import com.ghost.blelab.ui.components.SecondaryButton
 import com.ghost.blelab.ui.components.SectionTitle
@@ -33,49 +37,57 @@ fun ControlScreen(
     context: android.content.Context,
     onNavigateToResults: () -> Unit,
     onNavigateToTestCondition: () -> Unit,
+    lastSelectedRole: com.ghost.blelab.experiment.Role? = null,
+    initialError: String? = null,
     modifier: Modifier = Modifier
 ) {
+    // Observe the foreground service so this screen recomposes when the
+    // experiment starts/stops (including stops from the notification).
+    val serviceRunning by BleExperimentService.runningState.collectAsState()
+
     val config = experimentController.getCurrentConfig()
-    val isRunning = experimentController.isRunning() || serviceController.isRunning()
+    val isRunning = experimentController.isRunning() || serviceRunning
     val isAdvertising = bleAdvertiser.isAdvertising()
     val isScanning = bleScanner.isScanning()
 
     val rotationInterval by remember { mutableStateOf(config?.rotationIntervalMinutes ?: 10) }
     val txPower by remember { mutableStateOf(config?.txPowerLevel ?: android.bluetooth.le.AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM) }
 
+    var actionError by remember { mutableStateOf(initialError) }
+    var exportMessage by remember { mutableStateOf<String?>(null) }
+
     val statusMessage = when {
         isRunning && isAdvertising -> "Advertising"
         isRunning && isScanning -> "Scanning"
-        isRunning -> "Starting..."
+        isRunning -> "Running"
         else -> "Stopped"
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LabScrollScreen(modifier = modifier) {
         // Status
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             StatusBadge(text = statusMessage, isActive = isRunning)
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = config?.role?.name ?: "No role selected",
+                text = config?.role?.name ?: lastSelectedRole?.name ?: "No role selected",
                 fontSize = 18.sp,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
                 color = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.87f)
             )
         }
 
-        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
+        // Errors / feedback surfaced inline instead of failing silently
+        actionError?.let { ErrorBanner(message = it) }
+        exportMessage?.let { InfoBanner(message = it) }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Configuration
         SectionTitle("Configuration")
-        
+
         InfoRow("Rotation Interval", "${rotationInterval} min")
         InfoRow("TX Power", when (txPower) {
             android.bluetooth.le.AdvertiseSettings.ADVERTISE_TX_POWER_ULTRA_LOW -> "Ultra Low"
@@ -87,7 +99,7 @@ fun ControlScreen(
         InfoRow("Scan Mode", config?.scanMode?.name ?: "LOW_POWER")
         InfoRow("Advertise Mode", config?.advertisingMode?.name ?: "LOW_POWER")
 
-        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Test Condition
         SectionTitle("Test Condition")
@@ -98,21 +110,33 @@ fun ControlScreen(
         InfoRow("Orientation", testCondition.orientation.name)
         InfoRow("Pocket State", testCondition.pocketState.name)
 
-        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Actions
         PrimaryButton(
             text = if (isRunning) "Stop Experiment" else "Start Experiment",
             onClick = {
+                actionError = null
+                exportMessage = null
                 if (isRunning) {
-                    serviceController.stopExperiment()
+                    serviceController.stopExperiment().onFailure {
+                        actionError = "Failed to stop experiment: ${it.message}"
+                    }
                 } else {
-                    val baseConfig = config ?: com.ghost.blelab.experiment.ExperimentConfig()
-                    val updatedConfig = baseConfig.copy(
-                        rotationIntervalMinutes = rotationInterval,
-                        txPowerLevel = txPower
-                    )
-                    serviceController.startExperiment(updatedConfig)
+                    val role = config?.role?.takeIf { it != com.ghost.blelab.experiment.Role.UNSPECIFIED }
+                        ?: lastSelectedRole
+                    if (role == null) {
+                        actionError = "No role selected. Go back and choose Advertiser or Scanner first."
+                    } else {
+                        val updatedConfig = (config ?: com.ghost.blelab.experiment.ExperimentConfig(role = role)).copy(
+                            role = role,
+                            rotationIntervalMinutes = rotationInterval,
+                            txPowerLevel = txPower
+                        )
+                        serviceController.startExperiment(updatedConfig).onFailure {
+                            actionError = "Failed to start experiment: ${it.message}"
+                        }
+                    }
                 }
             }
         )
@@ -130,18 +154,35 @@ fun ControlScreen(
         SecondaryButton(
             text = "Export Data (Scanner only)",
             onClick = {
-                if (config?.role == com.ghost.blelab.experiment.Role.SCANNER) {
-                    val run = experimentController.getCurrentRun()
-                    run?.let {
-                        experimentExporter.exportExperiment(it.id, com.ghost.blelab.export.ExportFormat.CSV, context)
-                    }
+                actionError = null
+                exportMessage = null
+                if (config?.role != com.ghost.blelab.experiment.Role.SCANNER) {
+                    actionError = "Export is only available for the Scanner role."
+                    return@SecondaryButton
+                }
+                val run = experimentController.getCurrentRun()
+                if (run == null) {
+                    actionError = "No experiment run to export yet."
+                } else {
+                    experimentExporter.exportExperiment(
+                        run.id,
+                        com.ghost.blelab.export.ExportFormat.CSV,
+                        context
+                    ).fold(
+                        onSuccess = { result ->
+                            exportMessage = "Export complete: ${result.recordCount} records (${result.fileSizeBytes} bytes)"
+                        },
+                        onFailure = {
+                            actionError = "Export failed: ${it.message}"
+                        }
+                    )
                 }
             }
         )
 
         // Capability info
         if (!isRunning) {
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             SectionTitle("Device Capability")
             InfoRow("BLE Advertising", if (bleAdvertiser.isAdvertising()) "Active" else "Available")
             InfoRow("BLE Scanning", if (bleScanner.isScanning()) "Active" else "Available")

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -113,17 +112,19 @@ fun PrimaryButton(
 fun SecondaryButton(
     text: String,
     onClick: () -> Unit,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     OutlinedButton(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Color(0xFF1565C0)
+            contentColor = if (enabled) Color(0xFF1565C0) else Color(0xFFBDBDBD)
         ),
-        border = BorderStroke(1.dp, Color(0xFF1565C0))
+        border = BorderStroke(1.dp, if (enabled) Color(0xFF1565C0) else Color(0xFFBDBDBD))
     ) {
         Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.Medium)
     }
@@ -183,21 +184,35 @@ fun DropdownField(
             onExpandedChange = { expanded = it },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = value,
-                fontSize = 16.sp,
+            Row(
                 modifier = Modifier
+                    .menuAnchor()
                     .fillMaxWidth()
-                    .padding(16.dp, 12.dp)
+                    .clickable { expanded = !expanded }
                     .background(
                         color = Color.White,
                         shape = RoundedCornerShape(8.dp)
                     )
                     .border(BorderStroke(1.dp, Color(0xFFBDBDBD)), RoundedCornerShape(8.dp))
-                    .wrapContentSize(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = value,
+                    fontSize = 16.sp,
+                    color = Color.Black.copy(alpha = 0.87f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = if (expanded) "▲" else "▼",
+                    fontSize = 12.sp,
+                    color = Color.Black.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }

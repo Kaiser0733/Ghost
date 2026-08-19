@@ -12,6 +12,7 @@ import com.ghost.blelab.ble.scanner.BleScanner
 import com.ghost.blelab.ble.scanner.BleScannerImpl
 import com.ghost.blelab.experiment.ExperimentController
 import com.ghost.blelab.experiment.ExperimentControllerImpl
+import com.ghost.blelab.experiment.TestCondition
 import com.ghost.blelab.export.ExperimentExporter
 import com.ghost.blelab.export.ExperimentExporterImpl
 import com.ghost.blelab.measurement.MeasurementRecorder
@@ -47,4 +48,15 @@ class BleLabApplication : Application() {
     val experimentExporter: com.ghost.blelab.export.ExperimentExporter by lazy {
         com.ghost.blelab.export.ExperimentExporterImpl(this, measurementRecorder)
     }
+
+    /**
+     * Test condition selected in the UI before an experiment run exists.
+     *
+     * ExperimentControllerImpl.setTestCondition is a no-op while no run is
+     * active, so conditions chosen on the Test Condition screen were silently
+     * lost. The foreground service merges this value into the config when the
+     * next experiment starts, then clears it. In-memory only — never persisted.
+     */
+    @Volatile
+    var pendingTestCondition: TestCondition? = null
 }

@@ -34,11 +34,18 @@ class ServiceController(private val context: Context) {
         if (isRunning()) {
             return Result.failure(IllegalStateException("Experiment service already running"))
         }
+        // Merge a test condition chosen in the UI before any run existed.
+        val app = appContext as? BleLabApplication
+        val effectiveConfig = ExperimentStartConfigMerger.merge(
+            config = config,
+            pendingCondition = app?.pendingTestCondition,
+            onConsumed = { app?.pendingTestCondition = null }
+        )
         val intent = Intent(appContext, BleExperimentService::class.java).apply {
             action = BleExperimentService.ACTION_START
             putExtra(
                 BleExperimentService.EXTRA_CONFIG_JSON,
-                JsonUtil.toJson(ExperimentConfig.serializer(), config)
+                JsonUtil.toJson(ExperimentConfig.serializer(), effectiveConfig)
             )
         }
         return try {
@@ -73,9 +80,16 @@ class ServiceController(private val context: Context) {
 
     /**
      * Update the test condition of a running (or future) experiment.
-     * Delegates to the app-level ExperimentController shared with the service.
+     * While a run is active this delegates to the shared ExperimentController;
+     * before any run exists it is stored as a pending condition and merged
+     * into the config by [startExperiment].
      */
     fun updateTestCondition(condition: TestCondition) {
-        (appContext as? BleLabApplication)?.experimentController?.setTestCondition(condition)
+        val app = appContext as? BleLabApplication ?: return
+        if (app.experimentController.isRunning()) {
+            app.experimentController.setTestCondition(condition)
+        } else {
+            app.pendingTestCondition = condition
+        }
     }
 }

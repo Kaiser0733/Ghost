@@ -1,26 +1,26 @@
 package com.ghost.blelab.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ghost.blelab.ui.components.DropdownField
+import com.ghost.blelab.ui.components.LabScrollScreen
 import com.ghost.blelab.ui.components.PrimaryButton
 import com.ghost.blelab.ui.components.SecondaryButton
 
 @Composable
 fun TestConditionScreen(
     experimentController: com.ghost.blelab.experiment.ExperimentController,
+    serviceController: com.ghost.blelab.service.ServiceController,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -39,12 +39,7 @@ fun TestConditionScreen(
     val orientationOptions = com.ghost.blelab.experiment.Orientation.values().map { it.name }
     val pocketStateOptions = com.ghost.blelab.experiment.PocketState.values().map { it.name }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LabScrollScreen(modifier = modifier) {
         Text(
             text = "Test Condition",
             fontSize = 24.sp,
@@ -87,7 +82,7 @@ fun TestConditionScreen(
             onValueChange = { pocketState = com.ghost.blelab.experiment.PocketState.valueOf(it) }
         )
 
-        androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(top = 24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         PrimaryButton(
             text = "Apply & Return",
@@ -99,7 +94,9 @@ fun TestConditionScreen(
                     orientation = orientation,
                     pocketState = pocketState
                 )
-                experimentController.setTestCondition(updatedCondition)
+                // Routes through ServiceController: applies to a running run,
+                // or stores as pending condition merged at next start.
+                serviceController.updateTestCondition(updatedCondition)
                 onBack()
             }
         )
