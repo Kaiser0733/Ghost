@@ -49,11 +49,11 @@ class ServiceController(private val context: Context) {
             )
         }
         return try {
-            BleExperimentService.startStatus.value = BleExperimentService.StartStatus.Starting
+            BleExperimentService.startStatus.value = StartStatus.Starting
             ContextCompat.startForegroundService(appContext, intent)
             Result.success(Unit)
         } catch (e: Exception) {
-            BleExperimentService.startStatus.value = BleExperimentService.StartStatus.Failed(
+            BleExperimentService.startStatus.value = StartStatus.Failed(
                 "Could not start the experiment service: ${e.message ?: e::class.simpleName}"
             )
             Result.failure(e)

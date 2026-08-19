@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ghost.blelab.service.BleExperimentService
+import com.ghost.blelab.service.StartStatus
 import com.ghost.blelab.ui.components.ErrorBanner
 import com.ghost.blelab.ui.components.InfoBanner
 import com.ghost.blelab.ui.components.InfoRow
@@ -61,8 +62,8 @@ fun ControlScreen(
     var exportMessage by remember { mutableStateOf<String?>(null) }
 
     // Service-side failure reason, if the last start attempt failed.
-    val serviceFailure = (startStatus as? BleExperimentService.StartStatus.Failed)?.reason
-    val isStarting = startStatus is BleExperimentService.StartStatus.Starting
+    val serviceFailure = (startStatus as? StartStatus.Failed)?.reason
+    val isStarting = startStatus is StartStatus.Starting
 
     val statusMessage = when {
         isRunning && isAdvertising -> "Advertising"
@@ -130,7 +131,7 @@ fun ControlScreen(
                 actionError = null
                 exportMessage = null
                 // Clear any stale service failure from a previous attempt.
-                BleExperimentService.startStatus.value = BleExperimentService.StartStatus.Idle
+                BleExperimentService.startStatus.value = StartStatus.Idle
                 if (isRunning) {
                     serviceController.stopExperiment().onFailure {
                         actionError = "Failed to stop experiment: ${it.message}"

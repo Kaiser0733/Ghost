@@ -87,30 +87,6 @@ class BleExperimentService : Service() {
                 runningState.value = value
             }
 
-        /**
-         * Observable start status so the UI can show WHY a start failed.
-         * The service runs in its own component; without this channel every
-         * failure (Bluetooth off, permission missing, scan registration
-         * failed) was only visible in logcat while the UI showed "Stopped"
-         * with no explanation.
-         */
-        sealed class StartStatus {
-            /** No start attempted in this process yet. */
-            object Idle : StartStatus()
-
-            /** Start requested; waiting for foreground + BLE startup. */
-            object Starting : StartStatus()
-
-            /** Experiment running. */
-            object Running : StartStatus()
-
-            /** Start failed with an actionable reason. */
-            data class Failed(val reason: String) : StartStatus()
-
-            /** Experiment stopped normally. */
-            object Stopped : StartStatus()
-        }
-
         val startStatus = kotlinx.coroutines.flow.MutableStateFlow<StartStatus>(StartStatus.Idle)
     }
 
